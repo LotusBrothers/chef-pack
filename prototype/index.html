@@ -5,207 +5,281 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shrikhand&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=Figtree:wght@400;500;600;700;800&family=DM+Mono:wght@500&display=swap">
 <style>
-  /* Layout: a phone (the MVP app, four screens) beside the product plan; on phones the app is the page and the plan follows it.
-     World: a late-night kitchen. Cast-iron green ground, mustard as the house color, ketchup for heat. */
+  /* Layout: a phone running the game (header, live drops, pack grid, horizontal reel opening, card reveal, wallet) beside the product plan; on phones the game is the page.
+     World: a premium black-and-white pack-opening game. Black stage, white light, foil and holo as the only color. */
   :root {
     color-scheme: dark;
-    --bg: #111a16;
-    --surface: #19241f;
-    --surface-2: #223129;
-    --line: #2d3f36;
-    --fg: #f4efe2;
-    --muted: #a3b2a9;
-    --mustard: #f5b82e;
-    --ketchup: #e5482f;
-    --basil: #5fd38d;
-    --ink: #111a16;
-    --cream: #f2ede1;
+    --bg: #060606;
+    --surface: #111111;
+    --surface-2: #1a1a1a;
+    --line: #242424;
+    --line-2: #383838;
+    --fg: #fafafa;
+    --muted: #8a8a8a;
+    --ink: #060606;
+    --white: #ffffff;
+    --hat: #ffffff;
+    --pleat: #060606;
 
-    --display: "Shrikhand", "Cooper Black", Georgia, serif;
-    --body: "Outfit", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    --display: "Unbounded", "Arial Black", system-ui, sans-serif;
+    --body: "Figtree", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mono: "DM Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+    --r-standard: #f2f2f2;
+    --r-foil: linear-gradient(135deg, #7d7d7d, #f4f4f4 45%, #8f8f8f 70%, #e2e2e2);
+    --r-holo: linear-gradient(115deg, #ffc9f1, #bdefff 25%, #fff3b0 50%, #c9ffd6 70%, #d9c9ff 90%);
+    --r-black: #000000;
   }
   html { background: var(--bg); }
   body { background: var(--bg); color: var(--fg); font: 400 15px/1.5 var(--body); }
   * { box-sizing: border-box; }
-  button { font: inherit; color: inherit; }
+  button { font: inherit; color: inherit; -webkit-tap-highlight-color: transparent; }
   a { color: inherit; }
-  :focus-visible { outline: 2px solid var(--mustard); outline-offset: 3px; border-radius: 8px; }
+  :focus-visible { outline: 2px solid var(--white); outline-offset: 3px; border-radius: 10px; }
 
-  .page { max-width: 1060px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 40px;
-    display: grid; grid-template-columns: 390px minmax(0, 1fr); gap: 56px; align-items: start; }
+  .page { max-width: 1080px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 40px;
+    display: grid; grid-template-columns: 392px minmax(0, 1fr); gap: 60px; align-items: start; }
 
-  /* Phone */
-  .phone { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 20px); height: min(820px, calc(100dvh - 40px)); min-height: 640px; display: flex; flex-direction: column;
-    background: var(--bg); border: 10px solid #050806; border-radius: 46px; box-shadow: 0 0 0 1px var(--line), 0 40px 80px rgba(0,0,0,.55); overflow: hidden; }
-  .appbar { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px 10px; }
-  .logo { font-family: var(--display); font-size: 22px; line-height: 1; color: var(--mustard); }
-  .logo span { color: var(--fg); }
-  .loc { font: 600 12px/1 var(--body); color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 99px; padding: 6px 10px; }
-  .screen { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 6px 20px 24px; position: relative; }
-  .tabs { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--line); background: var(--surface); padding-bottom: 6px; }
-  .tab { background: none; border: 0; padding: 12px 0 8px; cursor: pointer; color: var(--muted); font-weight: 600; font-size: 13px; display: grid; justify-items: center; gap: 4px; }
-  .tab[aria-current="page"] { color: var(--mustard); }
-  .tab svg { width: 22px; height: 22px; }
-  .tab .badge { position: relative; }
-  .tab .badge i { position: absolute; top: -4px; right: -10px; min-width: 16px; height: 16px; border-radius: 9px; background: var(--ketchup); color: #fff; font: 700 10px/16px var(--body); font-style: normal; padding: 0 4px; }
+  /* ---------- Phone shell ---------- */
+  .phone { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 20px); height: min(840px, calc(100dvh - 40px)); min-height: 680px; display: flex; flex-direction: column;
+    background: var(--bg); border: 9px solid #000; border-radius: 48px; box-shadow: 0 0 0 1px var(--line-2), 0 50px 90px rgba(0,0,0,.85); overflow: hidden; }
+  .top { padding: 14px 16px 10px; display: flex; align-items: center; justify-content: space-between; gap: 10px; border-bottom: 1px solid var(--line); }
+  .brand { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .brand svg { width: 30px; height: 30px; flex: none; filter: drop-shadow(0 0 10px rgba(255,255,255,.35)); }
+  .brand b { font: 900 14px/1 var(--display); letter-spacing: .06em; white-space: nowrap; }
+  .right { display: flex; align-items: center; gap: 6px; }
+  .lvl { display: flex; align-items: center; gap: 6px; border: 1px solid var(--line-2); border-radius: 99px; padding: 4px 8px 4px 4px; }
+  .lvl b { width: 22px; height: 22px; border-radius: 50%; background: var(--white); color: var(--ink); display: grid; place-items: center; font: 900 10px/1 var(--display); }
+  .lvl .xp { width: 34px; height: 4px; border-radius: 4px; background: var(--surface-2); overflow: hidden; }
+  .lvl .xp i { display: block; height: 100%; background: var(--white); transition: width .9s cubic-bezier(.2,.8,.2,1); }
+  .bal { display: flex; align-items: center; background: var(--surface); border: 1px solid var(--line-2); border-radius: 12px; overflow: hidden; }
+  .bal span { padding: 7px 9px; font: 700 13px/1 var(--body); font-variant-numeric: tabular-nums; }
+  .bal button { border: 0; background: var(--white); color: var(--ink); width: 30px; align-self: stretch; font: 900 16px/1 var(--display); cursor: pointer; }
 
-  @media (max-width: 860px) {
-    .page { grid-template-columns: minmax(0, 1fr); gap: 36px; padding-block: 0 32px; }
-    .phone { position: static; height: auto; min-height: 0; border: 0; border-radius: 0; box-shadow: none; overflow: visible; margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px))) calc(-1 * max(16px, env(safe-area-inset-right, 0px))); }
-    .appbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 4; background: var(--bg); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .drops { display: flex; align-items: stretch; gap: 0; border-bottom: 1px solid var(--line); background: #0a0a0a; }
+  .drops .lab { flex: none; display: grid; place-items: center; padding: 0 8px; border-right: 1px solid var(--line); font: 500 8px/1.3 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); text-align: center; }
+  .drops .lab i { display: block; width: 6px; height: 6px; border-radius: 50%; background: var(--white); margin: 0 auto 4px; animation: blink 1.4s infinite; }
+  .dtrack { display: flex; gap: 6px; padding: 7px 6px; overflow: hidden; min-width: 0; }
+  .drop { flex: none; width: 62px; border-radius: 8px; background: var(--surface); border: 1px solid var(--line); padding: 5px 4px 6px; text-align: center; position: relative; overflow: hidden; }
+  .drop.new { animation: dropin .45s cubic-bezier(.2,.9,.3,1.2); }
+  .drop .bar { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: var(--rb); }
+  .drop .bar.black { background: var(--white); height: 2px; }
+  .drop b { display: block; font: 900 13px/1.1 var(--display); }
+  .drop small { display: block; font: 500 9px/1.2 var(--mono); color: var(--muted); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  @keyframes dropin { from { transform: translateX(-30px) scale(.8); opacity: 0; } }
+  @keyframes blink { 50% { opacity: .2; } }
+
+  .screen { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 14px 16px 22px; position: relative; scrollbar-width: none; }
+  .screen::-webkit-scrollbar { display: none; }
+  .tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 8px 14px 12px; border-top: 1px solid var(--line); background: rgba(6,6,6,.94); }
+  .tab { background: none; border: 0; border-radius: 14px; padding: 10px 0; cursor: pointer; color: var(--muted); font: 700 11px/1 var(--display); letter-spacing: .08em; text-transform: uppercase; display: flex; justify-content: center; align-items: center; gap: 8px; }
+  .tab[aria-current="page"] { color: var(--ink); background: var(--white); }
+  .tab svg { width: 18px; height: 18px; }
+  .tab i { min-width: 18px; height: 18px; border-radius: 9px; background: var(--fg); color: var(--ink); font: 800 10px/18px var(--body); font-style: normal; padding: 0 5px; }
+  .tab[aria-current="page"] i { background: var(--ink); color: var(--white); }
+
+  @media (max-width: 880px) {
+    .page { grid-template-columns: minmax(0, 1fr); gap: 40px; padding-block: 0 32px; }
+    .phone { position: relative; height: auto; min-height: 0; border: 0; border-radius: 0; box-shadow: none; overflow: visible; margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px))) calc(-1 * max(16px, env(safe-area-inset-right, 0px))); }
+    .head { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 6; background: var(--bg); }
+    .top { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
     body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
-    .screen { overflow: visible; min-height: 560px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
-    .tabs { position: sticky; bottom: 0; z-index: 4; padding-bottom: calc(6px + env(safe-area-inset-bottom, 0px)); padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); }
+    .screen { overflow: visible; min-height: 620px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+    .tabs { position: sticky; bottom: 0; z-index: 6; padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px)); padding-left: max(14px, env(safe-area-inset-left, 0px)); padding-right: max(14px, env(safe-area-inset-right, 0px)); }
+    .modal { position: fixed; z-index: 20; }
   }
 
-  /* Shared bits */
-  .kicker { font: 700 11px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin: 0; }
-  .h1 { font: 400 36px/1.02 var(--display); margin: 10px 0 0; text-wrap: balance; }
-  .h1 em { font-style: normal; color: var(--mustard); }
-  .sub { color: var(--muted); margin: 10px 0 0; }
-  .cta { width: 100%; border: 0; border-radius: 14px; padding: 15px 18px; background: var(--mustard); color: var(--ink); font-weight: 800; font-size: 16px; cursor: pointer; }
-  .cta.ghost { background: transparent; color: var(--fg); border: 1.5px solid var(--line); font-weight: 700; }
-  .cta:active { transform: scale(.98); }
-  .back { background: none; border: 0; color: var(--muted); padding: 4px 0; cursor: pointer; font-weight: 600; font-size: 14px; }
-  .fine { font-size: 12px; color: var(--muted); text-align: center; margin: 8px 0 0; }
+  /* ---------- Shared ---------- */
+  .kicker { font: 500 10px/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin: 0; }
+  .title { font: 900 22px/1.08 var(--display); margin: 6px 0 0; text-transform: uppercase; letter-spacing: -.01em; text-wrap: balance; }
+  .btn { width: 100%; border: 0; border-radius: 14px; padding: 15px 16px; background: var(--white); color: var(--ink); font: 900 13px/1 var(--display); letter-spacing: .08em; text-transform: uppercase; cursor: pointer;
+    box-shadow: 0 5px 0 #8f8f8f; transition: transform .08s, box-shadow .08s; text-align: center; text-decoration: none; display: block; }
+  .btn:active { transform: translateY(4px); box-shadow: 0 1px 0 #8f8f8f; }
+  .btn:disabled { opacity: .45; cursor: default; transform: none; }
+  .btn.dark { background: var(--surface-2); color: var(--fg); box-shadow: 0 5px 0 #000, inset 0 0 0 1px var(--line-2); }
+  .btn.dark:active { box-shadow: 0 1px 0 #000, inset 0 0 0 1px var(--line-2); }
+  .back { background: none; border: 0; color: var(--muted); padding: 4px 0; cursor: pointer; font: 500 10px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; }
+  .fine { font-size: 12px; color: var(--muted); text-align: center; margin: 10px 0 0; }
   .fadein { animation: fadein .3s ease-out both; }
   @keyframes fadein { from { opacity: 0; transform: translateY(8px); } }
+  .sec { display: flex; justify-content: space-between; align-items: baseline; margin: 22px 0 10px; }
+  .sec h2 { font: 700 12px/1 var(--display); letter-spacing: .08em; text-transform: uppercase; margin: 0; }
+  .sec small { font: 500 10px/1 var(--mono); color: var(--muted); letter-spacing: .1em; text-transform: uppercase; }
 
-  /* Home */
-  .packs { display: grid; gap: 10px; margin-top: 22px; }
-  .prow { display: grid; grid-template-columns: 46px minmax(0, 1fr) auto; gap: 14px; align-items: center; text-align: left; background: var(--surface); border: 1.5px solid var(--line); border-radius: 16px; padding: 12px 14px; cursor: pointer; }
-  .prow:hover { border-color: var(--muted); }
-  .pmini { width: 46px; height: 62px; border-radius: 7px; background: var(--pk); position: relative; box-shadow: 0 6px 14px rgba(0,0,0,.35); }
-  .pmini::before { content: ""; position: absolute; left: 0; right: 0; top: 10px; border-top: 1.5px dashed rgba(17,26,22,.45); }
-  .prow b { display: block; font-size: 17px; font-weight: 700; }
-  .prow small { display: block; color: var(--muted); font-size: 13px; line-height: 1.35; }
-  .prow .pr { text-align: right; }
-  .prow .pr b { font-size: 20px; color: var(--mustard); font-variant-numeric: tabular-nums; }
-  .prow .pr small { font-size: 11px; }
-  .free { margin-top: 12px; }
-  .steps { margin: 26px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; counter-reset: s; }
-  .steps li { counter-increment: s; background: var(--surface); border-radius: 12px; padding: 10px; font-size: 12px; color: var(--muted); line-height: 1.35; }
-  .steps li::before { content: counter(s); display: block; font: 400 22px/1 var(--display); color: var(--mustard); margin-bottom: 6px; }
-  .steps li b { display: block; color: var(--fg); font-size: 13px; }
+  /* ---------- Home ---------- */
+  .hero { position: relative; border-radius: 20px; overflow: hidden; background: radial-gradient(80% 120% at 85% 50%, #2a2a2a, #0c0c0c 60%); border: 1px solid var(--line-2); padding: 18px; display: grid; grid-template-columns: minmax(0, 1fr) 92px; gap: 10px; align-items: center; }
+  .hero .title { font-size: 21px; margin: 6px 0 0; }
+  .hero p { margin: 8px 0 0; color: var(--muted); font-size: 13px; line-height: 1.4; }
+  .hero svg { width: 92px; height: 92px; filter: drop-shadow(0 0 24px rgba(255,255,255,.4)); animation: bob 3.4s ease-in-out infinite; }
+  .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .pcard { position: relative; border-radius: 18px; background: var(--surface); border: 1px solid var(--line); padding: 12px 10px 10px; text-align: center; cursor: pointer; display: grid; gap: 8px; justify-items: center; overflow: hidden; }
+  .pcard::before { content: ""; position: absolute; inset: 0 0 40%; background: radial-gradient(60% 70% at 50% 60%, rgba(255,255,255,.1), transparent 70%); }
+  .pcard:hover { border-color: var(--line-2); }
+  .pcard:hover .pack { transform: translateY(-4px) rotate(-2deg); }
+  .pcard .tag { position: absolute; top: 9px; left: 9px; font: 500 8px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; background: var(--white); color: var(--ink); padding: 4px 6px; border-radius: 5px; z-index: 1; }
+  .pcard b { font: 800 14px/1.1 var(--body); position: relative; }
+  .pcard small { font-size: 11px; color: var(--muted); margin-top: -6px; position: relative; }
+  .pcard .price { width: 100%; border-radius: 10px; background: var(--white); color: var(--ink); font: 900 13px/1 var(--display); padding: 9px 0; position: relative; font-variant-numeric: tabular-nums; }
+  .pcard.free .price { background: transparent; color: var(--fg); box-shadow: inset 0 0 0 1px var(--line-2); }
 
-  .p-quick { --pk: var(--ketchup); --pk-ink: #fff4e6; }
-  .p-sitdown { --pk: var(--mustard); --pk-ink: var(--ink); }
-  .p-treat { --pk: var(--cream); --pk-ink: #1c1a16; }
-
-  /* Pack screen */
-  .packstage { display: grid; place-items: center; padding: 22px 0 10px; min-height: 360px; position: relative; }
-  .pack { position: relative; width: 210px; max-width: 100%; aspect-ratio: 2 / 3; border: 0; padding: 0; cursor: pointer; background: none; transition: transform .2s ease, filter .3s; }
-  .pack:hover { transform: translateY(-5px) rotate(-1.2deg); }
+  /* ---------- Pack art ---------- */
+  .pack { position: relative; width: 84px; aspect-ratio: 5 / 7.4; transition: transform .2s; display: block; }
   .pack .flap, .pack .body { position: absolute; left: 0; right: 0; display: block; background: var(--pk); }
-  .pack .flap { top: 0; height: 16%; border-radius: 14px 14px 0 0; border-bottom: 2px dashed rgba(17, 26, 22, .45); display: flex; align-items: center; justify-content: center; }
-  .pack .flap::before { content: "TEAR HERE"; font: 700 9px/1 var(--mono); letter-spacing: .3em; color: var(--pk-ink); opacity: .7; }
-  .pack .body { top: 16%; bottom: 0; border-radius: 0 0 14px 14px; padding: 18px 16px; text-align: left; color: var(--pk-ink); overflow: hidden; }
-  .pack .body::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(-45deg, rgba(255,255,255,.07) 0 10px, transparent 10px 20px); }
-  .pack .body::after { content: ""; position: absolute; inset: 0; background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,.35) 45%, transparent 60%); transform: translateX(-100%); animation: sheen 3.6s ease-in-out infinite; }
-  .p-treat .body { box-shadow: inset 0 0 0 6px var(--cream), inset 0 0 0 7px #b8962e; }
-  @keyframes sheen { 60%, 100% { transform: translateX(100%); } }
-  .pack .set { position: relative; display: block; font: 700 10px/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; opacity: .75; }
-  .pack .pname { position: relative; display: block; font: 400 30px/1 var(--display); margin-top: 10px; }
-  .pack .meta { position: relative; display: block; font-size: 13px; margin-top: 10px; opacity: .85; }
-  .pack .guar { position: absolute; left: 16px; right: 16px; bottom: 16px; font: 700 10px/1.3 var(--mono); letter-spacing: .1em; text-transform: uppercase; opacity: .8; }
-  .pack.shake { animation: shake .6s ease-in-out; }
-  .pack.tease { filter: drop-shadow(0 0 22px var(--mustard)) drop-shadow(0 0 6px var(--mustard)); }
-  .pack.open .flap { animation: flap .55s ease-in forwards; }
-  .pack.open .body { animation: sink .5s .35s ease-in forwards; }
-  @keyframes shake { 0%,100% { transform: rotate(0) } 15% { transform: rotate(-5deg) } 30% { transform: rotate(5deg) } 45% { transform: rotate(-4deg) } 60% { transform: rotate(4deg) } 75% { transform: rotate(-2deg) } }
-  @keyframes flap { to { transform: translate(60px, -140px) rotate(28deg); opacity: 0; } }
-  @keyframes sink { to { transform: translateY(90px); opacity: 0; } }
+  .pack .flap { top: 0; height: 13%; border-radius: 8px 8px 2px 2px; }
+  .pack .flap::after { content: ""; position: absolute; left: 7%; right: 7%; bottom: -1px; border-bottom: 1.5px dotted var(--pk-line); }
+  .pack .body { top: 13%; bottom: 0; border-radius: 2px 2px 8px 8px; overflow: hidden; display: grid; justify-items: center; align-content: center; gap: 4px; color: var(--pk-ink); }
+  .pack .body::after { content: ""; position: absolute; inset: 0; background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,.55) 48%, transparent 60%); transform: translateX(-120%); animation: sheen 3.6s ease-in-out infinite; mix-blend-mode: overlay; }
+  .pack .body svg { width: 46%; height: auto; aspect-ratio: 1; position: relative; }
+  .pack .pn { position: relative; font: 900 7px/1.1 var(--display); text-transform: uppercase; letter-spacing: .06em; padding: 0 4px; text-align: center; }
+  .pack .frame { position: absolute; inset: 5px; border: 1px solid var(--pk-line); border-radius: 4px; pointer-events: none; }
+  .pack.big { width: 120px; }
+  .pack.big .pn { font-size: 9px; }
+  @keyframes sheen { 55%, 100% { transform: translateX(120%); } }
+  @keyframes bob { 50% { transform: translateY(-6px); } }
+  .pk-quick { --pk: linear-gradient(160deg, #ffffff, #d9d9d9); --pk-ink: #0a0a0a; --pk-line: rgba(0,0,0,.25); --hat: #0a0a0a; --pleat: #e8e8e8; }
+  .pk-sitdown { --pk: linear-gradient(160deg, #f4f4f4 0%, #9a9a9a 35%, #e9e9e9 55%, #777 80%, #cfcfcf 100%); --pk-ink: #0a0a0a; --pk-line: rgba(0,0,0,.3); --hat: #0a0a0a; --pleat: #bdbdbd; }
+  .pk-treat { --pk: linear-gradient(160deg, #1f1f1f, #040404); --pk-ink: #fff; --pk-line: rgba(255,255,255,.55); }
+  .pk-treat .body, .pk-treat .flap { box-shadow: inset 0 0 0 1px rgba(255,255,255,.2); }
+  .pk-free { --pk: repeating-linear-gradient(135deg, #141414 0 6px, #1c1c1c 6px 12px); --pk-ink: #fff; --pk-line: rgba(255,255,255,.35); }
+  .pk-free .body, .pk-free .flap { box-shadow: inset 0 0 0 1px rgba(255,255,255,.25); }
 
-  .odds { margin-top: 8px; background: var(--surface); border-radius: 14px; padding: 12px 14px; display: grid; gap: 7px; }
-  .odds .orow { display: grid; grid-template-columns: minmax(0, 1fr) auto; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
-  .odds .orow b { color: var(--fg); font-weight: 600; }
-  .odds .orow.base b { color: var(--basil); }
-  .odds .orow.up b { color: var(--mustard); }
-  .checkout { margin-top: 14px; display: grid; gap: 8px; }
-  .lines { display: grid; gap: 4px; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
-  .lines div { display: flex; justify-content: space-between; }
-  .lines .tot { color: var(--fg); font-weight: 700; font-size: 15px; border-top: 1px solid var(--line); padding-top: 6px; margin-top: 2px; }
+  /* ---------- Pack page ---------- */
+  .phead { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px; align-items: center; margin-top: 8px; }
+  .phead .title { font-size: 20px; }
+  .phead p { margin: 4px 0 0; font-size: 13px; color: var(--muted); }
+  .phead p b { color: var(--fg); }
+  .reel { position: relative; margin-top: 16px; height: 132px; border-radius: 16px; background: #000; border: 1px solid var(--line-2); overflow: hidden; }
+  .reel::before, .reel::after { content: ""; position: absolute; top: 0; bottom: 0; width: 60px; z-index: 2; pointer-events: none; }
+  .reel::before { left: 0; background: linear-gradient(90deg, #000, transparent); }
+  .reel::after { right: 0; background: linear-gradient(-90deg, #000, transparent); }
+  .marker { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: var(--white); z-index: 3; box-shadow: 0 0 12px #fff; }
+  .marker::before, .marker::after { content: ""; position: absolute; left: 50%; margin-left: -7px; border: 7px solid transparent; }
+  .marker::before { top: 0; border-top-color: var(--white); }
+  .marker::after { bottom: 0; border-bottom-color: var(--white); }
+  .strip { position: absolute; top: 12px; left: 0; display: flex; gap: 8px; will-change: transform; }
+  .tile { flex: none; width: 92px; height: 106px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); position: relative; overflow: hidden; display: grid; align-content: center; justify-items: center; gap: 2px; padding: 6px; text-align: center; }
+  .tile::before { content: ""; position: absolute; inset: auto 0 0; height: 55%; background: var(--rb); opacity: .14; }
+  .tile .bar { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: var(--rb); }
+  .tile.r-black { background: #000; border-color: #fff; }
+  .tile.r-black .bar { background: #fff; }
+  .tile .ti { font: 900 22px/1 var(--display); position: relative; }
+  .tile .tv { font: 800 15px/1 var(--body); position: relative; margin-top: 4px; font-variant-numeric: tabular-nums; }
+  .tile .tn { font: 500 8px/1.2 var(--mono); color: var(--muted); position: relative; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; letter-spacing: .04em; }
+  .tile.hit { border-color: var(--white); box-shadow: 0 0 22px rgba(255,255,255,.45); }
 
-  /* Reveal */
-  .reveal { display: grid; gap: 14px; padding-top: 6px; perspective: 900px; }
-  .tonight { text-align: center; }
-  .tonight .h1 { font-size: 30px; margin-top: 6px; }
-  .rcard { position: relative; border-radius: 20px; padding: 18px; background: radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--pk) 30%, var(--surface)), var(--surface) 75%); border: 2px solid var(--pk); box-shadow: 0 24px 50px rgba(0,0,0,.45); animation: rise .8s cubic-bezier(.2,.9,.25,1.1) both; overflow: hidden; }
-  .rcard.up { border-color: var(--mustard); box-shadow: 0 24px 50px rgba(0,0,0,.45), 0 0 60px -6px var(--mustard); }
-  .rcard .top { display: flex; justify-content: space-between; align-items: start; gap: 10px; }
-  .rcard .mono { font: 400 46px/1 var(--display); color: var(--pk); text-shadow: 0 3px 0 rgba(0,0,0,.35); }
-  .rcard.up .mono { color: var(--mustard); }
-  .rcard .tag { font: 700 10px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--line); border-radius: 99px; padding: 6px 8px; white-space: nowrap; }
-  .rcard .rname { font-size: 24px; font-weight: 800; line-height: 1.1; margin-top: 18px; text-wrap: balance; }
-  .rcard .rmeta { color: var(--muted); font-size: 14px; margin-top: 4px; }
-  .rcard .rval { display: flex; align-items: baseline; gap: 8px; margin-top: 16px; }
-  .rcard .rval b { font: 800 44px/1 var(--body); font-variant-numeric: tabular-nums; }
-  .rcard .rval span { color: var(--muted); font-size: 14px; }
-  .rcard .was { color: var(--muted); text-decoration: line-through; font-size: 16px; }
-  .ribbon { position: absolute; top: 16px; right: -38px; transform: rotate(35deg); background: var(--mustard); color: var(--ink); font: 700 10px/1 var(--mono); letter-spacing: .14em; padding: 7px 44px; }
-  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .row2 .cta { padding: 13px 10px; font-size: 14px; text-align: center; text-decoration: none; display: block; }
-  .saved { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; color: var(--basil); font-weight: 600; }
-  @keyframes rise { from { transform: translateY(80px) rotateY(160deg) scale(.8); opacity: 0; } 50% { opacity: 1; } to { transform: none; } }
-  .confetti { position: absolute; top: -16px; width: 8px; height: 14px; border-radius: 2px; animation: fall linear forwards; pointer-events: none; z-index: 3; }
-  @keyframes fall { to { transform: translateY(700px) rotate(800deg); } }
+  .openrow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; margin-top: 14px; }
+  .openrow .btn.dark { width: auto; padding-inline: 16px; }
+  .opts { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; font-size: 12px; color: var(--muted); }
+  .toggle { display: flex; align-items: center; gap: 8px; background: none; border: 0; color: var(--muted); cursor: pointer; font: 500 10px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; padding: 0; }
+  .toggle .sw { width: 30px; height: 18px; border-radius: 9px; background: var(--surface-2); border: 1px solid var(--line-2); position: relative; transition: background .2s; }
+  .toggle .sw::after { content: ""; position: absolute; top: 2px; left: 2px; width: 12px; height: 12px; border-radius: 50%; background: var(--muted); transition: transform .2s, background .2s; }
+  .toggle[aria-pressed="true"] { color: var(--fg); }
+  .toggle[aria-pressed="true"] .sw { background: var(--white); }
+  .toggle[aria-pressed="true"] .sw::after { transform: translateX(12px); background: var(--ink); }
+  .opts .fee { font-variant-numeric: tabular-nums; }
 
-  /* Free spin */
-  .spinbox { margin-top: 18px; background: var(--surface); border-radius: 20px; padding: 18px; text-align: center; border: 1px solid var(--line); }
-  .spinbox .rname { font-size: 26px; font-weight: 800; line-height: 1.1; margin-top: 8px; }
-  .spinbox .rmeta { color: var(--muted); font-size: 14px; margin-top: 4px; }
-  .spinning .rname { filter: blur(1.5px); opacity: .6; }
+  .contents { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .item { border-radius: 14px; background: var(--surface); border: 1px solid var(--line); padding: 10px; display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 10px; align-items: center; position: relative; overflow: hidden; }
+  .item .sw { width: 28px; height: 38px; border-radius: 5px; background: var(--rb); }
+  .item.r-black .sw { box-shadow: inset 0 0 0 1px #fff; }
+  .item b { display: block; font: 900 15px/1 var(--display); font-variant-numeric: tabular-nums; }
+  .item small { display: block; font-size: 11px; color: var(--muted); margin-top: 4px; }
+  .item .odds { position: absolute; top: 8px; right: 9px; font: 500 10px/1 var(--mono); color: var(--fg); }
+  .spots { display: flex; flex-wrap: wrap; gap: 6px; }
+  .spots span { font-size: 12px; padding: 6px 9px; border-radius: 99px; border: 1px solid var(--line); color: var(--muted); }
 
-  /* Wallet */
-  .wlist { display: grid; gap: 10px; margin-top: 16px; }
-  .wcard { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--pk); border-radius: 14px; overflow: hidden; }
-  .whead { width: 100%; display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 12px 14px; background: none; border: 0; text-align: left; cursor: pointer; }
-  .whead .wm { font: 400 22px/1 var(--display); color: var(--pk); }
-  .whead b { display: block; font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .whead small { color: var(--muted); font-size: 12px; }
-  .whead .wv { font-weight: 800; font-size: 18px; font-variant-numeric: tabular-nums; }
-  .wbody { padding: 0 14px 14px; display: grid; gap: 8px; justify-items: center; }
-  .barcode { width: 100%; height: 64px; background: var(--cream); border-radius: 8px; padding: 8px 12px; display: flex; gap: 2px; align-items: stretch; }
-  .barcode i { background: #111; display: block; }
-  .wbody code { font: 700 13px/1 var(--mono); letter-spacing: .12em; color: var(--mustard); user-select: all; }
-  .empty { margin-top: 16px; border: 1.5px dashed var(--line); border-radius: 16px; padding: 22px 16px; text-align: center; color: var(--muted); }
-  .empty b { display: block; color: var(--fg); font-size: 16px; margin-bottom: 4px; }
+  /* ---------- Win modal ---------- */
+  .modal { position: absolute; inset: 0; z-index: 8; background: rgba(0,0,0,.82); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); display: grid; place-items: center; padding: 20px; overflow-y: auto; animation: fadein .25s both; }
+  .win { width: 100%; max-width: 330px; display: grid; gap: 12px; justify-items: center; position: relative; }
+  .win .whd { text-align: center; }
+  .win .whd .title { font-size: 22px; animation: pop .45s 1s both; }
+  .win .whd .kicker { animation: pop .45s .9s both; }
+  @keyframes pop { from { transform: scale(.5); opacity: 0; } }
+  .stage3d { perspective: 1100px; }
+  .card3d { position: relative; width: 220px; aspect-ratio: 5 / 7; transform-style: preserve-3d; animation: flipin 1.1s cubic-bezier(.25,.9,.3,1.05) both; }
+  @keyframes flipin { 0% { transform: translateY(60px) rotateY(180deg) scale(.6); } 55% { transform: translateY(-6px) rotateY(-14deg) scale(1.04); } 100% { transform: none; } }
+  .face, .cback { position: absolute; inset: 0; border-radius: 16px; backface-visibility: hidden; -webkit-backface-visibility: hidden; overflow: hidden; }
+  .cback { transform: rotateY(180deg); background: radial-gradient(circle, #1e1e1e, #000 70%); border: 1px solid #333; display: grid; place-items: center; }
+  .cback svg { width: 70px; height: 70px; }
+  .face { padding: 15px; display: flex; flex-direction: column; color: var(--c-ink); background: var(--c-bg); box-shadow: 0 30px 60px rgba(0,0,0,.6), 0 0 var(--glow, 0) rgba(255,255,255,.4); }
+  .face .ftop { display: flex; justify-content: space-between; align-items: center; }
+  .face .ftop svg { width: 26px; height: 26px; }
+  .face .rar { font: 500 9px/1 var(--mono); letter-spacing: .18em; text-transform: uppercase; border: 1px solid currentColor; border-radius: 99px; padding: 5px 8px; opacity: .85; }
+  .face .mono { font: 900 54px/1 var(--display); margin-top: 20px; letter-spacing: -.03em; }
+  .face .rn { font: 800 18px/1.15 var(--body); margin-top: auto; text-wrap: balance; }
+  .face .rm { font-size: 12px; opacity: .65; margin-top: 3px; }
+  .face .rv { display: flex; align-items: baseline; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--c-line); }
+  .face .rv b { font: 900 32px/1 var(--display); font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+  .face .rv s { opacity: .5; font-size: 14px; }
+  .face .rv span { font: 500 9px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; opacity: .65; margin-left: auto; }
+  .face > * { position: relative; }
+  .c-standard { --c-bg: #fafafa; --c-ink: #0a0a0a; --c-line: rgba(0,0,0,.12); --hat: #0a0a0a; --pleat: #fafafa; }
+  .c-foil { --c-bg: linear-gradient(150deg, #f7f7f7 0%, #a5a5a5 30%, #f2f2f2 52%, #8a8a8a 75%, #e0e0e0 100%); --c-ink: #0a0a0a; --c-line: rgba(0,0,0,.18); --glow: 40px; --hat: #0a0a0a; --pleat: #cfcfcf; }
+  .c-holo { --c-bg: #f6f6f6; --c-ink: #0a0a0a; --c-line: rgba(0,0,0,.14); --glow: 60px; --hat: #0a0a0a; --pleat: #f6f6f6; }
+  .c-holo::before { content: ""; position: absolute; inset: 0; background: var(--r-holo); background-size: 220% 220%; animation: holo 3.5s ease-in-out infinite alternate; opacity: .9; }
+  .c-foil::after, .c-holo::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,.75) 45%, transparent 58%); background-size: 260% 100%; animation: shine 2.6s linear infinite; mix-blend-mode: overlay; }
+  .c-black { --c-bg: radial-gradient(120% 80% at 50% 0%, #242424, #000 65%); --c-ink: #fff; --c-line: rgba(255,255,255,.2); --glow: 80px; border: 1px solid rgba(255,255,255,.6); }
+  .c-black .mono, .c-black .rv b { background: linear-gradient(100deg, #8a8a8a, #fff 40%, #9a9a9a 60%, #fff); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: shine 2.4s linear infinite; }
+  @keyframes shine { from { background-position: 130% 0; } to { background-position: -130% 0; } }
+  @keyframes holo { to { background-position: 100% 100%; } }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; animation: pop .4s 1.15s both; }
+  .chip { font: 900 11px/1 var(--display); letter-spacing: .08em; background: var(--white); color: var(--ink); padding: 8px 11px; border-radius: 99px; }
+  .chip.o { background: transparent; color: var(--fg); box-shadow: inset 0 0 0 1px var(--white); }
+  .wacts { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; animation: fadein .4s 1.25s both; }
+  .wacts .btn { padding: 13px 6px; font-size: 11px; }
+  .wacts .full { grid-column: 1 / -1; }
+  .spark { position: absolute; left: 50%; top: 42%; width: 6px; height: 6px; border-radius: 1px; background: var(--white); pointer-events: none; z-index: 3; animation: burst var(--t) cubic-bezier(.15,.7,.3,1) forwards; box-shadow: 0 0 8px #fff; }
+  @keyframes burst { from { transform: translate(-50%, -50%); opacity: 1; } to { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(.2) rotate(240deg); opacity: 0; } }
 
-  /* Plan column */
-  .plan { display: grid; gap: 34px; min-width: 0; padding-top: 6px; }
+  /* ---------- Wallet ---------- */
+  .wlist { display: grid; gap: 10px; margin-top: 14px; }
+  .wcard { border-radius: 16px; overflow: hidden; border: 1px solid var(--line); background: var(--surface); }
+  .whead { width: 100%; display: grid; grid-template-columns: 26px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 12px 14px; background: none; border: 0; text-align: left; cursor: pointer; }
+  .whead .sw { width: 24px; height: 34px; border-radius: 5px; background: var(--rb); }
+  .whead .sw.black { box-shadow: inset 0 0 0 1px #fff; }
+  .whead b { display: block; font-size: 15px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .whead small { color: var(--muted); font: 500 10px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+  .whead .wv { font: 900 16px/1 var(--display); font-variant-numeric: tabular-nums; }
+  .wbody { padding: 0 14px 14px; display: grid; gap: 10px; justify-items: center; }
+  .barcode { width: 100%; height: 66px; background: var(--white); border-radius: 10px; padding: 9px 12px; display: flex; align-items: stretch; }
+  .barcode i { background: #000; display: block; }
+  .wbody code { font: 500 13px/1 var(--mono); letter-spacing: .16em; user-select: all; }
+  .empty { margin-top: 14px; border: 1px dashed var(--line-2); border-radius: 18px; padding: 26px 16px; text-align: center; color: var(--muted); display: grid; justify-items: center; gap: 8px; }
+  .empty svg { width: 44px; height: 44px; opacity: .5; }
+  .empty b { color: var(--fg); font: 700 13px/1 var(--display); text-transform: uppercase; letter-spacing: .06em; }
+
+  /* ---------- Plan column ---------- */
+  .plan { display: grid; gap: 38px; min-width: 0; padding-top: 10px; }
   .plan section { min-width: 0; }
-  .plan h2 { font: 700 11px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin: 0 0 12px; }
-  .pitch { font: 400 clamp(34px, 5vw, 46px)/1.04 var(--display); margin: 0; text-wrap: balance; }
-  .pitch em { font-style: normal; color: var(--mustard); }
-  .lede { color: var(--muted); margin: 14px 0 0; max-width: 58ch; font-size: 16px; }
+  .plan h2 { font: 500 11px/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin: 0 0 14px; }
+  .pitch { font: 900 clamp(32px, 4.8vw, 50px)/1 var(--display); margin: 0; text-transform: uppercase; letter-spacing: -.02em; text-wrap: balance; }
+  .pitch span { color: var(--muted); }
+  .lede { color: var(--muted); margin: 16px 0 0; max-width: 58ch; font-size: 16px; }
   .lede strong { color: var(--fg); font-weight: 600; }
-  .shift { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
-  .shift > div { background: var(--surface); padding: 14px 16px; }
-  .shift h3 { margin: 0 0 8px; font: 700 11px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; }
-  .shift .was h3 { color: var(--muted); }
-  .shift .now h3 { color: var(--basil); }
-  .shift ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; font-size: 14px; color: var(--muted); }
-  .shift .now ul { color: var(--fg); }
-  @media (max-width: 520px) { .shift { grid-template-columns: minmax(0, 1fr); } }
+  .loop { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
+  .loop > div { background: var(--surface); padding: 14px; }
+  .loop b { display: block; font: 700 12px/1.2 var(--display); text-transform: uppercase; letter-spacing: .04em; margin-top: 8px; }
+  .loop span { font: 500 10px/1 var(--mono); color: var(--muted); letter-spacing: .1em; }
+  .loop p { margin: 6px 0 0; font-size: 13px; color: var(--muted); line-height: 1.4; }
+  @media (max-width: 560px) { .loop { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   .points { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; }
-  .points li { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 14px; font-size: 14px; }
-  .points li b { font: 700 11px/1.5 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--mustard); }
+  .points li { display: grid; grid-template-columns: 130px minmax(0, 1fr); gap: 14px; font-size: 14px; }
+  .points li b { font: 500 11px/1.6 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--fg); }
   .points li span { color: var(--muted); }
   .points li span strong { color: var(--fg); font-weight: 600; }
   @media (max-width: 460px) { .points li { grid-template-columns: minmax(0, 1fr); gap: 2px; } }
-  .tablebox { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; }
+  .tablebox { overflow-x: auto; border: 1px solid var(--line); border-radius: 16px; }
   table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: 14px; }
-  td { padding: 9px 14px; border-bottom: 1px solid var(--line); }
+  td { padding: 10px 14px; border-bottom: 1px solid var(--line); }
   td:last-child { text-align: right; white-space: nowrap; }
-  tr.sum td { font-weight: 700; color: var(--fg); background: var(--surface); }
-  tr.good td:last-child { color: var(--basil); }
+  tr:last-child td { border-bottom: 0; }
+  tr.sum td { font-weight: 700; background: var(--surface); }
+  tr.best td { background: var(--white); color: var(--ink); font-weight: 800; }
   td small { color: var(--muted); display: block; font-size: 12px; }
-  .note { font-size: 13px; color: var(--muted); margin: 10px 0 0; max-width: 62ch; }
-  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
-  .chips span { font-size: 13px; padding: 6px 10px; border-radius: 99px; background: var(--surface); border: 1px solid var(--line); color: var(--muted); }
+  .note { font-size: 13px; color: var(--muted); margin: 12px 0 0; max-width: 62ch; }
+  .note strong { color: var(--fg); font-weight: 600; }
   footer { grid-column: 1 / -1; color: var(--muted); font-size: 12px; text-align: center; }
 
   @media (prefers-reduced-motion: reduce) {
@@ -213,48 +287,66 @@
   }
 </style>
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="hat" viewBox="0 0 32 32">
+      <path style="fill:var(--hat,#fff)" d="M9.2 23.2v-6.1a6 6 0 0 1-.6-11.4 7.4 7.4 0 0 1 14.8 0 6 6 0 0 1-.6 11.4v6.1z"/>
+      <path style="stroke:var(--pleat,#060606)" stroke-width="1.4" stroke-linecap="round" d="M13 17.6v4.1M16 16.8v4.9M19 17.6v4.1" fill="none"/>
+      <rect style="fill:var(--hat,#fff)" x="9.2" y="24.4" width="13.6" height="3.4" rx="1.2"/>
+    </symbol>
+  </defs>
+</svg>
+
 <div class="page">
   <div class="phone" id="phone">
-    <div class="appbar">
-      <div class="logo">Chef <span>Pack</span></div>
-      <div class="loc">Austin, TX</div>
+    <div class="head">
+      <div class="top">
+        <div class="brand"><svg aria-hidden="true"><use href="#hat"/></svg><b>CHEF PACK</b></div>
+        <div class="right">
+          <div class="lvl" id="lvl" title="Chef rank"><b id="lvlNum">2</b><span class="xp"><i id="xpfill" style="width:40%"></i></span></div>
+          <div class="bal"><span id="bal">$250.00</span><button id="add" type="button" aria-label="Add $50 demo funds">+</button></div>
+        </div>
+      </div>
+      <div class="drops" aria-label="Live drops, simulated">
+        <div class="lab"><i></i>Live<br>drops</div>
+        <div class="dtrack" id="drops"></div>
+      </div>
     </div>
     <div class="screen" id="screen"></div>
-    <nav class="tabs" aria-label="App">
-      <button class="tab" id="tabTonight" type="button">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3v8a2 2 0 0 0 2 2v8"/><path d="M5 3v5a2 2 0 0 0 2 2h0"/><path d="M11 3v5a2 2 0 0 1-2 2"/><path d="M17 21V3c-2 1.5-3 4-3 7s1 4 3 4"/></svg>
-        Tonight
+    <nav class="tabs" aria-label="Game">
+      <button class="tab" id="tabPlay" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M5 7h14"/><path d="m10 12 2 2 2-2"/></svg>Packs
       </button>
       <button class="tab" id="tabWallet" type="button">
-        <span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/><path d="M7 15h3"/></svg><i id="wcount" hidden></i></span>
-        Wallet
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></svg>Wallet<i id="wcount" hidden></i>
       </button>
     </nav>
   </div>
 
   <div class="plan">
     <section>
-      <p class="pitch">Can't decide on dinner? <em>Rip a pack.</em></p>
-      <p class="lede">Every couple, group chat and roommate pair has the same fight: <strong>"I don't care, you pick."</strong> Chef Pack settles it. Pick a vibe and pay, and the app picks the restaurant and hands you a gift card for it, <strong>always worth at least what you paid</strong>. Sometimes it's upgraded.</p>
+      <p class="pitch">Can't decide on dinner? <span>Rip a pack.</span></p>
+      <p class="lede">Chef Pack plays like a pack-opening site: live drops, a spinning reel, rarity tiers. Every pull is a real restaurant gift card for tonight, <strong>always worth at least the pack price</strong>, and some are Foil, Holo or Black Label upgrades.</p>
     </section>
 
     <section>
-      <h2>What changed from the first idea</h2>
-      <div class="shift">
-        <div class="was"><h3>Pack-rip casino</h3><ul><li>Most packs worth less than you paid</li><li>Sell-back loop to keep ripping</li><li>Gambling law in most states</li><li>Payment processors and app stores push back</li></ul></div>
-        <div class="now"><h3>Dinner decider</h3><ul><li>Every pack worth at least the price</li><li>You eat the card tonight</li><li>The rip is the fun part, the meal is the product</li><li>Restaurants pay to be in packs</li></ul></div>
+      <h2>The game loop</h2>
+      <div class="loop">
+        <div><span>STEP 1</span><b>Pick a pack</b><p>Quick Bite, Sit-Down, Treat Yourself, or the free pick</p></div>
+        <div><span>STEP 2</span><b>Spin the reel</b><p>Cards fly past and slow onto the line</p></div>
+        <div><span>STEP 3</span><b>Flip the card</b><p>Restaurant, card value, rarity, plus XP</p></div>
+        <div><span>STEP 4</span><b>Go eat</b><p>Scan the card from your wallet</p></div>
       </div>
     </section>
 
     <section>
-      <h2>The MVP: four screens</h2>
+      <h2>Borrowed from pack-opening sites · changed for food</h2>
       <ul class="points">
-        <li><b>Tonight</b><span>Three packs (Quick Bite, Sit-Down, Treat Yourself) plus a <strong>free "just pick for me"</strong> spin that brings people in.</span></li>
-        <li><b>Pack</b><span>The guarantee, the upgrade odds, and one button. Apple Pay or a card.</span></li>
-        <li><b>Reveal</b><span>The rip, then where you're eating, how far it is, and the card value. Directions in one tap, plus one swap allowed if you're not feeling it.</span></li>
-        <li><b>Wallet</b><span>Your cards with a barcode to show at the register.</span></li>
+        <li><b>Kept</b><span>Live drops strip, pack grid with price buttons, horizontal reel, demo spins, fast spin, pack contents with odds, rarity tiers.</span></li>
+        <li><b>Changed</b><span>Every item in a pack is worth <strong>at least the pack price</strong>, so nobody pulls less than they paid. A pull becomes dinner tonight.</span></li>
+        <li><b>Left out of v1</b><span>Sell-back, battles, deposit bonuses. These are the parts that make pack sites look like gambling.</span></li>
+        <li><b>Chef ranks</b><span>XP from every pack: Dishwasher, Prep Cook, Line Cook, Sous Chef, Head Chef, Executive Chef.</span></li>
       </ul>
-      <p class="note">Left out of v1: sell-back, pack battles, live pull feeds, leaderboards and local independents. Each one waits until people are buying packs again.</p>
     </section>
 
     <section>
@@ -264,213 +356,201 @@
           <tbody>
             <tr><td>Customer pays<small>$40 pack + $1.99 service fee</small></td><td>$41.99</td></tr>
             <tr><td>Base gift card<small>$40 card, about 5% off through a gift card API</small></td><td>−$38.00</td></tr>
-            <tr><td>Upgrades<small>Average cost of the 12% of packs that get one</small></td><td>−$2.50</td></tr>
+            <tr><td>Upgrades<small>Average cost of Foil, Holo and Black Label</small></td><td>−$2.50</td></tr>
             <tr><td>Card processing<small>About 3%</small></td><td>−$1.26</td></tr>
             <tr class="sum"><td>Margin before restaurant deals</td><td>$0.23</td></tr>
             <tr><td>Restaurant promo fee<small>Paid by the restaurant for each new guest we send</small></td><td>+$4.00</td></tr>
-            <tr class="sum good"><td>Margin with a restaurant deal</td><td>$4.23</td></tr>
+            <tr class="best"><td>Margin with a restaurant deal</td><td>$4.23</td></tr>
           </tbody>
         </table>
       </div>
-      <p class="note">These are assumptions to check. The real business is <strong style="color:var(--fg)">sending new customers to restaurants</strong>. They already give DoorDash and Groupon 15–30% for that. At launch, v1 only has to prove people will buy packs. Restaurant deals are what make it profitable.</p>
-    </section>
-
-    <section>
-      <h2>Who it's for, and how they hear about it</h2>
-      <div class="chips"><span>Couples on date night</span><span>Roommates</span><span>Friend groups</span><span>Gift givers</span><span>Office lunch</span></div>
-      <ul class="points" style="margin-top:14px">
-        <li><b>TikTok</b><span>Rip-reaction videos: "We let a pack pick our date night."</span></li>
-        <li><b>Gifting</b><span>Send a pack to someone. They rip it on their phone.</span></li>
-        <li><b>Friday Pack</b><span>A weekly subscription with one pack every Friday at 5pm.</span></li>
-      </ul>
+      <p class="note">These are assumptions to check. The real business is <strong>sending new customers to restaurants</strong>. v1 only has to prove people will open packs. Restaurant deals are what make it profitable.</p>
     </section>
 
     <section>
       <h2>Prove it in 6 weeks</h2>
       <ul class="points">
-        <li><b>Weeks 1–2</b><span>Landing page and short videos with a waitlist. Goal: <strong>500 signups</strong> in one city.</span></li>
-        <li><b>Weeks 3–6</b><span>Test build for <strong>50 people</strong>, national chains only, gift cards delivered by hand or through Tremendous or Tango Card.</span></li>
-        <li><b>What to watch</b><span>Free spin → paid pack rate, <strong>second purchase within 30 days</strong>, and whether cards actually get redeemed.</span></li>
+        <li><b>Weeks 1–2</b><span>Landing page and rip-reaction TikToks. Goal: <strong>500 waitlist signups</strong> in one city.</span></li>
+        <li><b>Weeks 3–6</b><span>Test build for <strong>50 players</strong>, national chains only, cards sent through Tremendous or Tango Card.</span></li>
+        <li><b>What to watch</b><span>Demo spin → paid pack rate, <strong>second pack within 30 days</strong>, and cards actually redeemed.</span></li>
       </ul>
     </section>
   </div>
 
-  <footer>Demo only. No charges, and the gift cards and codes aren't real. Restaurant names are examples with no affiliation implied. The upgrade bonus still involves chance, so have a promotions attorney review it before launch.</footer>
+  <footer>Demo only. The balance is play money, live drops are simulated, and the gift cards and codes aren't real. Restaurant names are examples with no affiliation implied. The upgrade bonus involves chance, so have a promotions attorney review it before launch.</footer>
 </div>
 
 <script>
 const PACKS = [
-  { id: "quick", cls: "p-quick", name: "Quick Bite", price: 15, blurb: "Fast casual, in and out",
-    tiers: [{ v: 15, o: 88 }, { v: 20, o: 10 }, { v: 40, o: 1.8 }, { v: 100, o: 0.2 }],
+  { id: "quick", name: "Quick Bite", price: 15, blurb: "Fast casual, in and out", tag: "Popular",
+    tiers: [15, 20, 40, 100],
     spots: [
-      { n: "Chipotle", c: "Mexican", d: "0.6 mi", h: "Open until 10 PM" },
-      { n: "Chick-fil-A", c: "Chicken", d: "1.1 mi", h: "Open until 10 PM" },
-      { n: "Shake Shack", c: "Burgers", d: "2.3 mi", h: "Open until 11 PM" },
-      { n: "Panera", c: "Bakery café", d: "0.9 mi", h: "Open until 9 PM" },
-      { n: "Five Guys", c: "Burgers", d: "1.8 mi", h: "Open until 10 PM" },
-      { n: "Raising Cane's", c: "Chicken fingers", d: "1.4 mi", h: "Open until 2 AM" } ] },
-  { id: "sitdown", cls: "p-sitdown", name: "Sit-Down", price: 40, blurb: "Grab a table, stay a while",
-    tiers: [{ v: 40, o: 88 }, { v: 50, o: 10 }, { v: 100, o: 1.8 }, { v: 250, o: 0.2 }],
+      { n: "Chipotle", c: "Mexican", d: "0.6 mi" }, { n: "Chick-fil-A", c: "Chicken", d: "1.1 mi" },
+      { n: "Shake Shack", c: "Burgers", d: "2.3 mi" }, { n: "Panera", c: "Bakery café", d: "0.9 mi" },
+      { n: "Five Guys", c: "Burgers", d: "1.8 mi" }, { n: "Raising Cane's", c: "Chicken fingers", d: "1.4 mi" } ] },
+  { id: "sitdown", name: "Sit-Down", price: 40, blurb: "Grab a table, stay a while", tag: "Date night",
+    tiers: [40, 50, 100, 250],
     spots: [
-      { n: "Olive Garden", c: "Italian", d: "3.2 mi", h: "Open until 10 PM" },
-      { n: "Outback Steakhouse", c: "Steakhouse", d: "4.0 mi", h: "Open until 10 PM" },
-      { n: "Texas Roadhouse", c: "Steakhouse", d: "5.1 mi", h: "Open until 10 PM" },
-      { n: "The Cheesecake Factory", c: "American", d: "6.4 mi", h: "Open until 11 PM" },
-      { n: "P.F. Chang's", c: "Asian", d: "3.7 mi", h: "Open until 10 PM" },
-      { n: "Chili's", c: "Tex-Mex", d: "2.2 mi", h: "Open until 11 PM" } ] },
-  { id: "treat", cls: "p-treat", name: "Treat Yourself", price: 100, blurb: "Steaks, sushi, the good wine",
-    tiers: [{ v: 100, o: 88 }, { v: 125, o: 10 }, { v: 200, o: 1.8 }, { v: 500, o: 0.2 }],
+      { n: "Olive Garden", c: "Italian", d: "3.2 mi" }, { n: "Outback Steakhouse", c: "Steakhouse", d: "4.0 mi" },
+      { n: "Texas Roadhouse", c: "Steakhouse", d: "5.1 mi" }, { n: "The Cheesecake Factory", c: "American", d: "6.4 mi" },
+      { n: "P.F. Chang's", c: "Asian", d: "3.7 mi" }, { n: "Chili's", c: "Tex-Mex", d: "2.2 mi" } ] },
+  { id: "treat", name: "Treat Yourself", price: 100, blurb: "Steaks, sushi, the good wine", tag: "Premium",
+    tiers: [100, 125, 200, 500],
     spots: [
-      { n: "Ruth's Chris", c: "Steakhouse", d: "4.8 mi", h: "Open until 10 PM" },
-      { n: "The Capital Grille", c: "Steakhouse", d: "5.5 mi", h: "Open until 10 PM" },
-      { n: "Fogo de Chão", c: "Brazilian", d: "5.9 mi", h: "Open until 10 PM" },
-      { n: "Eddie V's", c: "Seafood", d: "6.2 mi", h: "Open until 11 PM" },
-      { n: "Fleming's", c: "Steakhouse", d: "7.0 mi", h: "Open until 10 PM" } ] }
+      { n: "Ruth's Chris", c: "Steakhouse", d: "4.8 mi" }, { n: "The Capital Grille", c: "Steakhouse", d: "5.5 mi" },
+      { n: "Fogo de Chão", c: "Brazilian", d: "5.9 mi" }, { n: "Eddie V's", c: "Seafood", d: "6.2 mi" },
+      { n: "Fleming's", c: "Steakhouse", d: "7.0 mi" } ] },
+  { id: "free", name: "Free Pick", price: 0, blurb: "Can't decide? Spin for a spot", tag: "Daily", free: true, tiers: [], spots: [] }
 ];
-const FEE = 1.99, SWAP = 2;
+PACKS[3].spots = PACKS.slice(0, 3).flatMap(p => p.spots);
+const RARITY = [
+  { id: "standard", name: "Standard", odds: 88, bg: "var(--r-standard)" },
+  { id: "foil", name: "Foil", odds: 10, bg: "var(--r-foil)" },
+  { id: "holo", name: "Holo", odds: 1.8, bg: "var(--r-holo)" },
+  { id: "black", name: "Black Label", odds: 0.2, bg: "var(--r-black)" }
+];
+const RANKS = ["Dishwasher", "Prep Cook", "Line Cook", "Sous Chef", "Head Chef", "Executive Chef"];
+const LEVEL_AT = [0, 50, 150, 300, 500, 800];
+const FEE = 1.99, SWAP = 2, TILE = 100, WIN_AT = 42;
+const HANDLES = ["grillmaster_j", "sauceboss", "medium_rare", "lilbiscuit", "brisketbae", "frybaby", "thecheflo", "nacho_avg", "ramen_rae", "wingking"];
 
 const $ = id => document.getElementById(id);
 const money = (n, c = false) => "$" + (c ? n.toFixed(2) : Math.round(n).toLocaleString());
 const packOf = id => PACKS.find(p => p.id === id);
 const initials = n => n.replace(/^The /, "").replace(/[^A-Za-z\s-]/g, "").split(/[\s-]+/).filter(Boolean).slice(0, 2).map(w => w[0]).join("").toUpperCase();
-const upOdds = p => p.tiers.slice(1).reduce((a, t) => a + t.o, 0);
 const maps = n => "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(n + " near Austin, TX");
+const hat = () => `<svg viewBox="0 0 32 32" aria-hidden="true"><use href="#hat"/></svg>`;
+const levelOf = xp => { let l = 0; LEVEL_AT.forEach((t, i) => { if (xp >= t) l = i; }); return l; };
+const rand = a => a[Math.floor(Math.random() * a.length)];
 
 let S, busy = false;
-const fresh = () => ({ screen: "home", packId: null, result: null, wallet: [], open: null, spin: null });
-function save() { try { localStorage.setItem("chefpack.mvp.v1", JSON.stringify({ wallet: S.wallet })); } catch (e) {} }
-function load() { try { const s = JSON.parse(localStorage.getItem("chefpack.mvp.v1")); return s && Array.isArray(s.wallet) ? s : null; } catch (e) { return null; } }
+const fresh = () => ({ screen: "home", packId: "sitdown", wallet: [], open: null, xp: 60, balance: 250, fast: false, win: null });
+function save() { try { localStorage.setItem("chefpack.reel.v1", JSON.stringify({ wallet: S.wallet, xp: S.xp, balance: S.balance })); } catch (e) {} }
+function load() { try { const s = JSON.parse(localStorage.getItem("chefpack.reel.v1")); return s && Array.isArray(s.wallet) ? s : null; } catch (e) { return null; } }
 
-function drawValue(p) {
+function drawRarity() {
   let roll = Math.random() * 100;
-  for (const t of p.tiers) if ((roll -= t.o) < 0) return t.v;
-  return p.tiers[0].v;
+  for (let i = 0; i < RARITY.length; i++) if ((roll -= RARITY[i].odds) < 0) return i;
+  return 0;
 }
-const pickSpot = (p, not) => { const pool = p.spots.filter(s => s.n !== not); return pool[Math.floor(Math.random() * pool.length)]; };
+// Filler tiles on the reel over-show upgrades so near misses fly past, the way pack sites do. The real odds are in drawRarity.
+const fillerRarity = () => { const r = Math.random(); return r < .6 ? 0 : r < .85 ? 1 : r < .96 ? 2 : 3; };
 const code = () => Array.from({ length: 3 }, () => Math.random().toString(36).slice(2, 6).toUpperCase()).join("-");
 
-function go(screen, extra = {}) { Object.assign(S, { screen }, extra); render(); const sc = $("screen"); sc.scrollTop = 0; }
-
-function render() {
-  const sc = $("screen");
-  $("tabTonight").setAttribute("aria-current", S.screen === "wallet" ? "false" : "page");
-  $("tabWallet").setAttribute("aria-current", S.screen === "wallet" ? "page" : "false");
+/* ---------- Header + live drops ---------- */
+function renderHud() {
+  const l = levelOf(S.xp), next = LEVEL_AT[l + 1];
+  $("lvlNum").textContent = l + 1;
+  $("lvl").title = `${RANKS[l]} · ${S.xp}${next ? " / " + next : ""} XP`;
+  $("xpfill").style.width = next ? ((S.xp - LEVEL_AT[l]) / (next - LEVEL_AT[l]) * 100) + "%" : "100%";
+  $("bal").textContent = money(S.balance, true);
   const wc = $("wcount"); wc.hidden = !S.wallet.length; wc.textContent = S.wallet.length;
-  sc.innerHTML = ({ home: home, pack: pack, reveal: reveal, spin: spin, wallet: wallet })[S.screen]();
-  bind[S.screen]?.();
+}
+function dropTile(d, isNew) {
+  return `<div class="drop ${isNew ? "new" : ""}" title="${d.who} pulled ${money(d.value)} ${d.n}"><b>${initials(d.n)}</b><small>${money(d.value)}</small><span class="bar ${d.r === 3 ? "black" : ""}" style="background:${d.r === 3 ? "" : RARITY[d.r].bg}"></span></div>`;
+}
+function fakeDrop() {
+  const p = rand(PACKS.slice(0, 3)), r = fillerRarity();
+  return { who: rand(HANDLES), n: rand(p.spots).n, value: p.tiers[r], r };
+}
+function pushDrop(d) {
+  const t = $("drops");
+  t.insertAdjacentHTML("afterbegin", dropTile(d, true));
+  while (t.children.length > 12) t.lastElementChild.remove();
 }
 
-/* Screens */
+/* ---------- Router ---------- */
+function go(screen, extra = {}) { Object.assign(S, { screen }, extra); render(); $("screen").scrollTop = 0; }
+function render() {
+  $("tabPlay").setAttribute("aria-current", S.screen === "wallet" ? "false" : "page");
+  $("tabWallet").setAttribute("aria-current", S.screen === "wallet" ? "page" : "false");
+  renderHud();
+  $("screen").innerHTML = ({ home, pack, wallet })[S.screen]();
+  bind[S.screen]?.();
+  closeModal();
+  if (S.win) showWin(S.win, false);
+}
+
+const packArt = (p, big = false) => `<span class="pack pk-${p.id} ${big ? "big" : ""}"><span class="flap"></span><span class="body"><span class="frame"></span>${hat()}<span class="pn">${p.name}</span></span></span>`;
+
+/* ---------- Screens ---------- */
 function home() {
   return `<div class="fadein">
-    <p class="kicker">Tonight · 6:42 PM</p>
-    <h1 class="h1">Can't decide on <em>dinner?</em></h1>
-    <p class="sub">Pick a vibe and rip a pack. We'll pick the spot, and the gift card is always worth at least what you paid.</p>
-    <div class="packs">
+    <div class="hero">
+      <div><p class="kicker">Tonight · Austin, TX</p><h1 class="title">Can't decide on dinner?</h1><p>Open a pack. Every pull is a gift card worth at least the pack price.</p></div>
+      ${hat()}
+    </div>
+    <div class="sec"><h2>Packs</h2><small>${PACKS.length} available</small></div>
+    <div class="grid">
       ${PACKS.map(p => `
-        <button class="prow ${p.cls}" type="button" data-pack="${p.id}">
-          <span class="pmini"></span>
-          <span><b>${p.name}</b><small>${p.blurb} · ${p.spots.length} spots near you</small></span>
-          <span class="pr"><b>${money(p.price)}</b><small>${Math.round(upOdds(p))}% upgrade</small></span>
+        <button class="pcard ${p.free ? "free" : ""}" type="button" data-pack="${p.id}">
+          <span class="tag">${p.tag}</span>
+          ${packArt(p)}
+          <b>${p.name}</b><small>${p.free ? "No card, just a pick" : `Cards ${money(p.tiers[0])} to ${money(p.tiers[3])}`}</small>
+          <span class="price">${p.free ? "Free" : money(p.price)}</span>
         </button>`).join("")}
     </div>
-    <button class="cta ghost free" id="free" type="button">Just pick a place for me (free)</button>
-    <ol class="steps">
-      <li><b>Pick a vibe</b>Quick, sit-down or fancy</li>
-      <li><b>Rip the pack</b>We pick the spot</li>
-      <li><b>Go eat</b>Card's in your wallet</li>
-    </ol>
   </div>`;
+}
+
+function reelTiles(p, win) {
+  const tiles = [];
+  for (let i = 0; i < WIN_AT + 6; i++) {
+    const t = i === WIN_AT ? win : (p.free ? { spot: rand(p.spots), r: 0 } : { spot: rand(p.spots), r: fillerRarity() });
+    tiles.push(tile(p, t, i === WIN_AT));
+  }
+  return tiles.join("");
+}
+function tile(p, t, isWin) {
+  const r = RARITY[t.r];
+  return `<div class="tile r-${r.id} ${isWin ? "wintile" : ""}" style="--rb:${r.bg}">
+    <span class="ti">${initials(t.spot.n)}</span>
+    ${p.free ? `<span class="tn">${t.spot.c}</span>` : `<span class="tv">${money(p.tiers[t.r])}</span>`}
+    <span class="tn">${t.spot.n}</span><span class="bar"></span></div>`;
 }
 
 function pack() {
   const p = packOf(S.packId);
+  const idle = Array.from({ length: 10 }, () => tile(p, { spot: rand(p.spots), r: p.free ? 0 : fillerRarity() }, false)).join("");
   return `<div class="fadein">
-    <button class="back" id="back" type="button">← Back</button>
-    <div class="packstage" id="stage">
-      <button class="pack ${p.cls}" id="pack" type="button" aria-label="Rip the ${p.name} pack">
-        <span class="flap"></span>
-        <span class="body">
-          <span class="set">Chef Pack · Tonight</span>
-          <span class="pname">${p.name}</span>
-          <span class="meta">${p.blurb}</span>
-          <span class="guar">At least a ${money(p.price)} card<br>${p.spots.length} spots near you</span>
-        </span>
-      </button>
+    <button class="back" id="back" type="button">← All packs</button>
+    <div class="phead">
+      ${packArt(p, true)}
+      <div><p class="kicker">${p.tag}</p><h1 class="title">${p.name}</h1>
+        <p>${p.blurb}<br>${p.free ? `<b>${p.spots.length} spots</b> to pick from` : `<b>${money(p.price)}+</b> guaranteed · ${p.spots.length} spots`}</p></div>
     </div>
-    <div class="odds">
-      <div class="orow base"><span>Guaranteed card</span><b>${money(p.tiers[0].v)}+</b></div>
-      ${p.tiers.slice(1).map(t => `<div class="orow up"><span>Upgrade to ${money(t.v)}</span><b>${t.o}%</b></div>`).join("")}
+    <div class="reel" id="reel"><div class="marker"></div><div class="strip" id="strip">${idle}</div></div>
+    ${p.free
+      ? `<div class="openrow" style="grid-template-columns:1fr"><button class="btn" id="open" type="button">Spin for dinner · Free</button></div>`
+      : `<div class="openrow"><button class="btn" id="open" type="button">Open · ${money(p.price + FEE, true)}</button><button class="btn dark" id="demo" type="button">Demo</button></div>`}
+    <div class="opts">
+      <button class="toggle" id="fast" type="button" aria-pressed="${S.fast}"><span class="sw"></span>Fast spin</button>
+      ${p.free ? `<span>Once a day</span>` : `<span class="fee">${money(p.price)} + ${money(FEE, true)} fee</span>`}
     </div>
-    <div class="checkout">
-      <div class="lines">
-        <div><span>${p.name} pack</span><span>${money(p.price, true)}</span></div>
-        <div><span>Service fee</span><span>${money(FEE, true)}</span></div>
-        <div class="tot"><span>Total</span><span>${money(p.price + FEE, true)}</span></div>
-      </div>
-      <button class="cta" id="buy" type="button">Pay &amp; rip · ${money(p.price + FEE, true)}</button>
-      <p class="fine">Demo, no charge. Tap the pack or the button.</p>
-    </div>
-  </div>`;
-}
-
-function reveal() {
-  const r = S.result, p = packOf(r.packId), s = r.spot, up = r.value > p.price;
-  return `<div class="reveal">
-    <div class="tonight">
-      <p class="kicker">${up ? "Upgraded!" : "Tonight you're eating at"}</p>
-      <h1 class="h1">${up ? `<em>${money(r.value)}</em> card` : "Fate has spoken."}</h1>
-    </div>
-    <div class="rcard ${p.cls} ${up ? "up" : ""}">
-      ${up ? `<div class="ribbon">UPGRADE</div>` : ""}
-      <div class="top"><span class="mono">${initials(s.n)}</span>${up ? "" : `<span class="tag">${p.name}</span>`}</div>
-      <div class="rname">${s.n}</div>
-      <div class="rmeta">${s.c} · ${s.d} · ${s.h}</div>
-      <div class="rval"><b>${money(r.value)}</b>${up ? `<span class="was">${money(p.price)}</span>` : ""}<span>gift card</span></div>
-    </div>
-    <div class="saved"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Saved to your wallet</div>
-    <div class="row2">
-      <a class="cta" href="${maps(s.n)}" target="_blank" rel="noopener">Directions</a>
-      <button class="cta ghost" id="wallet" type="button">Show my card</button>
-    </div>
-    ${r.swapped ? `<p class="fine">You used your swap on this pack.</p>`
-      : `<button class="cta ghost" id="swap" type="button">Not feeling it? Swap the restaurant · ${money(SWAP)}</button>
-         <p class="fine">Same card value, different restaurant. One swap per pack.</p>`}
-  </div>`;
-}
-
-function spin() {
-  const s = S.spin;
-  return `<div class="fadein">
-    <button class="back" id="back" type="button">← Back</button>
-    <p class="kicker" style="margin-top:12px">Free pick</p>
-    <h1 class="h1">How about…</h1>
-    <div class="spinbox" id="spinbox">
-      <div class="rname" id="sname">${s.spot.n}</div>
-      <div class="rmeta" id="smeta">${s.spot.c} · ${s.spot.d} · ${s.spot.h}</div>
-    </div>
-    <div class="checkout">
-      <button class="cta" id="topack" type="button">Get it paid for: ${packOf(s.packId).name} pack · ${money(packOf(s.packId).price)}</button>
-      <button class="cta ghost" id="again" type="button">Pick again</button>
-      <p class="fine">Free picks just suggest a place. A pack gets you the gift card.</p>
-    </div>
+    ${p.free ? "" : `
+    <div class="sec"><h2>Pack contents</h2><small>Odds per open</small></div>
+    <div class="contents">
+      ${RARITY.map((r, i) => `<div class="item r-${r.id}" style="--rb:${r.bg}"><span class="sw"></span><span><b>${money(p.tiers[i])}</b><small>${r.name} card</small></span><span class="odds">${r.odds}%</span></div>`).join("")}
+    </div>`}
+    <div class="sec"><h2>Restaurants in this pack</h2><small>${p.spots.length}</small></div>
+    <div class="spots">${p.spots.map(s => `<span>${s.n}</span>`).join("")}</div>
   </div>`;
 }
 
 function wallet() {
   if (!S.wallet.length) return `<div class="fadein">
-    <p class="kicker">Wallet</p><h1 class="h1">Your cards</h1>
-    <div class="empty"><b>No cards yet</b>Rip a pack on the Tonight tab and your gift card shows up here, ready to scan.</div>
-    <div class="checkout"><button class="cta" id="tohome" type="button">Find dinner</button></div>
+    <p class="kicker">Wallet</p><h1 class="title">Your cards</h1>
+    <div class="empty">${hat()}<b>No cards yet</b>Open a pack and your gift card lands here, ready to scan.</div>
+    <div style="margin-top:16px"><button class="btn" id="toHome" type="button">Browse packs</button></div>
   </div>`;
   return `<div class="fadein">
-    <p class="kicker">Wallet · ${S.wallet.length} card${S.wallet.length > 1 ? "s" : ""}</p><h1 class="h1">Your cards</h1>
+    <p class="kicker">Wallet · ${S.wallet.length} card${S.wallet.length > 1 ? "s" : ""}</p><h1 class="title">Your cards</h1>
     <div class="wlist">
       ${S.wallet.map((w, i) => `
-        <div class="wcard ${packOf(w.packId).cls}">
+        <div class="wcard">
           <button class="whead" type="button" data-i="${i}" aria-expanded="${S.open === i}">
-            <span class="wm">${initials(w.n)}</span>
-            <span style="min-width:0"><b>${w.n}</b><small>${w.c} · ${w.d}</small></span>
+            <span class="sw ${w.r === 3 ? "black" : ""}" style="--rb:${RARITY[w.r].bg}"></span>
+            <span style="min-width:0"><b>${w.n}</b><small>${RARITY[w.r].name} · ${w.d}</small></span>
             <span class="wv">${money(w.value)}</span>
           </button>
           ${S.open === i ? `<div class="wbody">${barcode(w.code)}<code>${w.code}</code><p class="fine" style="margin:0">Show this at the register. Demo code, not redeemable.</p></div>` : ""}
@@ -480,89 +560,148 @@ function wallet() {
 }
 
 function barcode(c) {
-  let seed = [...c].reduce((a, ch) => a * 31 + ch.charCodeAt(0) >>> 0, 7), bars = "";
-  for (let i = 0; i < 46; i++) { seed = (seed * 1103515245 + 12345) >>> 0; const w = 1 + (seed >>> 16) % 3; bars += `<i style="flex:${w} 0 0"></i>${i % 2 ? "" : `<span style="flex:${1 + (seed >>> 20) % 2} 0 0"></span>`}`; }
+  let seed = [...c].reduce((a, ch) => (a * 31 + ch.charCodeAt(0)) >>> 0, 7), bars = "";
+  for (let i = 0; i < 46; i++) { seed = (seed * 1103515245 + 12345) >>> 0; bars += `<i style="flex:${1 + (seed >>> 16) % 3} 0 0"></i><span style="flex:${1 + (seed >>> 20) % 2} 0 0"></span>`; }
   return `<div class="barcode" aria-label="Barcode">${bars}</div>`;
 }
 
-/* Interactions */
+/* ---------- Spin ---------- */
+function spin(demo) {
+  if (busy) return;
+  const p = packOf(S.packId);
+  if (!p.free && !demo && S.balance < p.price + FEE) { $("open").textContent = "Add funds with + up top"; return; }
+  busy = true;
+  if (!p.free && !demo) { S.balance -= p.price + FEE; renderHud(); }
+  const r = p.free ? 0 : drawRarity(), spot = rand(p.spots);
+  const strip = $("strip"), reel = $("reel");
+  strip.style.transition = "none"; strip.style.transform = "translateX(0)";
+  strip.innerHTML = reelTiles(p, { spot, r });
+  strip.offsetWidth;
+  const center = reel.clientWidth / 2, jitter = (Math.random() - .5) * 70;
+  const x = WIN_AT * TILE + 46 - center + jitter;
+  const dur = S.fast ? 1.6 : 5.2;
+  strip.style.transition = `transform ${dur}s cubic-bezier(.06,.55,.12,1)`;
+  strip.style.transform = `translateX(-${x}px)`;
+  $("screen").querySelectorAll("#open, #demo").forEach(b => b.disabled = true);
+  setTimeout(() => {
+    strip.querySelector(".wintile")?.classList.add("hit");
+    setTimeout(() => finish(p, r, spot, demo), 450);
+  }, dur * 1000 + 50);
+}
+
+function finish(p, r, spot, demo) {
+  busy = false;
+  if (p.free) { S.win = { free: true, packId: p.id, spot, r: 0 }; showWin(S.win, true); return; }
+  const value = p.tiers[r];
+  let xp = 0, levelUp = 0;
+  if (!demo) {
+    const before = levelOf(S.xp); xp = p.price + r * 25; S.xp += xp;
+    const after = levelOf(S.xp); if (after > before) levelUp = after;
+    S.wallet.unshift({ packId: p.id, r, value, n: spot.n, c: spot.c, d: spot.d, code: code() });
+    save(); renderHud();
+    pushDrop({ who: "you", n: spot.n, value, r });
+  }
+  S.win = { packId: p.id, r, value, spot, xp, levelUp, demo, swapped: false };
+  showWin(S.win, true);
+}
+
+/* ---------- Win modal ---------- */
+function closeModal() { document.querySelectorAll(".modal").forEach(m => m.remove()); }
+function cardFace(w) {
+  const p = packOf(w.packId), rar = RARITY[w.r], up = w.r > 0;
+  return `<div class="face c-${rar.id}">
+    <div class="ftop">${hat()}<span class="rar">${w.free ? "Free pick" : rar.name}</span></div>
+    <div class="mono">${initials(w.spot.n)}</div>
+    <div class="rn">${w.spot.n}</div>
+    <div class="rm">${w.spot.c} · ${w.spot.d} · open tonight</div>
+    ${w.free ? `<div class="rv"><b style="font-size:20px">Tonight?</b><span>No card</span></div>`
+      : `<div class="rv"><b>${money(w.value)}</b>${up ? `<s>${money(p.price)}</s>` : ""}<span>Gift card</span></div>`}
+  </div>`;
+}
+function showWin(w, fresh) {
+  closeModal();
+  const p = packOf(w.packId), rar = RARITY[w.r];
+  const head = w.free ? "How about…" : w.r === 3 ? "Black Label!" : w.r === 2 ? "Holo pull!" : w.r === 1 ? "Foil upgrade!" : "Fate has spoken";
+  const host = window.matchMedia("(max-width: 880px)").matches ? document.body : $("phone");
+  const m = document.createElement("div");
+  m.className = "modal"; m.setAttribute("role", "dialog"); m.setAttribute("aria-modal", "true"); m.setAttribute("aria-label", head);
+  const paid = PACKS.find(x => x.spots.some(s => s.n === w.spot.n) && !x.free);
+  m.innerHTML = `<div class="win" id="win" style="${fresh ? "" : "--skip:1"}">
+    <div class="whd"><p class="kicker">${w.demo ? "Demo spin · not saved" : w.swapped ? "Swapped · same value" : w.free ? "Free pick" : "Tonight you're eating at"}</p><h2 class="title">${head}</h2></div>
+    <div class="stage3d"><div class="card3d">${cardFace(w)}<div class="cback">${hat()}</div></div></div>
+    ${w.free || w.demo ? "" : `<div class="chips"><span class="chip">+${w.xp} XP</span>${w.levelUp ? `<span class="chip o">Rank up · ${RANKS[w.levelUp]}</span>` : ""}</div>`}
+    <div class="wacts">
+      ${w.free
+        ? `<button class="btn full" id="wPaid" type="button">Get it paid for · ${paid.name} ${money(paid.price)}</button>
+           <button class="btn dark" id="wAgain" type="button">Spin again</button><button class="btn dark" id="wClose" type="button">Close</button>`
+        : w.demo
+        ? `<button class="btn full" id="wReal" type="button">Open for real · ${money(p.price + FEE, true)}</button><button class="btn dark full" id="wClose" type="button">Close</button>`
+        : `<a class="btn" href="${maps(w.spot.n)}" target="_blank" rel="noopener">Directions</a>
+           <button class="btn dark" id="wWallet" type="button">My card</button>
+           ${w.swapped ? `<p class="fine full" style="margin:0">Swap used on this pack.</p>` : `<button class="btn dark full" id="wSwap" type="button">Swap restaurant · ${money(SWAP)}</button>`}
+           <button class="btn dark full" id="wClose" type="button">Open another</button>`}
+    </div>
+  </div>`;
+  host.appendChild(m);
+  const done = () => { S.win = null; closeModal(); };
+  m.querySelector("#wClose").onclick = done;
+  m.addEventListener("click", e => { if (e.target === m) done(); });
+  const q = id => m.querySelector("#" + id);
+  if (q("wWallet")) q("wWallet").onclick = () => { S.win = null; go("wallet", { open: 0 }); };
+  if (q("wPaid")) q("wPaid").onclick = () => { S.win = null; go("pack", { packId: paid.id }); };
+  if (q("wAgain")) q("wAgain").onclick = () => { done(); spin(false); };
+  if (q("wReal")) q("wReal").onclick = () => { done(); spin(false); };
+  if (q("wSwap")) q("wSwap").onclick = () => {
+    const pool = p.spots.filter(s => s.n !== w.spot.n);
+    w.spot = rand(pool); w.swapped = true; w.levelUp = 0;
+    Object.assign(S.wallet[0], { n: w.spot.n, c: w.spot.c, d: w.spot.d });
+    save(); showWin(w, true);
+  };
+  if (fresh) sparks(m.querySelector("#win"), w.free ? 16 : w.r === 0 ? 24 : w.r === 1 ? 60 : 120);
+  q("wClose").focus({ preventScroll: true });
+}
+
+function sparks(host, n) {
+  for (let i = 0; i < n; i++) {
+    const s = document.createElement("i");
+    s.className = "spark";
+    const a = Math.random() * Math.PI * 2, d = 80 + Math.random() * 220;
+    s.style.setProperty("--dx", Math.cos(a) * d + "px"); s.style.setProperty("--dy", Math.sin(a) * d + "px");
+    s.style.setProperty("--t", .8 + Math.random() * .9 + "s");
+    s.style.animationDelay = .5 + Math.random() * .25 + "s";
+    if (Math.random() < .4) { s.style.width = "3px"; s.style.height = "3px"; }
+    host.appendChild(s);
+    setTimeout(() => s.remove(), 2400);
+  }
+}
+
+/* ---------- Bindings ---------- */
 const bind = {
-  home() {
-    $("screen").querySelectorAll("[data-pack]").forEach(b => b.onclick = () => go("pack", { packId: b.dataset.pack }));
-    $("free").onclick = () => { const p = PACKS[Math.floor(Math.random() * PACKS.length)]; go("spin", { spin: { packId: p.id, spot: pickSpot(p) } }); };
-  },
+  home() { $("screen").querySelectorAll("[data-pack]").forEach(b => b.onclick = () => go("pack", { packId: b.dataset.pack })); },
   pack() {
-    $("back").onclick = () => go("home");
-    $("pack").onclick = rip; $("buy").onclick = rip;
-  },
-  reveal() {
-    $("wallet").onclick = () => go("wallet", { open: 0 });
-    const sw = $("swap");
-    if (sw) sw.onclick = () => {
-      const r = S.result, p = packOf(r.packId), spot = pickSpot(p, r.spot.n);
-      r.spot = spot; r.swapped = true;
-      Object.assign(S.wallet[0], { n: spot.n, c: spot.c, d: spot.d });
-      save(); render();
-    };
-  },
-  spin() {
-    $("back").onclick = () => go("home");
-    $("topack").onclick = () => go("pack", { packId: S.spin.packId });
-    $("again").onclick = () => {
-      const box = $("spinbox"); box.classList.add("spinning");
-      let n = 0;
-      const tick = setInterval(() => {
-        const p = PACKS[Math.floor(Math.random() * PACKS.length)], s = pickSpot(p);
-        $("sname").textContent = s.n; $("smeta").textContent = `${s.c} · ${s.d} · ${s.h}`;
-        if (++n > 9) { clearInterval(tick); S.spin = { packId: p.id, spot: s }; render(); }
-      }, 80);
-    };
+    $("back").onclick = () => { if (!busy) go("home"); };
+    $("open").onclick = () => spin(false);
+    if ($("demo")) $("demo").onclick = () => spin(true);
+    $("fast").onclick = () => { S.fast = !S.fast; $("fast").setAttribute("aria-pressed", S.fast); };
   },
   wallet() {
-    const th = $("tohome"); if (th) th.onclick = () => go("home");
+    const th = $("toHome"); if (th) th.onclick = () => go("home");
     $("screen").querySelectorAll("[data-i]").forEach(b => b.onclick = () => { const i = +b.dataset.i; S.open = S.open === i ? null : i; render(); });
   }
 };
 
-function rip() {
-  if (busy) return;
-  busy = true;
-  const p = packOf(S.packId), value = drawValue(p), spot = pickSpot(p);
-  const el = $("pack");
-  el.classList.add("shake");
-  $("buy").disabled = true; $("buy").textContent = "Ripping…";
-  if (value > p.price) setTimeout(() => el.classList.add("tease"), 250);
-  setTimeout(() => { el.classList.remove("shake"); el.classList.add("open"); }, 650);
-  setTimeout(() => {
-    S.wallet.unshift({ packId: p.id, value, n: spot.n, c: spot.c, d: spot.d, code: code() });
-    save(); busy = false;
-    go("reveal", { result: { packId: p.id, value, spot, swapped: false }, open: null });
-    if (value > p.price) confetti(value >= p.tiers[2].v ? 110 : 45);
-  }, 1350);
-}
-
-function confetti(n) {
-  const cols = ["--mustard", "--ketchup", "--basil", "--cream"], host = $("screen");
-  for (let i = 0; i < n; i++) {
-    const c = document.createElement("div");
-    c.className = "confetti";
-    c.style.left = Math.random() * 100 + "%";
-    c.style.background = `var(${cols[i % cols.length]})`;
-    c.style.animationDuration = 1.4 + Math.random() * 1.6 + "s";
-    c.style.animationDelay = Math.random() * .5 + "s";
-    host.appendChild(c);
-    setTimeout(() => c.remove(), 3800);
-  }
-}
-
 function start(data) {
   S = (data && data.S) || Object.assign(fresh(), load() || {});
-  if (S.screen === "reveal" && !S.result) S.screen = "home";
-  $("tabTonight").onclick = () => go("home");
-  $("tabWallet").onclick = () => go("wallet");
+  busy = false;
+  $("drops").innerHTML = Array.from({ length: 10 }, () => dropTile(fakeDrop(), false)).join("");
+  setInterval(() => { if (!document.hidden) pushDrop(fakeDrop()); }, 2600);
+  $("tabPlay").onclick = () => { if (!busy) { S.win = null; go("home"); } };
+  $("tabWallet").onclick = () => { if (!busy) { S.win = null; go("wallet"); } };
+  $("add").onclick = () => { S.balance += 50; save(); renderHud(); };
+  addEventListener("keydown", e => { if (e.key === "Escape" && S.win) { S.win = null; closeModal(); } });
   render();
 }
-window.claude?.hot?.snapshot?.(() => ({ S }));
+window.claude?.hot?.snapshot?.(() => ({ S: { ...S, win: null } }));
 window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
 </script>
 </body></html>
