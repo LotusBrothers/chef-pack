@@ -49,7 +49,8 @@ Charging money for a chance at a prize of varying value is regulated as gambling
 Get a gaming/sweepstakes attorney involved early. That review will shape the model (cash vs. credit buyback, prize floor, where we can launch). Don't use restaurant logos or imply partnership without permission until brand deals are in place.
 
 ## Open questions
-- [ ] Name and brand
+- [x] Name: **Chef Pack**
+- [ ] Brand identity (logo, colors, domain, trademark search)
 - [ ] Restaurant partnerships (co-marketing, discounted cards) vs. buying cards at retail
 - [ ] Platform: mobile-first web app or native app (app store rules on paid chance mechanics)
 - [ ] Buyback: credit only or a cash option?

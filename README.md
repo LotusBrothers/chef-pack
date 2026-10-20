@@ -1,8 +1,8 @@
-# Rip-a-Plate (working title)
+# Chef Pack
 
 **Test your fate. Rip a pack. Eat like it.**
 
-Rip-a-Plate takes the pack-rip model from apps like PackDraw and Courtyard, where you rip a digital pack and might pull a PSA 10, and applies it to food. Every pack holds a real restaurant gift card. You pick a tier, rip it open, and find out whether you got a $5 Taco Bell card or a $2,000 steakhouse grail.
+Chef Pack takes the pack-rip model from apps like PackDraw and Courtyard, where you rip a digital pack and might pull a PSA 10, and applies it to food. Every pack holds a real restaurant gift card. You pick a tier, rip it open, and find out whether you got a $5 Taco Bell card or a $2,000 steakhouse grail.
 
 ## The core loop
 
@@ -34,4 +34,4 @@ prototype/index.html   Clickable pack-rip demo (play money)
 
 ## Status
 
-This is the concept stage. The name isn't final, and nothing here takes real money yet.
+This is the concept stage. Nothing here takes real money yet.
