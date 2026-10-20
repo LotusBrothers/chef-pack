@@ -7,25 +7,21 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shrikhand&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
 <style>
-  /* Layout: a phone-width app column (the product) beside a "behind the counter" notes column (the business); stacks on phones.
-     World: a late-night kitchen. Cast-iron green ground, mustard as the house color, ketchup for heat, collectible-card rarity colors. */
+  /* Layout: a phone (the MVP app, four screens) beside the product plan; on phones the app is the page and the plan follows it.
+     World: a late-night kitchen. Cast-iron green ground, mustard as the house color, ketchup for heat. */
   :root {
     color-scheme: dark;
     --bg: #111a16;
     --surface: #19241f;
-    --surface-2: #213029;
+    --surface-2: #223129;
     --line: #2d3f36;
     --fg: #f4efe2;
     --muted: #a3b2a9;
     --mustard: #f5b82e;
     --ketchup: #e5482f;
+    --basil: #5fd38d;
     --ink: #111a16;
-
-    --common: #aab4ae;
-    --uncommon: #5fd38d;
-    --rare: #4fa9ff;
-    --epic: #c27dff;
-    --grail: #ffcc3d;
+    --cream: #f2ede1;
 
     --display: "Shrikhand", "Cooper Black", Georgia, serif;
     --body: "Outfit", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -35,458 +31,518 @@
   body { background: var(--bg); color: var(--fg); font: 400 15px/1.5 var(--body); }
   * { box-sizing: border-box; }
   button { font: inherit; color: inherit; }
-  :focus-visible { outline: 2px solid var(--mustard); outline-offset: 3px; border-radius: 6px; }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--mustard); outline-offset: 3px; border-radius: 8px; }
 
-  .wrap { max-width: 1080px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 32px; }
+  .page { max-width: 1060px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 40px;
+    display: grid; grid-template-columns: 390px minmax(0, 1fr); gap: 56px; align-items: start; }
 
-  /* Header */
-  .top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 14px; background: var(--bg); border-bottom: 1px solid var(--line); }
-  body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
-  .logo { font-family: var(--display); font-size: 26px; line-height: 1; color: var(--mustard); letter-spacing: .01em; }
+  /* Phone */
+  .phone { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 20px); height: min(820px, calc(100dvh - 40px)); min-height: 640px; display: flex; flex-direction: column;
+    background: var(--bg); border: 10px solid #050806; border-radius: 46px; box-shadow: 0 0 0 1px var(--line), 0 40px 80px rgba(0,0,0,.55); overflow: hidden; }
+  .appbar { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px 10px; }
+  .logo { font-family: var(--display); font-size: 22px; line-height: 1; color: var(--mustard); }
   .logo span { color: var(--fg); }
-  .wallet { display: flex; align-items: center; gap: 8px; }
-  .credits { background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; }
-  .credits small { color: var(--muted); font-weight: 500; margin-right: 4px; }
-  .topup { background: transparent; border: 1px dashed var(--line); color: var(--muted); border-radius: 999px; padding: 6px 10px; cursor: pointer; font-size: 13px; white-space: nowrap; }
-  .topup:hover { color: var(--fg); border-color: var(--muted); }
+  .loc { font: 600 12px/1 var(--body); color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 99px; padding: 6px 10px; }
+  .screen { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 6px 20px 24px; position: relative; }
+  .tabs { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--line); background: var(--surface); padding-bottom: 6px; }
+  .tab { background: none; border: 0; padding: 12px 0 8px; cursor: pointer; color: var(--muted); font-weight: 600; font-size: 13px; display: grid; justify-items: center; gap: 4px; }
+  .tab[aria-current="page"] { color: var(--mustard); }
+  .tab svg { width: 22px; height: 22px; }
+  .tab .badge { position: relative; }
+  .tab .badge i { position: absolute; top: -4px; right: -10px; min-width: 16px; height: 16px; border-radius: 9px; background: var(--ketchup); color: #fff; font: 700 10px/16px var(--body); font-style: normal; padding: 0 4px; }
 
-  .grid { display: grid; grid-template-columns: minmax(0, 440px) minmax(0, 1fr); gap: 40px; align-items: start; margin-top: 24px; }
-  @media (max-width: 860px) { .grid { grid-template-columns: minmax(0, 1fr); gap: 28px; } }
+  @media (max-width: 860px) {
+    .page { grid-template-columns: minmax(0, 1fr); gap: 36px; padding-block: 0 32px; }
+    .phone { position: static; height: auto; min-height: 0; border: 0; border-radius: 0; box-shadow: none; overflow: visible; margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px))) calc(-1 * max(16px, env(safe-area-inset-right, 0px))); }
+    .appbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 4; background: var(--bg); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+    body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+    .screen { overflow: visible; min-height: 560px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+    .tabs { position: sticky; bottom: 0; z-index: 4; padding-bottom: calc(6px + env(safe-area-inset-bottom, 0px)); padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); }
+  }
 
-  /* Hero */
-  .hero h1 { font-family: var(--display); font-weight: 400; font-size: clamp(38px, 9vw, 52px); line-height: 1.02; margin: 0; text-wrap: balance; }
-  .hero h1 em { font-style: normal; color: var(--mustard); }
-  .hero p { margin: 10px 0 0; color: var(--muted); max-width: 38ch; }
+  /* Shared bits */
+  .kicker { font: 700 11px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin: 0; }
+  .h1 { font: 400 36px/1.02 var(--display); margin: 10px 0 0; text-wrap: balance; }
+  .h1 em { font-style: normal; color: var(--mustard); }
+  .sub { color: var(--muted); margin: 10px 0 0; }
+  .cta { width: 100%; border: 0; border-radius: 14px; padding: 15px 18px; background: var(--mustard); color: var(--ink); font-weight: 800; font-size: 16px; cursor: pointer; }
+  .cta.ghost { background: transparent; color: var(--fg); border: 1.5px solid var(--line); font-weight: 700; }
+  .cta:active { transform: scale(.98); }
+  .back { background: none; border: 0; color: var(--muted); padding: 4px 0; cursor: pointer; font-weight: 600; font-size: 14px; }
+  .fine { font-size: 12px; color: var(--muted); text-align: center; margin: 8px 0 0; }
+  .fadein { animation: fadein .3s ease-out both; }
+  @keyframes fadein { from { opacity: 0; transform: translateY(8px); } }
 
-  /* Ticker */
-  .ticker { margin-top: 18px; border-block: 1px solid var(--line); overflow: hidden; position: relative; padding-block: 8px; }
-  .ticker .label { position: absolute; left: 0; top: 0; bottom: 0; display: flex; align-items: center; padding-right: 10px; padding-right: 22px; background: linear-gradient(90deg, var(--bg) 70%, transparent); z-index: 1; font: 700 10px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ketchup); }
-  .ticker .label::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--ketchup); margin-right: 6px; animation: blink 1.4s infinite; }
-  .track { display: flex; gap: 22px; width: max-content; padding-left: 64px; animation: marquee 38s linear infinite; font-size: 13px; white-space: nowrap; }
-  .track span b { color: var(--r); font-weight: 700; }
-  .track span i { color: var(--muted); font-style: normal; }
-  @keyframes marquee { to { transform: translateX(-50%); } }
-  @keyframes blink { 50% { opacity: .25; } }
+  /* Home */
+  .packs { display: grid; gap: 10px; margin-top: 22px; }
+  .prow { display: grid; grid-template-columns: 46px minmax(0, 1fr) auto; gap: 14px; align-items: center; text-align: left; background: var(--surface); border: 1.5px solid var(--line); border-radius: 16px; padding: 12px 14px; cursor: pointer; }
+  .prow:hover { border-color: var(--muted); }
+  .pmini { width: 46px; height: 62px; border-radius: 7px; background: var(--pk); position: relative; box-shadow: 0 6px 14px rgba(0,0,0,.35); }
+  .pmini::before { content: ""; position: absolute; left: 0; right: 0; top: 10px; border-top: 1.5px dashed rgba(17,26,22,.45); }
+  .prow b { display: block; font-size: 17px; font-weight: 700; }
+  .prow small { display: block; color: var(--muted); font-size: 13px; line-height: 1.35; }
+  .prow .pr { text-align: right; }
+  .prow .pr b { font-size: 20px; color: var(--mustard); font-variant-numeric: tabular-nums; }
+  .prow .pr small { font-size: 11px; }
+  .free { margin-top: 12px; }
+  .steps { margin: 26px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; counter-reset: s; }
+  .steps li { counter-increment: s; background: var(--surface); border-radius: 12px; padding: 10px; font-size: 12px; color: var(--muted); line-height: 1.35; }
+  .steps li::before { content: counter(s); display: block; font: 400 22px/1 var(--display); color: var(--mustard); margin-bottom: 6px; }
+  .steps li b { display: block; color: var(--fg); font-size: 13px; }
 
-  /* Tier chooser */
-  h2 { font: 700 11px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin: 0 0 12px; }
-  .choose { margin-top: 22px; }
-  .tiers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-  .tier { background: var(--surface); border: 1.5px solid var(--line); border-radius: 12px; padding: 10px; text-align: left; cursor: pointer; display: grid; gap: 2px; min-width: 0; }
-  .tier[aria-checked="true"] { border-color: var(--mustard); background: var(--surface-2); }
-  .tier b { font-size: 13px; font-weight: 700; line-height: 1.2; }
-  .tier span { font: 700 18px/1.2 var(--body); color: var(--mustard); font-variant-numeric: tabular-nums; }
-  .tier small { color: var(--muted); font-size: 11px; line-height: 1.3; }
+  .p-quick { --pk: var(--ketchup); --pk-ink: #fff4e6; }
+  .p-sitdown { --pk: var(--mustard); --pk-ink: var(--ink); }
+  .p-treat { --pk: var(--cream); --pk-ink: #1c1a16; }
 
-  /* Stage */
-  .stage { position: relative; margin-top: 14px; min-height: 470px; border-radius: 20px; border: 1px solid var(--line); background:
-      radial-gradient(120% 70% at 50% 35%, var(--surface-2), var(--bg) 70%); display: grid; place-items: center; overflow: hidden; padding: 24px 16px; }
-  .stage .floor { position: absolute; bottom: 14px; left: 0; right: 0; text-align: center; font: 500 11px/1 var(--mono); color: var(--muted); letter-spacing: .06em; }
-
-  /* Packs */
-  .pack { position: relative; width: 220px; max-width: 100%; aspect-ratio: 2 / 3; border: 0; padding: 0; cursor: pointer; background: none; transition: transform .2s ease, filter .2s; }
+  /* Pack screen */
+  .packstage { display: grid; place-items: center; padding: 22px 0 10px; min-height: 360px; position: relative; }
+  .pack { position: relative; width: 210px; max-width: 100%; aspect-ratio: 2 / 3; border: 0; padding: 0; cursor: pointer; background: none; transition: transform .2s ease, filter .3s; }
   .pack:hover { transform: translateY(-5px) rotate(-1.2deg); }
   .pack .flap, .pack .body { position: absolute; left: 0; right: 0; display: block; background: var(--pk); }
   .pack .flap { top: 0; height: 16%; border-radius: 14px 14px 0 0; border-bottom: 2px dashed rgba(17, 26, 22, .45); display: flex; align-items: center; justify-content: center; }
   .pack .flap::before { content: "TEAR HERE"; font: 700 9px/1 var(--mono); letter-spacing: .3em; color: var(--pk-ink); opacity: .7; }
   .pack .body { top: 16%; bottom: 0; border-radius: 0 0 14px 14px; padding: 18px 16px; text-align: left; color: var(--pk-ink); overflow: hidden; }
-  .pack .body::before { content: ""; position: absolute; inset: 0; background:
-      repeating-linear-gradient(-45deg, rgba(255,255,255,.07) 0 10px, transparent 10px 20px); }
+  .pack .body::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(-45deg, rgba(255,255,255,.07) 0 10px, transparent 10px 20px); }
   .pack .body::after { content: ""; position: absolute; inset: 0; background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,.35) 45%, transparent 60%); transform: translateX(-100%); animation: sheen 3.6s ease-in-out infinite; }
+  .p-treat .body { box-shadow: inset 0 0 0 6px var(--cream), inset 0 0 0 7px #b8962e; }
   @keyframes sheen { 60%, 100% { transform: translateX(100%); } }
   .pack .set { position: relative; display: block; font: 700 10px/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; opacity: .75; }
-  .pack .pname { position: relative; display: block; font: 400 32px/1 var(--display); margin-top: 10px; }
+  .pack .pname { position: relative; display: block; font: 400 30px/1 var(--display); margin-top: 10px; }
   .pack .meta { position: relative; display: block; font-size: 13px; margin-top: 10px; opacity: .85; }
-  .pack .price { position: absolute; left: 16px; right: 16px; bottom: 16px; display: flex; justify-content: space-between; align-items: baseline; font-weight: 700; }
-  .pack .price b { font-size: 26px; font-variant-numeric: tabular-nums; }
-  .pack .price small { font: 700 10px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; opacity: .75; }
-  .pack .seal { position: absolute; right: 14px; top: 46%; width: 62px; height: 62px; border-radius: 50%; border: 2px solid currentColor; display: grid; place-items: center; text-align: center; font: 700 8px/1.15 var(--mono); letter-spacing: .1em; text-transform: uppercase; opacity: .55; transform: rotate(12deg); }
-
-  .p-drive-thru { --pk: var(--ketchup); --pk-ink: #fff4e6; }
-  .p-sit-down { --pk: var(--mustard); --pk-ink: var(--ink); }
-  .p-white-tablecloth { --pk: #f2ede1; --pk-ink: #1c1a16; }
-  .p-white-tablecloth .body { box-shadow: inset 0 0 0 6px #f2ede1, inset 0 0 0 7px #b8962e; }
-
+  .pack .guar { position: absolute; left: 16px; right: 16px; bottom: 16px; font: 700 10px/1.3 var(--mono); letter-spacing: .1em; text-transform: uppercase; opacity: .8; }
   .pack.shake { animation: shake .6s ease-in-out; }
-  .pack.tease { filter: drop-shadow(0 0 22px var(--r)) drop-shadow(0 0 6px var(--r)); }
+  .pack.tease { filter: drop-shadow(0 0 22px var(--mustard)) drop-shadow(0 0 6px var(--mustard)); }
   .pack.open .flap { animation: flap .55s ease-in forwards; }
   .pack.open .body { animation: sink .5s .35s ease-in forwards; }
   @keyframes shake { 0%,100% { transform: rotate(0) } 15% { transform: rotate(-5deg) } 30% { transform: rotate(5deg) } 45% { transform: rotate(-4deg) } 60% { transform: rotate(4deg) } 75% { transform: rotate(-2deg) } }
   @keyframes flap { to { transform: translate(60px, -140px) rotate(28deg); opacity: 0; } }
   @keyframes sink { to { transform: translateY(90px); opacity: 0; } }
 
-  /* Graded slab reveal */
-  .reveal { display: grid; justify-items: center; gap: 16px; perspective: 900px; }
-  .slab { --r: var(--common); width: 230px; max-width: 100%; border-radius: 14px; padding: 8px; background: linear-gradient(160deg, rgba(255,255,255,.16), rgba(255,255,255,.04)); border: 1px solid rgba(255,255,255,.22); box-shadow: 0 0 0 1px rgba(0,0,0,.4), 0 24px 50px rgba(0,0,0,.5), 0 0 50px -8px var(--r); animation: rise .8s cubic-bezier(.2,.9,.25,1.1) both; }
-  .slab .label { display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; background: #f4efe2; color: #16130e; border-radius: 7px; padding: 7px 9px; font: 700 9px/1.25 var(--mono); letter-spacing: .04em; text-transform: uppercase; border-top: 4px solid var(--r); }
-  .slab .label .grade { grid-row: span 2; align-self: center; font: 700 22px/1 var(--body); text-align: right; }
-  .slab .label .muted { color: #6c6658; font-weight: 500; }
-  .face { position: relative; margin-top: 8px; aspect-ratio: 5 / 7; border-radius: 9px; overflow: hidden; padding: 14px; display: flex; flex-direction: column; background: radial-gradient(130% 90% at 50% 0%, color-mix(in srgb, var(--r) 38%, var(--surface)), var(--surface) 70%); border: 2px solid var(--r); }
-  .face .mono { font: 400 64px/1 var(--display); color: var(--r); margin-top: 6px; text-shadow: 0 3px 0 rgba(0,0,0,.35); }
-  .face .rest { font-weight: 700; font-size: 17px; line-height: 1.2; margin-top: auto; text-wrap: balance; }
-  .face .val { font: 800 40px/1 var(--body); font-variant-numeric: tabular-nums; margin-top: 4px; }
-  .face .pull { font: 700 10px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--r); margin-top: 8px; }
-  .holo .face::after { content: ""; position: absolute; inset: 0; mix-blend-mode: soft-light; opacity: .5; pointer-events: none;
-      background: linear-gradient(115deg, transparent 38%, #ff7ad9 45%, #7af2ff 50%, #fff07a 55%, transparent 62%); background-size: 300% 300%; animation: holo 2.8s linear infinite; }
-  .grail-pulse { animation: rise .8s cubic-bezier(.2,.9,.25,1.1) both, pulse 1.4s .8s ease-in-out infinite; }
-  @keyframes holo { from { background-position: 100% 0; } to { background-position: -150% 0; } }
-  @keyframes rise { from { transform: translateY(90px) rotateY(180deg) scale(.75); opacity: 0; } 50% { opacity: 1; } to { transform: none; } }
-  @keyframes pulse { 50% { box-shadow: 0 0 0 1px rgba(0,0,0,.4), 0 24px 50px rgba(0,0,0,.5), 0 0 90px 4px var(--r); } }
+  .odds { margin-top: 8px; background: var(--surface); border-radius: 14px; padding: 12px 14px; display: grid; gap: 7px; }
+  .odds .orow { display: grid; grid-template-columns: minmax(0, 1fr) auto; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .odds .orow b { color: var(--fg); font-weight: 600; }
+  .odds .orow.base b { color: var(--basil); }
+  .odds .orow.up b { color: var(--mustard); }
+  .checkout { margin-top: 14px; display: grid; gap: 8px; }
+  .lines { display: grid; gap: 4px; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .lines div { display: flex; justify-content: space-between; }
+  .lines .tot { color: var(--fg); font-weight: 700; font-size: 15px; border-top: 1px solid var(--line); padding-top: 6px; margin-top: 2px; }
 
-  .banner { font: 400 26px/1 var(--display); color: var(--r); text-align: center; animation: pop .5s .5s both; }
-  @keyframes pop { from { transform: scale(.4); opacity: 0; } }
-  .actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; animation: pop .4s .7s both; }
-  .btn { border: 0; border-radius: 12px; padding: 11px 16px; font-weight: 700; cursor: pointer; }
-  .btn.keep { background: var(--fg); color: var(--ink); }
-  .btn.sell { background: transparent; border: 1.5px solid var(--line); }
-  .btn.sell:hover { border-color: var(--muted); }
+  /* Reveal */
+  .reveal { display: grid; gap: 14px; padding-top: 6px; perspective: 900px; }
+  .tonight { text-align: center; }
+  .tonight .h1 { font-size: 30px; margin-top: 6px; }
+  .rcard { position: relative; border-radius: 20px; padding: 18px; background: radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--pk) 30%, var(--surface)), var(--surface) 75%); border: 2px solid var(--pk); box-shadow: 0 24px 50px rgba(0,0,0,.45); animation: rise .8s cubic-bezier(.2,.9,.25,1.1) both; overflow: hidden; }
+  .rcard.up { border-color: var(--mustard); box-shadow: 0 24px 50px rgba(0,0,0,.45), 0 0 60px -6px var(--mustard); }
+  .rcard .top { display: flex; justify-content: space-between; align-items: start; gap: 10px; }
+  .rcard .mono { font: 400 46px/1 var(--display); color: var(--pk); text-shadow: 0 3px 0 rgba(0,0,0,.35); }
+  .rcard.up .mono { color: var(--mustard); }
+  .rcard .tag { font: 700 10px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--line); border-radius: 99px; padding: 6px 8px; white-space: nowrap; }
+  .rcard .rname { font-size: 24px; font-weight: 800; line-height: 1.1; margin-top: 18px; text-wrap: balance; }
+  .rcard .rmeta { color: var(--muted); font-size: 14px; margin-top: 4px; }
+  .rcard .rval { display: flex; align-items: baseline; gap: 8px; margin-top: 16px; }
+  .rcard .rval b { font: 800 44px/1 var(--body); font-variant-numeric: tabular-nums; }
+  .rcard .rval span { color: var(--muted); font-size: 14px; }
+  .rcard .was { color: var(--muted); text-decoration: line-through; font-size: 16px; }
+  .ribbon { position: absolute; top: 16px; right: -38px; transform: rotate(35deg); background: var(--mustard); color: var(--ink); font: 700 10px/1 var(--mono); letter-spacing: .14em; padding: 7px 44px; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .row2 .cta { padding: 13px 10px; font-size: 14px; text-align: center; text-decoration: none; display: block; }
+  .saved { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; color: var(--basil); font-weight: 600; }
+  @keyframes rise { from { transform: translateY(80px) rotateY(160deg) scale(.8); opacity: 0; } 50% { opacity: 1; } to { transform: none; } }
+  .confetti { position: absolute; top: -16px; width: 8px; height: 14px; border-radius: 2px; animation: fall linear forwards; pointer-events: none; z-index: 3; }
+  @keyframes fall { to { transform: translateY(700px) rotate(800deg); } }
 
-  .confetti { position: absolute; top: -16px; width: 8px; height: 14px; border-radius: 2px; animation: fall linear forwards; pointer-events: none; }
-  @keyframes fall { to { transform: translateY(520px) rotate(800deg); } }
+  /* Free spin */
+  .spinbox { margin-top: 18px; background: var(--surface); border-radius: 20px; padding: 18px; text-align: center; border: 1px solid var(--line); }
+  .spinbox .rname { font-size: 26px; font-weight: 800; line-height: 1.1; margin-top: 8px; }
+  .spinbox .rmeta { color: var(--muted); font-size: 14px; margin-top: 4px; }
+  .spinning .rname { filter: blur(1.5px); opacity: .6; }
 
-  .pity { margin-top: 12px; display: grid; gap: 6px; }
-  .pity .row { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); }
-  .pity .row b { color: var(--fg); font-weight: 600; font-variant-numeric: tabular-nums; }
-  .bar { height: 6px; border-radius: 99px; background: var(--surface-2); overflow: hidden; }
-  .bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--rare), var(--epic)); border-radius: inherit; transition: width .4s; }
+  /* Wallet */
+  .wlist { display: grid; gap: 10px; margin-top: 16px; }
+  .wcard { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--pk); border-radius: 14px; overflow: hidden; }
+  .whead { width: 100%; display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 12px 14px; background: none; border: 0; text-align: left; cursor: pointer; }
+  .whead .wm { font: 400 22px/1 var(--display); color: var(--pk); }
+  .whead b { display: block; font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .whead small { color: var(--muted); font-size: 12px; }
+  .whead .wv { font-weight: 800; font-size: 18px; font-variant-numeric: tabular-nums; }
+  .wbody { padding: 0 14px 14px; display: grid; gap: 8px; justify-items: center; }
+  .barcode { width: 100%; height: 64px; background: var(--cream); border-radius: 8px; padding: 8px 12px; display: flex; gap: 2px; align-items: stretch; }
+  .barcode i { background: #111; display: block; }
+  .wbody code { font: 700 13px/1 var(--mono); letter-spacing: .12em; color: var(--mustard); user-select: all; }
+  .empty { margin-top: 16px; border: 1.5px dashed var(--line); border-radius: 16px; padding: 22px 16px; text-align: center; color: var(--muted); }
+  .empty b { display: block; color: var(--fg); font-size: 16px; margin-bottom: 4px; }
 
-  /* Vault */
-  .kitchen { margin-top: 28px; }
-  .vault { display: grid; gap: 6px; }
-  .vault .empty { color: var(--muted); font-size: 14px; padding: 14px; border: 1px dashed var(--line); border-radius: 12px; }
-  .vitem { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 10px 12px; background: var(--surface); border-radius: 12px; border-left: 3px solid var(--r); }
-  .vitem .vmono { font: 400 20px/1 var(--display); color: var(--r); width: 34px; }
-  .vitem .vtxt { min-width: 0; }
-  .vitem .vtxt b { display: block; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .vitem .vtxt small { color: var(--muted); font-size: 12px; font-family: var(--mono); }
-  .vitem button { background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; }
-  .vitem code { font: 700 12px/1 var(--mono); color: var(--mustard); user-select: all; }
-
-  /* Notes column */
-  .notes { display: grid; gap: 28px; min-width: 0; }
-  .notes > section { min-width: 0; }
-  .eyebrow { font: 400 30px/1.05 var(--display); color: var(--fg); margin: 0; }
-  .eyebrow + p { color: var(--muted); margin: 8px 0 0; max-width: 56ch; }
-  .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
-  @media (max-width: 520px) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  .stat { background: var(--surface); padding: 12px; }
-  .stat small { display: block; color: var(--muted); font-size: 12px; }
-  .stat b { display: block; font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; margin-top: 2px; }
-  .stat .hint { font-size: 11px; color: var(--muted); }
-  .tablebox { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; }
-  table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: 14px; }
-  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
-  tr:last-child td { border-bottom: 0; }
-  th { font: 700 10px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); background: var(--surface); }
-  td.num, th.num { text-align: right; }
-  .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--r); margin-right: 8px; vertical-align: 1px; }
-  .oddsbar { display: inline-block; height: 6px; border-radius: 9px; background: var(--r); vertical-align: middle; min-width: 2px; }
-  .evline { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 10px; font-size: 13px; color: var(--muted); }
-  .evline b { color: var(--fg); font-variant-numeric: tabular-nums; }
+  /* Plan column */
+  .plan { display: grid; gap: 34px; min-width: 0; padding-top: 6px; }
+  .plan section { min-width: 0; }
+  .plan h2 { font: 700 11px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin: 0 0 12px; }
+  .pitch { font: 400 clamp(34px, 5vw, 46px)/1.04 var(--display); margin: 0; text-wrap: balance; }
+  .pitch em { font-style: normal; color: var(--mustard); }
+  .lede { color: var(--muted); margin: 14px 0 0; max-width: 58ch; font-size: 16px; }
+  .lede strong { color: var(--fg); font-weight: 600; }
+  .shift { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+  .shift > div { background: var(--surface); padding: 14px 16px; }
+  .shift h3 { margin: 0 0 8px; font: 700 11px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; }
+  .shift .was h3 { color: var(--muted); }
+  .shift .now h3 { color: var(--basil); }
+  .shift ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; font-size: 14px; color: var(--muted); }
+  .shift .now ul { color: var(--fg); }
+  @media (max-width: 520px) { .shift { grid-template-columns: minmax(0, 1fr); } }
   .points { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; }
-  .points li { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 12px; font-size: 14px; }
+  .points li { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 14px; font-size: 14px; }
   .points li b { font: 700 11px/1.5 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--mustard); }
   .points li span { color: var(--muted); }
   .points li span strong { color: var(--fg); font-weight: 600; }
-  @media (max-width: 420px) { .points li { grid-template-columns: minmax(0, 1fr); gap: 2px; } }
-  .legal { border: 1px solid color-mix(in srgb, var(--ketchup) 55%, var(--line)); background: color-mix(in srgb, var(--ketchup) 9%, var(--surface)); border-radius: 14px; padding: 14px 16px; font-size: 14px; color: var(--muted); }
-  .legal b { color: var(--fg); }
-  footer { margin-top: 36px; color: var(--muted); font-size: 12px; text-align: center; }
+  @media (max-width: 460px) { .points li { grid-template-columns: minmax(0, 1fr); gap: 2px; } }
+  .tablebox { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; }
+  table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: 14px; }
+  td { padding: 9px 14px; border-bottom: 1px solid var(--line); }
+  td:last-child { text-align: right; white-space: nowrap; }
+  tr.sum td { font-weight: 700; color: var(--fg); background: var(--surface); }
+  tr.good td:last-child { color: var(--basil); }
+  td small { color: var(--muted); display: block; font-size: 12px; }
+  .note { font-size: 13px; color: var(--muted); margin: 10px 0 0; max-width: 62ch; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chips span { font-size: 13px; padding: 6px 10px; border-radius: 99px; background: var(--surface); border: 1px solid var(--line); color: var(--muted); }
+  footer { grid-column: 1 / -1; color: var(--muted); font-size: 12px; text-align: center; }
 
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
-    .track { animation: none; }
   }
 </style>
 
-<div class="wrap">
-  <header class="top">
-    <div class="logo">Chef <span>Pack</span></div>
-    <div class="wallet">
-      <div class="credits"><small>Credits</small><span id="bal">$250.00</span></div>
-      <button class="topup" id="topup" type="button">+ $100</button>
+<div class="page">
+  <div class="phone" id="phone">
+    <div class="appbar">
+      <div class="logo">Chef <span>Pack</span></div>
+      <div class="loc">Austin, TX</div>
     </div>
-  </header>
-
-  <div class="grid">
-    <main class="app">
-      <div class="hero">
-        <h1>Test your fate. <em>Rip a pack.</em></h1>
-        <p>Every pack holds a real restaurant gift card. Pick your table, tear it open, then keep the card or sell it back and rip again.</p>
-      </div>
-
-      <div class="ticker" aria-label="Recent pulls, simulated">
-        <div class="label">Live</div>
-        <div class="track" id="ticker"></div>
-      </div>
-
-      <section class="choose">
-        <h2 id="chooseLbl">Pick your table</h2>
-        <div class="tiers" id="tiers" role="radiogroup" aria-labelledby="chooseLbl"></div>
-        <div class="stage" id="stage"></div>
-        <div class="pity" id="pity"></div>
-      </section>
-
-      <section class="kitchen">
-        <h2>Your kitchen</h2>
-        <div class="vault" id="vault"></div>
-      </section>
-    </main>
-
-    <aside class="notes">
-      <section>
-        <p class="eyebrow">Behind the counter</p>
-        <p>The app is what a customer sees. These notes show what happens underneath it: the odds, the house's cut, and how we'd build it for real.</p>
-      </section>
-
-      <section>
-        <h2>This session</h2>
-        <div class="stats">
-          <div class="stat"><small>Packs ripped</small><b id="sRipped">0</b></div>
-          <div class="stat"><small>Spent</small><b id="sSpent">$0</b></div>
-          <div class="stat"><small>Pulled</small><b id="sPulled">$0</b><span class="hint">face value</span></div>
-          <div class="stat"><small>Return</small><b id="sReturn">–</b><span class="hint" id="sBest">best pull: –</span></div>
-        </div>
-      </section>
-
-      <section>
-        <h2 id="oddsTitle">Odds</h2>
-        <div class="tablebox">
-          <table>
-            <thead><tr><th>Rarity</th><th>Pull</th><th class="num">Card</th><th class="num">Odds</th><th></th></tr></thead>
-            <tbody id="odds"></tbody>
-          </table>
-        </div>
-        <div class="evline" id="ev"></div>
-      </section>
-
-      <section>
-        <h2>How Chef Pack makes money</h2>
-        <ul class="points">
-          <li><b>House edge</b><span>Each pack pays out <strong>86–90%</strong> of its price on average. The rest is margin.</span></li>
-          <li><b>Card discount</b><span>Gift cards bought in bulk from a distributor typically cost <strong>3–15% under face value</strong>.</span></li>
-          <li><b>Sell-back</b><span>A sell-back pays <strong>85% as credits</strong>, not cash. Most credits get spent on the next rip, and the card never has to be bought.</span></li>
-          <li><b>Pity timer</b><span>Ten rips without a Rare guarantees one. Bad streaks end before people quit.</span></li>
-        </ul>
-      </section>
-
-      <section>
-        <h2>How we'd build it</h2>
-        <ul class="points">
-          <li><b>App</b><span>React Native (iOS + Android) with a matching web app. The rip and reveal animation is the core screen.</span></li>
-          <li><b>Odds engine</b><span>Server-side, <strong>provably fair</strong>: we publish a hash of the seed before the rip and reveal the seed after it, so anyone can check the result.</span></li>
-          <li><b>Gift cards</b><span>A rewards API such as Tango Card or Tremendous. We buy the card the moment someone taps Keep, so there's no inventory.</span></li>
-          <li><b>Compliance</b><span>Age check, location blocking for restricted states, purchase limits, and a payment processor that supports sweepstakes.</span></li>
-          <li><b>Growth</b><span>Live pull feed, shareable grail clips, limited drops (a Valentine's date-night pack, a Super Bowl wings pack), and pack battles.</span></li>
-        </ul>
-      </section>
-
-      <section class="legal">
-        <b>Before real money changes hands:</b> paying for a random prize can count as gambling depending on the state. Pack-rip apps rely on a guaranteed-value prize (our floor card), a free way to enter, and location blocking. Have a sweepstakes attorney review this first.
-      </section>
-    </aside>
+    <div class="screen" id="screen"></div>
+    <nav class="tabs" aria-label="App">
+      <button class="tab" id="tabTonight" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3v8a2 2 0 0 0 2 2v8"/><path d="M5 3v5a2 2 0 0 0 2 2h0"/><path d="M11 3v5a2 2 0 0 1-2 2"/><path d="M17 21V3c-2 1.5-3 4-3 7s1 4 3 4"/></svg>
+        Tonight
+      </button>
+      <button class="tab" id="tabWallet" type="button">
+        <span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/><path d="M7 15h3"/></svg><i id="wcount" hidden></i></span>
+        Wallet
+      </button>
+    </nav>
   </div>
 
-  <footer>Demo only. Credits are play money, and the live feed is simulated. Restaurant names are examples with no affiliation or partnership implied.</footer>
+  <div class="plan">
+    <section>
+      <p class="pitch">Can't decide on dinner? <em>Rip a pack.</em></p>
+      <p class="lede">Every couple, group chat and roommate pair has the same fight: <strong>"I don't care, you pick."</strong> Chef Pack settles it. Pick a vibe and pay, and the app picks the restaurant and hands you a gift card for it, <strong>always worth at least what you paid</strong>. Sometimes it's upgraded.</p>
+    </section>
+
+    <section>
+      <h2>What changed from the first idea</h2>
+      <div class="shift">
+        <div class="was"><h3>Pack-rip casino</h3><ul><li>Most packs worth less than you paid</li><li>Sell-back loop to keep ripping</li><li>Gambling law in most states</li><li>Payment processors and app stores push back</li></ul></div>
+        <div class="now"><h3>Dinner decider</h3><ul><li>Every pack worth at least the price</li><li>You eat the card tonight</li><li>The rip is the fun part, the meal is the product</li><li>Restaurants pay to be in packs</li></ul></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>The MVP: four screens</h2>
+      <ul class="points">
+        <li><b>Tonight</b><span>Three packs (Quick Bite, Sit-Down, Treat Yourself) plus a <strong>free "just pick for me"</strong> spin that brings people in.</span></li>
+        <li><b>Pack</b><span>The guarantee, the upgrade odds, and one button. Apple Pay or a card.</span></li>
+        <li><b>Reveal</b><span>The rip, then where you're eating, how far it is, and the card value. Directions in one tap, plus one swap allowed if you're not feeling it.</span></li>
+        <li><b>Wallet</b><span>Your cards with a barcode to show at the register.</span></li>
+      </ul>
+      <p class="note">Left out of v1: sell-back, pack battles, live pull feeds, leaderboards and local independents. Each one waits until people are buying packs again.</p>
+    </section>
+
+    <section>
+      <h2>Where the money comes from · one Sit-Down pack</h2>
+      <div class="tablebox">
+        <table>
+          <tbody>
+            <tr><td>Customer pays<small>$40 pack + $1.99 service fee</small></td><td>$41.99</td></tr>
+            <tr><td>Base gift card<small>$40 card, about 5% off through a gift card API</small></td><td>−$38.00</td></tr>
+            <tr><td>Upgrades<small>Average cost of the 12% of packs that get one</small></td><td>−$2.50</td></tr>
+            <tr><td>Card processing<small>About 3%</small></td><td>−$1.26</td></tr>
+            <tr class="sum"><td>Margin before restaurant deals</td><td>$0.23</td></tr>
+            <tr><td>Restaurant promo fee<small>Paid by the restaurant for each new guest we send</small></td><td>+$4.00</td></tr>
+            <tr class="sum good"><td>Margin with a restaurant deal</td><td>$4.23</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">These are assumptions to check. The real business is <strong style="color:var(--fg)">sending new customers to restaurants</strong>. They already give DoorDash and Groupon 15–30% for that. At launch, v1 only has to prove people will buy packs. Restaurant deals are what make it profitable.</p>
+    </section>
+
+    <section>
+      <h2>Who it's for, and how they hear about it</h2>
+      <div class="chips"><span>Couples on date night</span><span>Roommates</span><span>Friend groups</span><span>Gift givers</span><span>Office lunch</span></div>
+      <ul class="points" style="margin-top:14px">
+        <li><b>TikTok</b><span>Rip-reaction videos: "We let a pack pick our date night."</span></li>
+        <li><b>Gifting</b><span>Send a pack to someone. They rip it on their phone.</span></li>
+        <li><b>Friday Pack</b><span>A weekly subscription with one pack every Friday at 5pm.</span></li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Prove it in 6 weeks</h2>
+      <ul class="points">
+        <li><b>Weeks 1–2</b><span>Landing page and short videos with a waitlist. Goal: <strong>500 signups</strong> in one city.</span></li>
+        <li><b>Weeks 3–6</b><span>Test build for <strong>50 people</strong>, national chains only, gift cards delivered by hand or through Tremendous or Tango Card.</span></li>
+        <li><b>What to watch</b><span>Free spin → paid pack rate, <strong>second purchase within 30 days</strong>, and whether cards actually get redeemed.</span></li>
+      </ul>
+    </section>
+  </div>
+
+  <footer>Demo only. No charges, and the gift cards and codes aren't real. Restaurant names are examples with no affiliation implied. The upgrade bonus still involves chance, so have a promotions attorney review it before launch.</footer>
 </div>
 
 <script>
-const TIERS = [
-  { id: "drive-thru", short: "Drive-Thru", name: "Drive-Thru", price: 10, blurb: "Fast food",
-    restaurants: ["McDonald's", "Taco Bell", "Wendy's", "Chick-fil-A", "Chipotle", "Panera", "Five Guys", "Shake Shack", "Raising Cane's"],
-    slots: [
-      { rarity: "common", label: "Side Dish", value: 5, odds: 65 },
-      { rarity: "uncommon", label: "Combo Meal", value: 10, odds: 25 },
-      { rarity: "rare", label: "Family Bucket", value: 25, odds: 8 },
-      { rarity: "epic", label: "Super Size", value: 50, odds: 1.8 },
-      { rarity: "grail", label: "Golden Fry", value: 200, odds: 0.2 } ] },
-  { id: "sit-down", short: "Sit-Down", name: "Sit-Down", price: 35, blurb: "Casual dining",
-    restaurants: ["Olive Garden", "Outback Steakhouse", "Texas Roadhouse", "Chili's", "Applebee's", "The Cheesecake Factory", "Red Lobster", "LongHorn Steakhouse"],
-    slots: [
-      { rarity: "common", label: "Appetizer", value: 15, odds: 50 },
-      { rarity: "uncommon", label: "Entrée", value: 25, odds: 31 },
-      { rarity: "rare", label: "Date Night", value: 50, odds: 14 },
-      { rarity: "epic", label: "Party of Six", value: 100, odds: 4.3 },
-      { rarity: "grail", label: "Endless Plate", value: 500, odds: 0.7 } ] },
-  { id: "white-tablecloth", short: "Tablecloth", name: "White Tablecloth", price: 150, blurb: "Fine dining",
-    restaurants: ["Ruth's Chris", "The Capital Grille", "Morton's", "Fleming's", "Eddie V's", "STK", "Nobu"],
-    slots: [
-      { rarity: "common", label: "Amuse-Bouche", value: 50, odds: 45 },
-      { rarity: "uncommon", label: "Chef's Table", value: 100, odds: 33 },
-      { rarity: "rare", label: "Wine Pairing", value: 250, odds: 17 },
-      { rarity: "epic", label: "Tasting Menu", value: 500, odds: 4.4 },
-      { rarity: "grail", label: "Michelin Grail", value: 2000, odds: 0.6 } ] }
+const PACKS = [
+  { id: "quick", cls: "p-quick", name: "Quick Bite", price: 15, blurb: "Fast casual, in and out",
+    tiers: [{ v: 15, o: 88 }, { v: 20, o: 10 }, { v: 40, o: 1.8 }, { v: 100, o: 0.2 }],
+    spots: [
+      { n: "Chipotle", c: "Mexican", d: "0.6 mi", h: "Open until 10 PM" },
+      { n: "Chick-fil-A", c: "Chicken", d: "1.1 mi", h: "Open until 10 PM" },
+      { n: "Shake Shack", c: "Burgers", d: "2.3 mi", h: "Open until 11 PM" },
+      { n: "Panera", c: "Bakery café", d: "0.9 mi", h: "Open until 9 PM" },
+      { n: "Five Guys", c: "Burgers", d: "1.8 mi", h: "Open until 10 PM" },
+      { n: "Raising Cane's", c: "Chicken fingers", d: "1.4 mi", h: "Open until 2 AM" } ] },
+  { id: "sitdown", cls: "p-sitdown", name: "Sit-Down", price: 40, blurb: "Grab a table, stay a while",
+    tiers: [{ v: 40, o: 88 }, { v: 50, o: 10 }, { v: 100, o: 1.8 }, { v: 250, o: 0.2 }],
+    spots: [
+      { n: "Olive Garden", c: "Italian", d: "3.2 mi", h: "Open until 10 PM" },
+      { n: "Outback Steakhouse", c: "Steakhouse", d: "4.0 mi", h: "Open until 10 PM" },
+      { n: "Texas Roadhouse", c: "Steakhouse", d: "5.1 mi", h: "Open until 10 PM" },
+      { n: "The Cheesecake Factory", c: "American", d: "6.4 mi", h: "Open until 11 PM" },
+      { n: "P.F. Chang's", c: "Asian", d: "3.7 mi", h: "Open until 10 PM" },
+      { n: "Chili's", c: "Tex-Mex", d: "2.2 mi", h: "Open until 11 PM" } ] },
+  { id: "treat", cls: "p-treat", name: "Treat Yourself", price: 100, blurb: "Steaks, sushi, the good wine",
+    tiers: [{ v: 100, o: 88 }, { v: 125, o: 10 }, { v: 200, o: 1.8 }, { v: 500, o: 0.2 }],
+    spots: [
+      { n: "Ruth's Chris", c: "Steakhouse", d: "4.8 mi", h: "Open until 10 PM" },
+      { n: "The Capital Grille", c: "Steakhouse", d: "5.5 mi", h: "Open until 10 PM" },
+      { n: "Fogo de Chão", c: "Brazilian", d: "5.9 mi", h: "Open until 10 PM" },
+      { n: "Eddie V's", c: "Seafood", d: "6.2 mi", h: "Open until 11 PM" },
+      { n: "Fleming's", c: "Steakhouse", d: "7.0 mi", h: "Open until 10 PM" } ] }
 ];
-const BUYBACK = 0.85, PITY = 10, START = 250;
-const GRADE = { common: "7", uncommon: "8", rare: "9", epic: "9.5", grail: "10" };
-const GRADE_TXT = { common: "NM", uncommon: "NM-MT", rare: "MINT", epic: "MINT+", grail: "GEM MT" };
-const RANK = { common: 0, uncommon: 1, rare: 2, epic: 3, grail: 4 };
+const FEE = 1.99, SWAP = 2;
 
 const $ = id => document.getElementById(id);
 const money = (n, c = false) => "$" + (c ? n.toFixed(2) : Math.round(n).toLocaleString());
-const rc = r => `var(--${r})`;
-const tierOf = id => TIERS.find(t => t.id === id);
-const initials = name => name.replace(/^The /, "").replace(/[^A-Za-z\s-]/g, "").split(/[\s-]+/).filter(Boolean).slice(0, 2).map(w => w[0]).join("").toUpperCase();
+const packOf = id => PACKS.find(p => p.id === id);
+const initials = n => n.replace(/^The /, "").replace(/[^A-Za-z\s-]/g, "").split(/[\s-]+/).filter(Boolean).slice(0, 2).map(w => w[0]).join("").toUpperCase();
+const upOdds = p => p.tiers.slice(1).reduce((a, t) => a + t.o, 0);
+const maps = n => "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(n + " near Austin, TX");
 
 let S, busy = false;
-const fresh = () => ({ balance: START, tierId: "sit-down", vault: [], ripped: 0, spent: 0, pulled: 0, best: null, pity: {}, serial: 211 });
+const fresh = () => ({ screen: "home", packId: null, result: null, wallet: [], open: null, spin: null });
+function save() { try { localStorage.setItem("chefpack.mvp.v1", JSON.stringify({ wallet: S.wallet })); } catch (e) {} }
+function load() { try { const s = JSON.parse(localStorage.getItem("chefpack.mvp.v1")); return s && Array.isArray(s.wallet) ? s : null; } catch (e) { return null; } }
 
-function save() { try { localStorage.setItem("chefpack.v1", JSON.stringify(S)); } catch (e) {} }
-function load() { try { const s = JSON.parse(localStorage.getItem("chefpack.v1")); return s && s.tierId ? s : null; } catch (e) { return null; } }
+function drawValue(p) {
+  let roll = Math.random() * 100;
+  for (const t of p.tiers) if ((roll -= t.o) < 0) return t.v;
+  return p.tiers[0].v;
+}
+const pickSpot = (p, not) => { const pool = p.spots.filter(s => s.n !== not); return pool[Math.floor(Math.random() * pool.length)]; };
+const code = () => Array.from({ length: 3 }, () => Math.random().toString(36).slice(2, 6).toUpperCase()).join("-");
 
-// Weighted pick. Production would run this server-side with a provably fair seed.
-function draw(t) {
-  const forced = (S.pity[t.id] || 0) >= PITY - 1;
-  const pool = forced ? t.slots.filter(s => RANK[s.rarity] >= 2) : t.slots;
-  const total = pool.reduce((a, s) => a + s.odds, 0);
-  let roll = Math.random() * total;
-  for (const s of pool) if ((roll -= s.odds) < 0) return s;
-  return pool[0];
+function go(screen, extra = {}) { Object.assign(S, { screen }, extra); render(); const sc = $("screen"); sc.scrollTop = 0; }
+
+function render() {
+  const sc = $("screen");
+  $("tabTonight").setAttribute("aria-current", S.screen === "wallet" ? "false" : "page");
+  $("tabWallet").setAttribute("aria-current", S.screen === "wallet" ? "page" : "false");
+  const wc = $("wcount"); wc.hidden = !S.wallet.length; wc.textContent = S.wallet.length;
+  sc.innerHTML = ({ home: home, pack: pack, reveal: reveal, spin: spin, wallet: wallet })[S.screen]();
+  bind[S.screen]?.();
 }
 
-function renderWallet() { $("bal").textContent = money(S.balance, true); }
-
-function renderTiers() {
-  $("tiers").innerHTML = TIERS.map(t => `
-    <button class="tier" type="button" role="radio" data-id="${t.id}" aria-checked="${t.id === S.tierId}">
-      <b>${t.short}</b><span>${money(t.price)}</span><small>${t.blurb}</small>
-    </button>`).join("");
-  $("tiers").querySelectorAll(".tier").forEach(b => b.onclick = () => {
-    if (busy) return;
-    S.tierId = b.dataset.id; save();
-    renderTiers(); renderPack(); renderOdds(); renderPity();
-  });
+/* Screens */
+function home() {
+  return `<div class="fadein">
+    <p class="kicker">Tonight · 6:42 PM</p>
+    <h1 class="h1">Can't decide on <em>dinner?</em></h1>
+    <p class="sub">Pick a vibe and rip a pack. We'll pick the spot, and the gift card is always worth at least what you paid.</p>
+    <div class="packs">
+      ${PACKS.map(p => `
+        <button class="prow ${p.cls}" type="button" data-pack="${p.id}">
+          <span class="pmini"></span>
+          <span><b>${p.name}</b><small>${p.blurb} · ${p.spots.length} spots near you</small></span>
+          <span class="pr"><b>${money(p.price)}</b><small>${Math.round(upOdds(p))}% upgrade</small></span>
+        </button>`).join("")}
+    </div>
+    <button class="cta ghost free" id="free" type="button">Just pick a place for me (free)</button>
+    <ol class="steps">
+      <li><b>Pick a vibe</b>Quick, sit-down or fancy</li>
+      <li><b>Rip the pack</b>We pick the spot</li>
+      <li><b>Go eat</b>Card's in your wallet</li>
+    </ol>
+  </div>`;
 }
 
-function renderPack() {
-  const t = tierOf(S.tierId);
-  const lo = t.slots[0].value, hi = t.slots[t.slots.length - 1].value;
-  $("stage").innerHTML = `
-    <button class="pack p-${t.id}" id="pack" type="button" aria-label="Rip a ${t.name} pack for ${money(t.price)}">
-      <span class="flap"></span>
-      <span class="body">
-        <span class="set">Chef Pack · Series 1</span>
-        <span class="pname">${t.name}</span>
-        <span class="meta">1 gift card inside<br>${money(lo)} to ${money(hi)}</span>
-        <span class="seal">Real<br>gift card<br>inside</span>
-        <span class="price"><small>Tap to rip</small><b>${money(t.price)}</b></span>
-      </span>
-    </button>
-    <div class="floor" id="floor">${t.restaurants.length} restaurants in this set</div>`;
-  $("pack").onclick = rip;
+function pack() {
+  const p = packOf(S.packId);
+  return `<div class="fadein">
+    <button class="back" id="back" type="button">← Back</button>
+    <div class="packstage" id="stage">
+      <button class="pack ${p.cls}" id="pack" type="button" aria-label="Rip the ${p.name} pack">
+        <span class="flap"></span>
+        <span class="body">
+          <span class="set">Chef Pack · Tonight</span>
+          <span class="pname">${p.name}</span>
+          <span class="meta">${p.blurb}</span>
+          <span class="guar">At least a ${money(p.price)} card<br>${p.spots.length} spots near you</span>
+        </span>
+      </button>
+    </div>
+    <div class="odds">
+      <div class="orow base"><span>Guaranteed card</span><b>${money(p.tiers[0].v)}+</b></div>
+      ${p.tiers.slice(1).map(t => `<div class="orow up"><span>Upgrade to ${money(t.v)}</span><b>${t.o}%</b></div>`).join("")}
+    </div>
+    <div class="checkout">
+      <div class="lines">
+        <div><span>${p.name} pack</span><span>${money(p.price, true)}</span></div>
+        <div><span>Service fee</span><span>${money(FEE, true)}</span></div>
+        <div class="tot"><span>Total</span><span>${money(p.price + FEE, true)}</span></div>
+      </div>
+      <button class="cta" id="buy" type="button">Pay &amp; rip · ${money(p.price + FEE, true)}</button>
+      <p class="fine">Demo, no charge. Tap the pack or the button.</p>
+    </div>
+  </div>`;
 }
 
-function renderOdds() {
-  const t = tierOf(S.tierId);
-  $("oddsTitle").textContent = `Odds · ${t.name} pack`;
-  const max = Math.max(...t.slots.map(s => s.odds));
-  $("odds").innerHTML = t.slots.map(s => `
-    <tr style="--r:${rc(s.rarity)}">
-      <td><span class="dot"></span>${s.rarity[0].toUpperCase() + s.rarity.slice(1)}</td>
-      <td>${s.label}</td>
-      <td class="num">${money(s.value)}</td>
-      <td class="num">${s.odds}%</td>
-      <td><span class="oddsbar" style="width:${Math.max(2, s.odds / max * 70)}px"></span></td>
-    </tr>`).join("");
-  const ev = t.slots.reduce((a, s) => a + s.value * s.odds / 100, 0);
-  const beat = t.slots.filter(s => s.value >= t.price).reduce((a, s) => a + s.odds, 0);
-  $("ev").innerHTML = `<span>Average card <b>${money(ev, true)}</b></span><span>Payout <b>${(ev / t.price * 100).toFixed(1)}%</b> of price</span><span>Break even or better <b>${beat.toFixed(0)}%</b> of rips</span>`;
+function reveal() {
+  const r = S.result, p = packOf(r.packId), s = r.spot, up = r.value > p.price;
+  return `<div class="reveal">
+    <div class="tonight">
+      <p class="kicker">${up ? "Upgraded!" : "Tonight you're eating at"}</p>
+      <h1 class="h1">${up ? `<em>${money(r.value)}</em> card` : "Fate has spoken."}</h1>
+    </div>
+    <div class="rcard ${p.cls} ${up ? "up" : ""}">
+      ${up ? `<div class="ribbon">UPGRADE</div>` : ""}
+      <div class="top"><span class="mono">${initials(s.n)}</span>${up ? "" : `<span class="tag">${p.name}</span>`}</div>
+      <div class="rname">${s.n}</div>
+      <div class="rmeta">${s.c} · ${s.d} · ${s.h}</div>
+      <div class="rval"><b>${money(r.value)}</b>${up ? `<span class="was">${money(p.price)}</span>` : ""}<span>gift card</span></div>
+    </div>
+    <div class="saved"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Saved to your wallet</div>
+    <div class="row2">
+      <a class="cta" href="${maps(s.n)}" target="_blank" rel="noopener">Directions</a>
+      <button class="cta ghost" id="wallet" type="button">Show my card</button>
+    </div>
+    ${r.swapped ? `<p class="fine">You used your swap on this pack.</p>`
+      : `<button class="cta ghost" id="swap" type="button">Not feeling it? Swap the restaurant · ${money(SWAP)}</button>
+         <p class="fine">Same card value, different restaurant. One swap per pack.</p>`}
+  </div>`;
 }
 
-function renderPity() {
-  const n = S.pity[S.tierId] || 0;
-  $("pity").innerHTML = `
-    <div class="row"><span>Rare-or-better guarantee</span><b>${n} / ${PITY}</b></div>
-    <div class="bar"><i style="width:${n / PITY * 100}%"></i></div>`;
+function spin() {
+  const s = S.spin;
+  return `<div class="fadein">
+    <button class="back" id="back" type="button">← Back</button>
+    <p class="kicker" style="margin-top:12px">Free pick</p>
+    <h1 class="h1">How about…</h1>
+    <div class="spinbox" id="spinbox">
+      <div class="rname" id="sname">${s.spot.n}</div>
+      <div class="rmeta" id="smeta">${s.spot.c} · ${s.spot.d} · ${s.spot.h}</div>
+    </div>
+    <div class="checkout">
+      <button class="cta" id="topack" type="button">Get it paid for: ${packOf(s.packId).name} pack · ${money(packOf(s.packId).price)}</button>
+      <button class="cta ghost" id="again" type="button">Pick again</button>
+      <p class="fine">Free picks just suggest a place. A pack gets you the gift card.</p>
+    </div>
+  </div>`;
 }
 
-function renderStats() {
-  $("sRipped").textContent = S.ripped;
-  $("sSpent").textContent = money(S.spent);
-  $("sPulled").textContent = money(S.pulled);
-  $("sReturn").textContent = S.spent ? Math.round(S.pulled / S.spent * 100) + "%" : "–";
-  $("sBest").textContent = "best pull: " + (S.best ? `${money(S.best.value)} ${S.best.rest}` : "–");
+function wallet() {
+  if (!S.wallet.length) return `<div class="fadein">
+    <p class="kicker">Wallet</p><h1 class="h1">Your cards</h1>
+    <div class="empty"><b>No cards yet</b>Rip a pack on the Tonight tab and your gift card shows up here, ready to scan.</div>
+    <div class="checkout"><button class="cta" id="tohome" type="button">Find dinner</button></div>
+  </div>`;
+  return `<div class="fadein">
+    <p class="kicker">Wallet · ${S.wallet.length} card${S.wallet.length > 1 ? "s" : ""}</p><h1 class="h1">Your cards</h1>
+    <div class="wlist">
+      ${S.wallet.map((w, i) => `
+        <div class="wcard ${packOf(w.packId).cls}">
+          <button class="whead" type="button" data-i="${i}" aria-expanded="${S.open === i}">
+            <span class="wm">${initials(w.n)}</span>
+            <span style="min-width:0"><b>${w.n}</b><small>${w.c} · ${w.d}</small></span>
+            <span class="wv">${money(w.value)}</span>
+          </button>
+          ${S.open === i ? `<div class="wbody">${barcode(w.code)}<code>${w.code}</code><p class="fine" style="margin:0">Show this at the register. Demo code, not redeemable.</p></div>` : ""}
+        </div>`).join("")}
+    </div>
+  </div>`;
 }
 
-function renderVault() {
-  if (!S.vault.length) { $("vault").innerHTML = `<div class="empty">Cards you keep land here, ready to redeem. Rip a pack to start.</div>`; return; }
-  $("vault").innerHTML = S.vault.map((v, i) => `
-    <div class="vitem" style="--r:${rc(v.rarity)}">
-      <span class="vmono">${initials(v.rest)}</span>
-      <span class="vtxt"><b>${money(v.value)} · ${v.rest}</b><small>${v.label} · #${v.serial}</small></span>
-      ${v.shown ? `<code>${v.code}</code>` : `<button type="button" data-i="${i}">Redeem</button>`}
-    </div>`).join("");
-  $("vault").querySelectorAll("button[data-i]").forEach(b => b.onclick = () => { S.vault[+b.dataset.i].shown = true; save(); renderVault(); });
+function barcode(c) {
+  let seed = [...c].reduce((a, ch) => a * 31 + ch.charCodeAt(0) >>> 0, 7), bars = "";
+  for (let i = 0; i < 46; i++) { seed = (seed * 1103515245 + 12345) >>> 0; const w = 1 + (seed >>> 16) % 3; bars += `<i style="flex:${w} 0 0"></i>${i % 2 ? "" : `<span style="flex:${1 + (seed >>> 20) % 2} 0 0"></span>`}`; }
+  return `<div class="barcode" aria-label="Barcode">${bars}</div>`;
 }
+
+/* Interactions */
+const bind = {
+  home() {
+    $("screen").querySelectorAll("[data-pack]").forEach(b => b.onclick = () => go("pack", { packId: b.dataset.pack }));
+    $("free").onclick = () => { const p = PACKS[Math.floor(Math.random() * PACKS.length)]; go("spin", { spin: { packId: p.id, spot: pickSpot(p) } }); };
+  },
+  pack() {
+    $("back").onclick = () => go("home");
+    $("pack").onclick = rip; $("buy").onclick = rip;
+  },
+  reveal() {
+    $("wallet").onclick = () => go("wallet", { open: 0 });
+    const sw = $("swap");
+    if (sw) sw.onclick = () => {
+      const r = S.result, p = packOf(r.packId), spot = pickSpot(p, r.spot.n);
+      r.spot = spot; r.swapped = true;
+      Object.assign(S.wallet[0], { n: spot.n, c: spot.c, d: spot.d });
+      save(); render();
+    };
+  },
+  spin() {
+    $("back").onclick = () => go("home");
+    $("topack").onclick = () => go("pack", { packId: S.spin.packId });
+    $("again").onclick = () => {
+      const box = $("spinbox"); box.classList.add("spinning");
+      let n = 0;
+      const tick = setInterval(() => {
+        const p = PACKS[Math.floor(Math.random() * PACKS.length)], s = pickSpot(p);
+        $("sname").textContent = s.n; $("smeta").textContent = `${s.c} · ${s.d} · ${s.h}`;
+        if (++n > 9) { clearInterval(tick); S.spin = { packId: p.id, spot: s }; render(); }
+      }, 80);
+    };
+  },
+  wallet() {
+    const th = $("tohome"); if (th) th.onclick = () => go("home");
+    $("screen").querySelectorAll("[data-i]").forEach(b => b.onclick = () => { const i = +b.dataset.i; S.open = S.open === i ? null : i; render(); });
+  }
+};
 
 function rip() {
   if (busy) return;
-  const t = tierOf(S.tierId);
-  if (S.balance < t.price) { $("floor").textContent = "Not enough credits. Tap + $100 up top."; return; }
   busy = true;
-  S.balance -= t.price; S.spent += t.price; S.ripped++;
-  renderWallet();
-  const slot = draw(t);
-  S.pity[t.id] = RANK[slot.rarity] >= 2 ? 0 : (S.pity[t.id] || 0) + 1;
-  const pack = $("pack");
-  pack.style.setProperty("--r", rc(slot.rarity));
-  pack.classList.add("shake");
-  $("floor").textContent = "Ripping…";
-  // Rare-or-better packs glow before the tear, like a hit in a real pack.
-  if (RANK[slot.rarity] >= 2) setTimeout(() => pack.classList.add("tease"), 250);
-  setTimeout(() => { pack.classList.remove("shake"); pack.classList.add("open"); }, 650);
-  setTimeout(() => reveal(t, slot), 1350);
-}
-
-function reveal(t, slot) {
-  const rest = t.restaurants[Math.floor(Math.random() * t.restaurants.length)];
-  const serial = String(++S.serial).padStart(4, "0");
-  const sell = slot.value * BUYBACK;
-  const big = RANK[slot.rarity] >= 3;
-  S.pulled += slot.value;
-  if (!S.best || slot.value > S.best.value) S.best = { value: slot.value, rest };
-  save(); renderStats(); renderPity();
-
-  $("stage").innerHTML = `
-    <div class="reveal" style="--r:${rc(slot.rarity)}">
-      ${big ? `<div class="banner">${slot.rarity === "grail" ? "GRAIL PULL!" : "Big hit!"}</div>` : ""}
-      <div class="slab ${big ? "holo" : ""} ${slot.rarity === "grail" ? "grail-pulse" : ""}" style="--r:${rc(slot.rarity)}">
-        <div class="label">
-          <span>Chef Pack 2026 · ${t.short}</span><span class="grade">${GRADE[slot.rarity]}</span>
-          <span class="muted">${slot.rarity} · #${serial}</span>
-          <span class="muted" style="grid-column:1/-1">${GRADE_TXT[slot.rarity]}</span>
-        </div>
-        <div class="face">
-          <div class="mono">${initials(rest)}</div>
-          <div class="rest">${rest}</div>
-          <div class="val">${money(slot.value)}</div>
-          <div class="pull">${slot.label} · gift card</div>
-        </div>
-      </div>
-      <div class="actions">
-        <button class="btn keep" id="keep" type="button">Keep it</button>
-        <button class="btn sell" id="sell" type="button">Sell back for ${money(sell, true)}</button>
-      </div>
-    </div>`;
-  if (big) confetti(slot.rarity === "grail" ? 110 : 45);
-
-  const done = kept => {
-    if (kept) {
-      const code = "CP-" + Math.random().toString(36).slice(2, 6).toUpperCase() + "-" + Math.random().toString(36).slice(2, 6).toUpperCase();
-      S.vault.unshift({ rarity: slot.rarity, label: slot.label, value: slot.value, rest, serial, code, shown: false });
-      renderVault();
-    } else {
-      S.balance += sell; renderWallet();
-    }
-    save(); busy = false; renderPack();
-  };
-  $("keep").onclick = () => done(true);
-  $("sell").onclick = () => done(false);
+  const p = packOf(S.packId), value = drawValue(p), spot = pickSpot(p);
+  const el = $("pack");
+  el.classList.add("shake");
+  $("buy").disabled = true; $("buy").textContent = "Ripping…";
+  if (value > p.price) setTimeout(() => el.classList.add("tease"), 250);
+  setTimeout(() => { el.classList.remove("shake"); el.classList.add("open"); }, 650);
+  setTimeout(() => {
+    S.wallet.unshift({ packId: p.id, value, n: spot.n, c: spot.c, d: spot.d, code: code() });
+    save(); busy = false;
+    go("reveal", { result: { packId: p.id, value, spot, swapped: false }, open: null });
+    if (value > p.price) confetti(value >= p.tiers[2].v ? 110 : 45);
+  }, 1350);
 }
 
 function confetti(n) {
-  const cols = ["--grail", "--mustard", "--ketchup", "--epic", "--rare", "--uncommon"];
-  const stage = $("stage");
+  const cols = ["--mustard", "--ketchup", "--basil", "--cream"], host = $("screen");
   for (let i = 0; i < n; i++) {
     const c = document.createElement("div");
     c.className = "confetti";
@@ -494,27 +550,17 @@ function confetti(n) {
     c.style.background = `var(${cols[i % cols.length]})`;
     c.style.animationDuration = 1.4 + Math.random() * 1.6 + "s";
     c.style.animationDelay = Math.random() * .5 + "s";
-    stage.appendChild(c);
+    host.appendChild(c);
     setTimeout(() => c.remove(), 3800);
   }
 }
 
-function renderTicker() {
-  const handles = ["@grillmaster_j", "@sauceboss", "@medium_rare", "@lilbiscuit", "@brisketbae", "@frybaby", "@thecheflo", "@nacho_avg", "@ramen_rae", "@wingking"];
-  const items = [];
-  for (let i = 0; i < 12; i++) {
-    const t = TIERS[i % 3];
-    const s = t.slots[2 + (i * 7 % 3)];
-    const rest = t.restaurants[(i * 5) % t.restaurants.length];
-    items.push(`<span style="--r:${rc(s.rarity)}">${handles[i % handles.length]} <i>pulled</i> <b>${money(s.value)}</b> ${rest}</span>`);
-  }
-  $("ticker").innerHTML = items.join("") + items.join("");
-}
-
 function start(data) {
-  S = (data && data.S) || load() || fresh();
-  renderWallet(); renderTicker(); renderTiers(); renderPack(); renderOdds(); renderPity(); renderStats(); renderVault();
-  $("topup").onclick = () => { S.balance += 100; save(); renderWallet(); };
+  S = (data && data.S) || Object.assign(fresh(), load() || {});
+  if (S.screen === "reveal" && !S.result) S.screen = "home";
+  $("tabTonight").onclick = () => go("home");
+  $("tabWallet").onclick = () => go("wallet");
+  render();
 }
 window.claude?.hot?.snapshot?.(() => ({ S }));
 window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});

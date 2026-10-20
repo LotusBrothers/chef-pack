@@ -1,6 +1,8 @@
 # Chef Pack
 
-**Test your fate. Rip a pack. Eat like it.**
+**Can't decide on dinner? Rip a pack.**
+
+The MVP plan is in [`docs/PRODUCT.md`](docs/PRODUCT.md), and the app demo is in `prototype/index.html`. The original pack-rip casino concept is kept in `prototype/casino-concept.html`.
 
 Chef Pack takes the pack-rip model from apps like PackDraw and Courtyard, where you rip a digital pack and might pull a PSA 10, and applies it to food. Every pack holds a real restaurant gift card. You pick a tier, rip it open, and find out whether you got a $5 Taco Bell card or a $2,000 steakhouse grail.
 
