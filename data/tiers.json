@@ -1,0 +1,45 @@
+{
+  "_note": "Draft odds. Each tier targets ~86-90% expected value (EV) of pack price before wholesale gift-card discounts. Weights in each tier sum to 100.",
+  "buybackRate": 0.85,
+  "tiers": [
+    {
+      "id": "drive-thru",
+      "name": "Drive-Thru Pack",
+      "price": 10,
+      "restaurants": ["McDonald's", "Taco Bell", "Wendy's", "Chick-fil-A", "Chipotle", "Panera", "Five Guys", "Shake Shack", "Raising Cane's"],
+      "slots": [
+        { "rarity": "common",    "label": "Side Dish",     "value": 5,   "odds": 65.0 },
+        { "rarity": "uncommon",  "label": "Combo Meal",    "value": 10,  "odds": 25.0 },
+        { "rarity": "rare",      "label": "Family Bucket", "value": 25,  "odds": 8.0 },
+        { "rarity": "epic",      "label": "Super Size",    "value": 50,  "odds": 1.8 },
+        { "rarity": "grail",     "label": "Golden Fry",    "value": 200, "odds": 0.2 }
+      ]
+    },
+    {
+      "id": "sit-down",
+      "name": "Sit-Down Pack",
+      "price": 35,
+      "restaurants": ["Olive Garden", "Outback Steakhouse", "Texas Roadhouse", "Chili's", "Applebee's", "The Cheesecake Factory", "Red Lobster", "LongHorn Steakhouse"],
+      "slots": [
+        { "rarity": "common",    "label": "Appetizer",     "value": 15,  "odds": 50.0 },
+        { "rarity": "uncommon",  "label": "Entrée",        "value": 25,  "odds": 31.0 },
+        { "rarity": "rare",      "label": "Date Night",    "value": 50,  "odds": 14.0 },
+        { "rarity": "epic",      "label": "Party of Six",  "value": 100, "odds": 4.3 },
+        { "rarity": "grail",     "label": "Endless Plate", "value": 500, "odds": 0.7 }
+      ]
+    },
+    {
+      "id": "white-tablecloth",
+      "name": "White Tablecloth Pack",
+      "price": 150,
+      "restaurants": ["Ruth's Chris", "The Capital Grille", "Morton's", "Fleming's", "Eddie V's", "STK", "Nobu"],
+      "slots": [
+        { "rarity": "common",    "label": "Amuse-Bouche",  "value": 50,   "odds": 45.0 },
+        { "rarity": "uncommon",  "label": "Chef's Table",  "value": 100,  "odds": 33.0 },
+        { "rarity": "rare",      "label": "Wine Pairing",  "value": 250,  "odds": 17.0 },
+        { "rarity": "epic",      "label": "Tasting Menu",  "value": 500,  "odds": 4.4 },
+        { "rarity": "grail",     "label": "Michelin Grail","value": 2000, "odds": 0.6 }
+      ]
+    }
+  ]
+}

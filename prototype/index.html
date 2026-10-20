@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rip-a-Plate</title>
+<style>
+  :root {
+    --bg: #0f0d0b; --panel: #1b1814; --line: #2e2922; --text: #f4ede4; --muted: #a89e90;
+    --accent: #ff6b2c;
+    --common: #9aa0a6; --uncommon: #3ecf6e; --rare: #3b9bff; --epic: #b05cff; --grail: #ffc83d;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.45 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+  header { display: flex; justify-content: space-between; align-items: center; padding: 16px; border-bottom: 1px solid var(--line); }
+  .logo { font-weight: 800; font-size: 20px; letter-spacing: -.02em; }
+  .logo span { color: var(--accent); }
+  .wallet { background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; font-variant-numeric: tabular-nums; }
+  main { max-width: 960px; margin: 0 auto; padding: 16px; }
+  h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 24px 0 10px; }
+  .tiers { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+  .tier { background: var(--panel); border: 2px solid var(--line); border-radius: 14px; padding: 14px; cursor: pointer; text-align: left; color: inherit; font: inherit; }
+  .tier[aria-pressed="true"] { border-color: var(--accent); }
+  .tier b { display: block; font-size: 17px; }
+  .tier .price { color: var(--accent); font-weight: 700; font-size: 22px; margin: 4px 0; }
+  .tier small { color: var(--muted); }
+  .stage { display: grid; place-items: center; min-height: 380px; margin-top: 16px; background: radial-gradient(circle at 50% 40%, #241f19, var(--bg) 70%); border-radius: 18px; border: 1px solid var(--line); position: relative; overflow: hidden; }
+  .pack { width: 200px; height: 290px; border-radius: 14px; position: relative; cursor: pointer; border: none; padding: 0;
+    background: linear-gradient(145deg, var(--accent), #c2331a); box-shadow: 0 20px 50px #0008; color: #fff; font: inherit; }
+  .pack::before { content: ""; position: absolute; inset: 0; border-radius: 14px; background: repeating-linear-gradient(45deg, #fff1 0 8px, transparent 8px 16px); }
+  .pack .ptitle { position: relative; font-weight: 800; font-size: 22px; padding: 0 16px; }
+  .pack .hint { position: absolute; bottom: 16px; left: 0; right: 0; font-size: 12px; opacity: .85; }
+  .pack:hover { transform: translateY(-4px) rotate(-1deg); transition: transform .2s; }
+  .pack.shake { animation: shake .55s ease-in-out; }
+  .pack.torn { animation: tear .5s forwards; }
+  @keyframes shake { 0%,100% { transform: rotate(0) } 20% { transform: rotate(-4deg) } 40% { transform: rotate(4deg) } 60% { transform: rotate(-3deg) } 80% { transform: rotate(3deg) } }
+  @keyframes tear { to { transform: translateY(-40px) scale(1.15); opacity: 0; } }
+  .card { width: 220px; border-radius: 16px; padding: 18px; text-align: center; background: var(--panel); border: 3px solid var(--r); box-shadow: 0 0 40px -4px var(--r); animation: reveal .5s ease-out; }
+  .card .rar { color: var(--r); font-weight: 800; text-transform: uppercase; letter-spacing: .1em; font-size: 12px; }
+  .card .val { font-size: 44px; font-weight: 800; margin: 6px 0 0; }
+  .card .rest { font-size: 18px; font-weight: 600; }
+  .card .lbl { color: var(--muted); font-size: 13px; margin-top: 2px; }
+  .card.grail { animation: reveal .5s ease-out, pulse 1.2s ease-in-out infinite; }
+  @keyframes reveal { from { transform: scale(.6) rotateY(90deg); opacity: 0 } to { transform: none; opacity: 1 } }
+  @keyframes pulse { 50% { box-shadow: 0 0 80px 6px var(--r); } }
+  .actions { display: flex; gap: 8px; margin-top: 14px; justify-content: center; }
+  .btn { border: none; border-radius: 10px; padding: 10px 14px; font: inherit; font-weight: 700; cursor: pointer; }
+  .btn.keep { background: var(--text); color: var(--bg); }
+  .btn.sell { background: transparent; color: var(--text); border: 1px solid var(--line); }
+  .confetti { position: absolute; width: 8px; height: 14px; top: -20px; animation: fall linear forwards; }
+  @keyframes fall { to { transform: translateY(440px) rotate(720deg); } }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 640px) { .cols { grid-template-columns: 1fr; } }
+  table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+  td, th { padding: 7px 8px; border-bottom: 1px solid var(--line); text-align: left; }
+  th { color: var(--muted); font-weight: 600; font-size: 12px; }
+  .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; background: var(--r); }
+  .ev { color: var(--muted); font-size: 13px; margin-top: 8px; }
+  .hist { list-style: none; padding: 0; margin: 0; max-height: 260px; overflow: auto; }
+  .hist li { display: flex; justify-content: space-between; padding: 7px 8px; border-bottom: 1px solid var(--line); }
+  .hist .tag { color: var(--muted); font-size: 12px; }
+  .note { color: var(--muted); font-size: 12px; text-align: center; margin: 28px 0 8px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">Rip-a-<span>Plate</span></div>
+  <div class="wallet">Credits: <b id="bal">$200.00</b></div>
+</header>
+<main>
+  <h2>Choose your fate</h2>
+  <div class="tiers" id="tiers"></div>
+
+  <div class="stage" id="stage"></div>
+
+  <div class="cols">
+    <section>
+      <h2>Odds: <span id="oddsName"></span></h2>
+      <table><thead><tr><th>Rarity</th><th>Pull</th><th>Value</th><th>Odds</th></tr></thead><tbody id="odds"></tbody></table>
+      <div class="ev" id="ev"></div>
+    </section>
+    <section>
+      <h2>Your pulls</h2>
+      <ul class="hist" id="hist"><li class="tag">No rips yet.</li></ul>
+    </section>
+  </div>
+  <p class="note">Prototype: play money only. Restaurant names are placeholders, with no affiliation implied.</p>
+</main>
+
+<script>
+// Mirrors data/tiers.json (inlined so this works when opened from disk).
+const CONFIG = {
+  buybackRate: 0.85,
+  tiers: [
+    { id: "drive-thru", name: "Drive-Thru Pack", price: 10,
+      restaurants: ["McDonald's","Taco Bell","Wendy's","Chick-fil-A","Chipotle","Panera","Five Guys","Shake Shack","Raising Cane's"],
+      slots: [
+        { rarity: "common", label: "Side Dish", value: 5, odds: 65 },
+        { rarity: "uncommon", label: "Combo Meal", value: 10, odds: 25 },
+        { rarity: "rare", label: "Family Bucket", value: 25, odds: 8 },
+        { rarity: "epic", label: "Super Size", value: 50, odds: 1.8 },
+        { rarity: "grail", label: "Golden Fry", value: 200, odds: 0.2 } ] },
+    { id: "sit-down", name: "Sit-Down Pack", price: 35,
+      restaurants: ["Olive Garden","Outback Steakhouse","Texas Roadhouse","Chili's","Applebee's","The Cheesecake Factory","Red Lobster","LongHorn Steakhouse"],
+      slots: [
+        { rarity: "common", label: "Appetizer", value: 15, odds: 50 },
+        { rarity: "uncommon", label: "Entrée", value: 25, odds: 31 },
+        { rarity: "rare", label: "Date Night", value: 50, odds: 14 },
+        { rarity: "epic", label: "Party of Six", value: 100, odds: 4.3 },
+        { rarity: "grail", label: "Endless Plate", value: 500, odds: 0.7 } ] },
+    { id: "white-tablecloth", name: "White Tablecloth Pack", price: 150,
+      restaurants: ["Ruth's Chris","The Capital Grille","Morton's","Fleming's","Eddie V's","STK","Nobu"],
+      slots: [
+        { rarity: "common", label: "Amuse-Bouche", value: 50, odds: 45 },
+        { rarity: "uncommon", label: "Chef's Table", value: 100, odds: 33 },
+        { rarity: "rare", label: "Wine Pairing", value: 250, odds: 17 },
+        { rarity: "epic", label: "Tasting Menu", value: 500, odds: 4.4 },
+        { rarity: "grail", label: "Michelin Grail", value: 2000, odds: 0.6 } ] }
+  ]
+};
+
+const $ = id => document.getElementById(id);
+const money = n => "$" + n.toFixed(2);
+const color = r => `var(--${r})`;
+let balance = 200, tier = CONFIG.tiers[0], busy = false;
+
+function pick(slots) {
+  // Prototype RNG. Production should use a provably fair server seed (see docs/CONCEPT.md).
+  let roll = Math.random() * 100;
+  for (const s of slots) { if ((roll -= s.odds) < 0) return s; }
+  return slots[0];
+}
+
+function renderTiers() {
+  $("tiers").innerHTML = CONFIG.tiers.map(t => `
+    <button class="tier" data-id="${t.id}" aria-pressed="${t === tier}">
+      <b>${t.name}</b><div class="price">${money(t.price)}</div>
+      <small>${t.restaurants.slice(0, 4).join(", ")}…</small>
+    </button>`).join("");
+  $("tiers").querySelectorAll(".tier").forEach(b => b.onclick = () => {
+    if (busy) return;
+    tier = CONFIG.tiers.find(t => t.id === b.dataset.id);
+    renderTiers(); renderOdds(); renderPack();
+  });
+}
+
+function renderOdds() {
+  $("oddsName").textContent = tier.name;
+  $("odds").innerHTML = tier.slots.map(s => `
+    <tr style="--r:${color(s.rarity)}"><td><span class="dot"></span>${s.rarity}</td>
+    <td>${s.label}</td><td>${money(s.value)}</td><td>${s.odds}%</td></tr>`).join("");
+  const ev = tier.slots.reduce((a, s) => a + s.value * s.odds / 100, 0);
+  $("ev").textContent = `Expected value ${money(ev)} (${(ev / tier.price * 100).toFixed(1)}% of pack price)`;
+}
+
+function renderPack() {
+  $("stage").innerHTML = `
+    <button class="pack" id="pack" aria-label="Rip ${tier.name}">
+      <div class="ptitle">${tier.name}</div>
+      <div class="hint">Tap to rip · ${money(tier.price)}</div>
+    </button>`;
+  $("pack").onclick = rip;
+}
+
+function rip() {
+  if (busy) return;
+  if (balance < tier.price) { $("pack").querySelector(".hint").textContent = "Not enough credits"; return; }
+  busy = true;
+  balance -= tier.price; $("bal").textContent = money(balance);
+  const pack = $("pack");
+  pack.classList.add("shake");
+  setTimeout(() => { pack.classList.remove("shake"); pack.classList.add("torn"); }, 550);
+  setTimeout(() => reveal(pick(tier.slots)), 1050);
+}
+
+function reveal(slot) {
+  const rest = tier.restaurants[Math.floor(Math.random() * tier.restaurants.length)];
+  const sell = slot.value * CONFIG.buybackRate;
+  $("stage").innerHTML = `
+    <div>
+      <div class="card ${slot.rarity === "grail" ? "grail" : ""}" style="--r:${color(slot.rarity)}">
+        <div class="rar">${slot.rarity}</div>
+        <div class="val">${money(slot.value).replace(".00", "")}</div>
+        <div class="rest">${rest}</div>
+        <div class="lbl">${slot.label} gift card</div>
+      </div>
+      <div class="actions">
+        <button class="btn keep" id="keep">Keep card</button>
+        <button class="btn sell" id="sell">Sell back ${money(sell)}</button>
+      </div>
+    </div>`;
+  if (slot.rarity === "epic" || slot.rarity === "grail") confetti(slot.rarity === "grail" ? 90 : 40);
+  const done = (kept) => {
+    if (!kept) { balance += sell; $("bal").textContent = money(balance); }
+    addHistory(slot, rest, kept);
+    busy = false; renderPack();
+  };
+  $("keep").onclick = () => done(true);
+  $("sell").onclick = () => done(false);
+}
+
+function addHistory(slot, rest, kept) {
+  const h = $("hist");
+  if (h.querySelector(".tag") && !h.querySelector("li span.dot")) h.innerHTML = "";
+  h.insertAdjacentHTML("afterbegin", `
+    <li style="--r:${color(slot.rarity)}"><span><span class="dot"></span>${money(slot.value)} ${rest}</span>
+    <span class="tag">${kept ? "kept" : "sold back"}</span></li>`);
+}
+
+function confetti(n) {
+  const cols = ["--grail", "--accent", "--epic", "--rare", "--uncommon"];
+  for (let i = 0; i < n; i++) {
+    const c = document.createElement("div");
+    c.className = "confetti";
+    c.style.left = Math.random() * 100 + "%";
+    c.style.background = `var(${cols[i % cols.length]})`;
+    c.style.animationDuration = 1.2 + Math.random() * 1.5 + "s";
+    c.style.animationDelay = Math.random() * .4 + "s";
+    $("stage").appendChild(c);
+    setTimeout(() => c.remove(), 3200);
+  }
+}
+
+renderTiers(); renderOdds(); renderPack();
+</script>
+</body>
+</html>
