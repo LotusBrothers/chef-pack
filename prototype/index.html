@@ -1,6 +1,4 @@
-<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><style>body{margin:0}</style>
-</head><body>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><style>body{margin:0}</style></head><body>
 <title>Chef Pack</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -122,6 +120,13 @@
   .pcard b { font: 800 14px/1.1 var(--body); position: relative; }
   .pcard small { font-size: 11px; color: var(--muted); margin-top: -6px; position: relative; }
   .pcard .price { width: 100%; border-radius: 10px; background: var(--white); color: var(--ink); font: 900 13px/1 var(--display); padding: 9px 0; position: relative; font-variant-numeric: tabular-nums; }
+  .pcard.free { grid-column: 1 / -1; grid-template-columns: auto minmax(0, 1fr) 96px; text-align: left; align-items: center; justify-items: start; gap: 14px; padding: 12px 14px; }
+  .pcard.free .tag { position: static; grid-column: 2; grid-row: 1; justify-self: start; margin-bottom: -4px; }
+  .pcard.free .pack { grid-row: 1 / span 3; width: 56px; }
+  .pcard.free b, .pcard.free small { grid-column: 2; }
+  .pcard.free small { margin-top: -10px; }
+  .pcard.free .price { grid-column: 3; grid-row: 1 / span 3; }
+  .pcard.free::before { display: none; }
   .pcard.free .price { background: transparent; color: var(--fg); box-shadow: inset 0 0 0 1px var(--line-2); }
 
   /* ---------- Pack art ---------- */
@@ -142,6 +147,8 @@
   .pk-sitdown { --pk: linear-gradient(160deg, #f4f4f4 0%, #9a9a9a 35%, #e9e9e9 55%, #777 80%, #cfcfcf 100%); --pk-ink: #0a0a0a; --pk-line: rgba(0,0,0,.3); --hat: #0a0a0a; --pleat: #bdbdbd; }
   .pk-treat { --pk: linear-gradient(160deg, #1f1f1f, #040404); --pk-ink: #fff; --pk-line: rgba(255,255,255,.55); }
   .pk-treat .body, .pk-treat .flap { box-shadow: inset 0 0 0 1px rgba(255,255,255,.2); }
+  .pk-local { --pk: radial-gradient(circle at 1px 1px, rgba(255,255,255,.22) 1px, transparent 1.4px) 0 0 / 7px 7px, linear-gradient(160deg, #3a3a3a, #121212); --pk-ink: #fff; --pk-line: rgba(255,255,255,.5); }
+  .pk-local .body, .pk-local .flap { box-shadow: inset 0 0 0 1px rgba(255,255,255,.3); }
   .pk-free { --pk: repeating-linear-gradient(135deg, #141414 0 6px, #1c1c1c 6px 12px); --pk-ink: #fff; --pk-line: rgba(255,255,255,.35); }
   .pk-free .body, .pk-free .flap { box-shadow: inset 0 0 0 1px rgba(255,255,255,.25); }
 
@@ -189,6 +196,12 @@
   .item .odds { position: absolute; top: 8px; right: 9px; font: 500 10px/1 var(--mono); color: var(--fg); }
   .spots { display: flex; flex-wrap: wrap; gap: 6px; }
   .spots span { font-size: 12px; padding: 6px 9px; border-radius: 99px; border: 1px solid var(--line); color: var(--muted); }
+
+  .lg { fill: currentColor; display: block; position: relative; }
+  .lg.tl { width: 34px; height: 34px; margin-bottom: 2px; }
+  .lg.fl { width: 76px; height: 76px; margin-top: 18px; }
+  .lg.dl { width: 18px; height: 18px; margin: 0 auto 1px; }
+  .tile.r-standard .lg, .tile.r-foil .lg { color: var(--fg); }
 
   /* ---------- Win modal ---------- */
   .modal { position: absolute; inset: 0; z-index: 8; background: rgba(0,0,0,.82); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); display: grid; place-items: center; padding: 20px; overflow-y: auto; animation: fadein .25s both; }
@@ -381,28 +394,33 @@
 </div>
 
 <script>
+const CITY = "Rogers, AR";
 const PACKS = [
-  { id: "quick", name: "Quick Bite", price: 15, blurb: "Fast casual, in and out", tag: "Popular",
+  { id: "quick", name: "Quick Bite", price: 15, blurb: "Drive-thru and fast casual", tag: "Popular",
     tiers: [15, 20, 40, 100],
     spots: [
-      { n: "Chipotle", c: "Mexican", d: "0.6 mi" }, { n: "Chick-fil-A", c: "Chicken", d: "1.1 mi" },
-      { n: "Shake Shack", c: "Burgers", d: "2.3 mi" }, { n: "Panera", c: "Bakery café", d: "0.9 mi" },
-      { n: "Five Guys", c: "Burgers", d: "1.8 mi" }, { n: "Raising Cane's", c: "Chicken fingers", d: "1.4 mi" } ] },
+      { n: "McDonald's", c: "Burgers", d: "Rogers", logo: "mcdonalds" }, { n: "Taco Bell", c: "Tex-Mex", d: "Rogers", logo: "tacobell" },
+      { n: "Burger King", c: "Burgers", d: "Rogers", logo: "burgerking" }, { n: "KFC", c: "Fried chicken", d: "Rogers", logo: "kfc" },
+      { n: "Chick-fil-A", c: "Chicken", d: "Rogers" }, { n: "Sonic Drive-In", c: "Burgers & shakes", d: "Rogers" } ] },
   { id: "sitdown", name: "Sit-Down", price: 40, blurb: "Grab a table, stay a while", tag: "Date night",
     tiers: [40, 50, 100, 250],
     spots: [
-      { n: "Olive Garden", c: "Italian", d: "3.2 mi" }, { n: "Outback Steakhouse", c: "Steakhouse", d: "4.0 mi" },
-      { n: "Texas Roadhouse", c: "Steakhouse", d: "5.1 mi" }, { n: "The Cheesecake Factory", c: "American", d: "6.4 mi" },
-      { n: "P.F. Chang's", c: "Asian", d: "3.7 mi" }, { n: "Chili's", c: "Tex-Mex", d: "2.2 mi" } ] },
-  { id: "treat", name: "Treat Yourself", price: 100, blurb: "Steaks, sushi, the good wine", tag: "Premium",
+      { n: "Olive Garden", c: "Italian", d: "Rogers" }, { n: "Texas Roadhouse", c: "Steakhouse", d: "Rogers" },
+      { n: "Chili's", c: "Tex-Mex", d: "Rogers" }, { n: "Outback Steakhouse", c: "Steakhouse", d: "Rogers" } ] },
+  { id: "local", name: "Rogers Local", price: 40, blurb: "Hometown spots, not chains", tag: "Local",
+    tiers: [40, 50, 100, 250],
+    spots: [
+      { n: "Monte Ne Inn Chicken", c: "Family-style chicken", d: "Rogers" }, { n: "Jim's Razorback Pizza", c: "Pizza", d: "Rogers" },
+      { n: "Tacos 4 Life", c: "Tacos", d: "Rogers" }, { n: "Heirloom", c: "New American", d: "Downtown Rogers" } ] },
+  { id: "treat", name: "Treat Yourself", price: 100, blurb: "Steaks and a long dinner", tag: "Premium",
     tiers: [100, 125, 200, 500],
     spots: [
-      { n: "Ruth's Chris", c: "Steakhouse", d: "4.8 mi" }, { n: "The Capital Grille", c: "Steakhouse", d: "5.5 mi" },
-      { n: "Fogo de Chão", c: "Brazilian", d: "5.9 mi" }, { n: "Eddie V's", c: "Seafood", d: "6.2 mi" },
-      { n: "Fleming's", c: "Steakhouse", d: "7.0 mi" } ] },
+      { n: "Arthur's Prime Steakhouse", c: "Steakhouse", d: "Rogers" }, { n: "Heirloom", c: "New American", d: "Downtown Rogers" } ] },
   { id: "free", name: "Free Pick", price: 0, blurb: "Can't decide? Spin for a spot", tag: "Daily", free: true, tiers: [], spots: [] }
 ];
-PACKS[3].spots = PACKS.slice(0, 3).flatMap(p => p.spots);
+PACKS[4].spots = [...new Map(PACKS.slice(0, 4).flatMap(p => p.spots).map(s => [s.n, s])).values()];
+// Brand marks are filled in only in the local-only build (Simple Icons paths). The published demo leaves this empty.
+const LOGOS = {};
 const RARITY = [
   { id: "standard", name: "Standard", odds: 88, bg: "var(--r-standard)" },
   { id: "foil", name: "Foil", odds: 10, bg: "var(--r-foil)" },
@@ -418,15 +436,16 @@ const $ = id => document.getElementById(id);
 const money = (n, c = false) => "$" + (c ? n.toFixed(2) : Math.round(n).toLocaleString());
 const packOf = id => PACKS.find(p => p.id === id);
 const initials = n => n.replace(/^The /, "").replace(/[^A-Za-z\s-]/g, "").split(/[\s-]+/).filter(Boolean).slice(0, 2).map(w => w[0]).join("").toUpperCase();
-const maps = n => "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(n + " near Austin, TX");
+const maps = n => "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(n + " " + CITY);
 const hat = () => `<svg viewBox="0 0 32 32" aria-hidden="true"><use href="#hat"/></svg>`;
+const mark = (spot, cls = "") => LOGOS[spot.logo] ? `<svg class="lg ${cls}" viewBox="0 0 24 24" role="img" aria-label="${spot.n}"><path d="${LOGOS[spot.logo]}"/></svg>` : "";
 const levelOf = xp => { let l = 0; LEVEL_AT.forEach((t, i) => { if (xp >= t) l = i; }); return l; };
 const rand = a => a[Math.floor(Math.random() * a.length)];
 
 let S, busy = false;
 const fresh = () => ({ screen: "home", packId: "sitdown", wallet: [], open: null, xp: 60, balance: 250, fast: false, win: null });
-function save() { try { localStorage.setItem("chefpack.reel.v1", JSON.stringify({ wallet: S.wallet, xp: S.xp, balance: S.balance })); } catch (e) {} }
-function load() { try { const s = JSON.parse(localStorage.getItem("chefpack.reel.v1")); return s && Array.isArray(s.wallet) ? s : null; } catch (e) { return null; } }
+function save() { try { localStorage.setItem("chefpack.rogers.v1", JSON.stringify({ wallet: S.wallet, xp: S.xp, balance: S.balance })); } catch (e) {} }
+function load() { try { const s = JSON.parse(localStorage.getItem("chefpack.rogers.v1")); return s && Array.isArray(s.wallet) ? s : null; } catch (e) { return null; } }
 
 function drawRarity() {
   let roll = Math.random() * 100;
@@ -447,10 +466,11 @@ function renderHud() {
   const wc = $("wcount"); wc.hidden = !S.wallet.length; wc.textContent = S.wallet.length;
 }
 function dropTile(d, isNew) {
-  return `<div class="drop ${isNew ? "new" : ""}" title="${d.who} pulled ${money(d.value)} ${d.n}"><b>${initials(d.n)}</b><small>${money(d.value)}</small><span class="bar ${d.r === 3 ? "black" : ""}" style="background:${d.r === 3 ? "" : RARITY[d.r].bg}"></span></div>`;
+  return `<div class="drop ${isNew ? "new" : ""}" title="${d.who} pulled ${money(d.value)} ${d.n}">${mark(spotByName(d.n), "dl") || `<b>${initials(d.n)}</b>`}<small>${money(d.value)}</small><span class="bar ${d.r === 3 ? "black" : ""}" style="background:${d.r === 3 ? "" : RARITY[d.r].bg}"></span></div>`;
 }
+const spotByName = n => PACKS.flatMap(p => p.spots).find(s => s.n === n) || { n };
 function fakeDrop() {
-  const p = rand(PACKS.slice(0, 3)), r = fillerRarity();
+  const p = rand(PACKS.filter(x => !x.free)), r = fillerRarity();
   return { who: rand(HANDLES), n: rand(p.spots).n, value: p.tiers[r], r };
 }
 function pushDrop(d) {
@@ -477,7 +497,7 @@ const packArt = (p, big = false) => `<span class="pack pk-${p.id} ${big ? "big" 
 function home() {
   return `<div class="fadein">
     <div class="hero">
-      <div><p class="kicker">Tonight · Austin, TX</p><h1 class="title">Can't decide on dinner?</h1><p>Open a pack. Every pull is a gift card worth at least the pack price.</p></div>
+      <div><p class="kicker">Tonight · ${CITY}</p><h1 class="title">Can't decide on dinner?</h1><p>Open a pack. Every pull is a gift card worth at least the pack price.</p></div>
       ${hat()}
     </div>
     <div class="sec"><h2>Packs</h2><small>${PACKS.length} available</small></div>
@@ -504,7 +524,7 @@ function reelTiles(p, win) {
 function tile(p, t, isWin) {
   const r = RARITY[t.r];
   return `<div class="tile r-${r.id} ${isWin ? "wintile" : ""}" style="--rb:${r.bg}">
-    <span class="ti">${initials(t.spot.n)}</span>
+    ${mark(t.spot, "tl") || `<span class="ti">${initials(t.spot.n)}</span>`}
     ${p.free ? `<span class="tn">${t.spot.c}</span>` : `<span class="tv">${money(p.tiers[t.r])}</span>`}
     <span class="tn">${t.spot.n}</span><span class="bar"></span></div>`;
 }
@@ -611,7 +631,7 @@ function cardFace(w) {
   const p = packOf(w.packId), rar = RARITY[w.r], up = w.r > 0;
   return `<div class="face c-${rar.id}">
     <div class="ftop">${hat()}<span class="rar">${w.free ? "Free pick" : rar.name}</span></div>
-    <div class="mono">${initials(w.spot.n)}</div>
+    ${mark(w.spot, "fl") || `<div class="mono">${initials(w.spot.n)}</div>`}
     <div class="rn">${w.spot.n}</div>
     <div class="rm">${w.spot.c} · ${w.spot.d} · open tonight</div>
     ${w.free ? `<div class="rv"><b style="font-size:20px">Tonight?</b><span>No card</span></div>`
@@ -653,6 +673,7 @@ function showWin(w, fresh) {
   if (q("wReal")) q("wReal").onclick = () => { done(); spin(false); };
   if (q("wSwap")) q("wSwap").onclick = () => {
     const pool = p.spots.filter(s => s.n !== w.spot.n);
+    if (!pool.length) return;
     w.spot = rand(pool); w.swapped = true; w.levelUp = 0;
     Object.assign(S.wallet[0], { n: w.spot.n, c: w.spot.c, d: w.spot.d });
     save(); showWin(w, true);
