@@ -1,7 +1,9 @@
 import {ApiError,authenticate,database,endpoint} from '../backend/http.mjs';
 export default endpoint('POST',async(req)=>{
   const token=await authenticate(req);
-  const body=typeof req.body==='string'?JSON.parse(req.body):req.body;
+  let body;
+  try { body=typeof req.body==='string'?JSON.parse(req.body):req.body; }
+  catch { throw new ApiError(400,'invalid_json'); }
   const key=req.headers?.['idempotency-key'];
   if (!body || typeof body.pack_id!=='string' || !/^[a-z0-9-]{1,64}$/.test(body.pack_id) ||
       typeof key!=='string' || !/^[A-Za-z0-9_-]{8,128}$/.test(key) ||
