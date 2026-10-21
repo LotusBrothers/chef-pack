@@ -4,6 +4,7 @@ Readiness: BLOCKED. The frontend is connected to the mock API contract, but the 
 Report scope: integration.
 Tested code commit: 53b2bedf9621aaecc97c3727a07c1e05d0ffebaf (frontend/justin). The local suite was re-run on this commit; screenshots are from cd8f344, before the c67f155 merge.
 Main included: 28515f4539c79dab41a21bbef8e0ca1c234d97d7.
+Later commit 1cfd1fb: a visual-only logo change (white chef hat on a black badge in the top bar and sign-in sheet). The case results below were not re-run on it. It was checked at iPhone 13 size with no page errors, and the scope check passes.
 Combined preview: none available (see blockers).
 Machine-readable report: reports/frontend/current.json. Evidence: reports/frontend/evidence/.
 
