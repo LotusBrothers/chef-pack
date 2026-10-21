@@ -143,9 +143,25 @@
   .hscroll > * { scroll-snap-align: start; }
   .packs { display: grid; gap: 20px; }
   .pack { background: none; border: 0; padding: 0; text-align: left; display: grid; gap: 9px; min-width: 0; width: 100%; }
-  .mosaic { position: relative; border-radius: 14px; background: var(--surface); padding: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .mosaic .more { position: absolute; right: 16px; bottom: 16px; background: #fff; color: var(--fg); font-size: 12px; font-weight: 800; padding: 4px 9px; border-radius: 99px; box-shadow: 0 1px 4px rgba(0,0,0,.15); }
+  .pi .tag { display: none; }
   .tag { display: inline-block; vertical-align: 2px; margin-left: 4px; background: var(--surface); color: var(--fg); font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 99px; }
+  .pk { position: relative; aspect-ratio: 1.586; border-radius: 5.5% / 8.7%; container-type: inline-size; overflow: hidden; color: #fff; text-align: left;
+    background:
+      repeating-linear-gradient(115deg, rgba(255,255,255,.018) 0 1px, transparent 1px 3px),
+      radial-gradient(120% 90% at 0% 0%, #2e2e2e 0%, #121212 48%, #060606 100%);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.09), 0 10px 24px rgba(0,0,0,.18); }
+  .pk::after { content: ""; position: absolute; inset: 0; background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,.07) 45%, transparent 60%); pointer-events: none; }
+  .pk .ptop { position: absolute; left: 6%; right: 6%; top: 8%; display: flex; justify-content: space-between; align-items: center; }
+  .pk .brandmark { display: flex; align-items: center; gap: 1.8cqi; font-size: 4cqi; font-weight: 800; letter-spacing: .18em; color: rgba(255,255,255,.6); }
+  .pk .brandmark svg { width: 5.4cqi; height: 5.4cqi; }
+  .pk .ptag { font-size: 3.6cqi; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; background: rgba(255,255,255,.12); padding: 1.2cqi 2.6cqi; border-radius: 99px; }
+  .pk .pname { position: absolute; left: 6%; right: 6%; top: 27%; font-size: 10.5cqi; font-weight: 900; letter-spacing: -.03em; line-height: 1; }
+  .pk .pbrands { position: absolute; left: 6%; right: 6%; top: 44%; font-size: 3.9cqi; font-weight: 600; color: rgba(255,255,255,.62); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pk .pbot { position: absolute; left: 6%; right: 6%; bottom: 10%; display: flex; justify-content: space-between; align-items: flex-end; }
+  .pk .pbot span { font-size: 3.6cqi; font-weight: 700; letter-spacing: .16em; color: rgba(255,255,255,.5); line-height: 1.5; }
+  .pk .pbot span b { display: block; font-size: 6cqi; letter-spacing: -.01em; color: #fff; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .pk .pbot .pprice { font-size: 10cqi; font-weight: 900; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+  .pk .pacc { position: absolute; left: 0; right: 0; bottom: 0; height: 1.6cqi; background: var(--a); }
   .pi { display: flex; justify-content: space-between; gap: 10px; align-items: start; }
   .pi b { display: block; font-size: 16px; font-weight: 800; }
   .pi small { display: block; color: var(--muted); font-size: 14px; margin-top: 1px; }
@@ -160,7 +176,9 @@
   .item small { font-size: 12px; color: var(--muted); margin-top: -6px; }
 
   /* ---------- Pack screen ---------- */
-  .stitle h1 { margin: 16px 0 0; font-size: 28px; font-weight: 900; letter-spacing: -.03em; line-height: 1.1; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .stitle { margin-top: 14px; }
+  .stitle h1:not(.sr) { margin: 16px 0 0; font-size: 28px; font-weight: 900; letter-spacing: -.03em; line-height: 1.1; }
   .meta { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 6px; color: var(--muted); font-size: 14px; }
   .meta b { color: var(--fg); font-weight: 700; }
   .values { margin-top: 16px; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
@@ -384,8 +402,18 @@ function bindChrome() {
 }
 
 /* ---------- Pieces ---------- */
-const mosaic = p => `<div class="mosaic">${p.spots.slice(0, 4).map(s => gc(s)).join("")}${p.spots.length > 4 ? `<span class="more">+${p.spots.length - 4} more</span>` : ""}</div>`;
-const packCard = p => `<button class="pack" type="button" data-pack="${p.id}">${mosaic(p)}
+// The pack itself: one sealed black card with its name, restaurants, guaranteed value and price.
+const packFace = p => {
+  const stops = p.spots.slice(0, 5).map(accent);
+  const names = p.spots.slice(0, 4).map(x => x.n).join(" · ") + (p.spots.length > 4 ? ` · +${p.spots.length - 4} more` : "");
+  return `<div class="pk" style="--a:linear-gradient(90deg, ${stops.join(", ")})">
+    <span class="ptop"><span class="brandmark"><svg aria-hidden="true"><use href="#hat-w"/></svg>CHEF PACK</span>${p.free ? `<span class="ptag">Daily</span>` : p.tag ? `<span class="ptag">${esc(p.tag)}</span>` : ""}</span>
+    <span class="pname">${esc(p.name)}</span>
+    <span class="pbrands">${p.free ? `Any of ${p.spots.length} restaurants` : esc(names)}</span>
+    <span class="pbot"><span>${p.free ? "NO CARD<b>Just a pick</b>" : `GUARANTEED<b>${money(p.price)}+ card</b>`}</span><span class="pprice">${p.free ? "FREE" : money(p.price)}</span></span>
+    <span class="pacc"></span></div>`;
+};
+const packCard = p => `<button class="pack" type="button" data-pack="${p.id}">${packFace(p)}
   <div class="pi"><div><b>${esc(p.name)}${p.tag ? ` <span class="tag">${esc(p.tag)}</span>` : ""}</b><small>${p.free ? "Free · a place to eat, no card" : `<span class="guar">${money(p.price)}+ gift card</span> · ${p.spots.length} restaurants`}</small></div><span class="price">${p.free ? "Free" : money(p.price)}</span></div></button>`;
 const openPack = id => go("pack", { packId: id, from: S.page });
 
@@ -413,8 +441,8 @@ function renderPacks() {
 
 function pack() {
   const p = packOf(S.packId);
-  return `${mosaic(p)}
-    <div class="stitle"><h1>${esc(p.name)}</h1>
+  return `${packFace(p)}
+    <div class="stitle"><h1 class="sr">${esc(p.name)}</h1>
       <div class="meta">${p.free ? `<span><b>Free</b></span><span>${p.spots.length} restaurants</span>`
         : `<span class="guar">${money(p.price)}+ gift card, guaranteed</span><span><b>${p.spots.length}</b> restaurants</span><span><b>${upOdds()}%</b> upgrade chance</span>`}</div></div>
     ${p.free ? "" : `<div class="values">${p.tiers.map((v, i) => `<div><b>${money(v)} gift card</b><span>${i ? `${ODDS[i]}% chance` : "Guaranteed"}</span></div>`).join("")}</div>`}
