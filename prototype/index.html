@@ -346,6 +346,26 @@
   .empty p { margin: 0; color: var(--muted); }
   .foot { color: var(--muted); font-size: 12px; text-align: center; margin: 28px 0 4px; line-height: 1.5; }
 
+
+  /* ---------- Test mode and account ---------- */
+  .testbar { display: flex; justify-content: center; flex-wrap: wrap; gap: 2px 8px; background: #fde68a; color: #4a3200; border-radius: 10px; padding: 5px 10px; font-size: 12px; font-weight: 700; margin-bottom: 4px; text-align: center; }
+  .testbar b { font-weight: 900; letter-spacing: .08em; }
+  #acct span { max-width: 96px; overflow: hidden; text-overflow: ellipsis; }
+  .mini .mtag.test { background: #fde68a; color: #4a3200; }
+  .ptile.demo .mini > :not(.mtag) { opacity: .55; filter: grayscale(.5); }
+  .ptile.demo .row strong { color: var(--muted); font-size: 14px; }
+  .note { margin: 12px 0 0; background: var(--surface); border-radius: 12px; padding: 12px 14px; font-size: 14px; color: var(--muted); line-height: 1.45; }
+  .note b { color: var(--fg); }
+  .form { display: grid; gap: 10px; margin-top: 14px; }
+  .form label { display: grid; gap: 4px; font-weight: 700; font-size: 14px; }
+  .form input { height: 48px; border: 1.5px solid var(--line); border-radius: 12px; padding: 0 14px; font-size: 16px; background: #fff; min-width: 0; }
+  .form input:focus { outline: 2px solid var(--fg); outline-offset: 0; border-color: transparent; }
+  .msg { margin: 0; min-height: 20px; font-size: 14px; color: var(--muted); }
+  .msg.err { color: #b42318; font-weight: 600; }
+  .msg.ok { color: var(--green); font-weight: 600; }
+  .otest { margin: 0 0 4px; background: #fde68a; color: #4a3200; font-size: 12px; font-weight: 900; letter-spacing: .08em; padding: 4px 10px; border-radius: 8px; }
+  .buynow:disabled { background: var(--surface-2); color: var(--muted); opacity: 1; }
+
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   }
@@ -448,19 +468,15 @@ const PACKS = [
 PACKS.forEach(p => p.tiers.forEach(v => p.spots.forEach(s => { if (v < s.min || v > s.max) console.error(`${p.name}: ${s.n} has no $${v} card`); })));
 const IN_PACKS = Object.values(R).filter(s => PACKS.some(p => p.spots.includes(s)));
 const FREE = { id: "free", name: "Free Pick", price: 0, free: true, cat: "free", blurb: "A random restaurant for tonight, no card", spots: IN_PACKS, tiers: [] };
-const ALL = [...PACKS, FREE];
 const CATS = [["all", "All"], ["fast", "Fast food"], ["casual", "Casual dining"], ["pizza", "Pizza"], ["mexican", "Mexican"], ["italian", "Italian"], ["seafood", "Seafood"], ["steak", "Steakhouse"], ["breakfast", "Breakfast"], ["dessert", "Dessert"], ["fine", "Fine dining"]];
+// Illustrative odds for demo themes only; the test server has no upgrades.
 const ODDS = [88, 10, 1.8, 0.2];
-const FEE = 1.99, SWAP = 2;
 
 const $ = id => document.getElementById(id);
 const money = (n, c = false) => "$" + (c ? n.toFixed(2) : Math.round(n).toLocaleString());
-const packOf = id => ALL.find(p => p.id === id);
 const rand = a => a[Math.floor(Math.random() * a.length)];
 const icon = id => `<svg aria-hidden="true"><use href="#ic-${id}"/></svg>`;
 const maps = n => "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(n + " " + CITY);
-const code = () => Array.from({ length: 3 }, () => Math.random().toString(36).slice(2, 6).toUpperCase()).join(" ");
-const upOdds = () => ODDS.slice(1).reduce((a, b) => a + b, 0);
 const esc = t => String(t).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 const isLight = hex => { const h = hex.replace("#", ""), f = h.length === 3 ? h.split("").map(x => x + x).join("") : h; const [r, g, b] = [0, 2, 4].map(i => parseInt(f.slice(i, i + 2), 16)); return (r * 299 + g * 587 + b * 114) / 1000 > 225; };
 const isDark = hex => { const h = hex.replace("#", ""), f = h.length === 3 ? h.split("").map(x => x + x).join("") : h; const [r, g, b] = [0, 2, 4].map(i => parseInt(f.slice(i, i + 2), 16)); return (r * 299 + g * 587 + b * 114) / 1000 < 40; };
@@ -474,46 +490,125 @@ function gc(s, cls = "", value = null) {
   return `<div class="gc ${cls}" style="--a:${accent(s)}"><span class="gtop"><svg aria-hidden="true"><use href="#hat-w"/></svg>CHEF PACK</span><span class="gmark">${markup}</span><span class="gbot"><span>GIFT CARD</span>${value !== null ? `<b>${money(value)}</b>` : ""}</span><span class="acc"></span></div>`;
 }
 
+/* ---------- Test backend (same origin) ----------
+   Packs, orders and the wallet come from Tyler's mock API: TEST MODE, no real money, cards NOT REDEEMABLE.
+   The server picks the price, owner and result; the browser never decides a paid outcome. */
+const AUTH_URL = "https://umhbsphrgplijlrkzgps.supabase.co";
+// Supabase publishable key (public by design). Empty until Tyler supplies it; /api/config may serve it instead.
+const AUTH_KEY = "";
+const SESSION_KEY = "chefpack.session.v1", PENDING_KEY = "chefpack.pending.v1";
+// Local themes whose look matches a server pack. Every other theme stays demo-only until the backend sells it.
+const THEME = { "quick-bite": "quick", "sit-down": "sitdown" };
+const TEST_SPOT = { id: "test", n: "Test card", c: "Demo restaurant", min: 0, max: 0, b: "#191919", f: "#ffffff" };
+const DEMO = PACKS.filter(p => !Object.values(THEME).includes(p.id)).map(p => ({ ...p, demo: true }));
+const fromApi = x => {
+  const t = packOf(THEME[x.id]), price = x.price_cents / 100;
+  return { id: x.id, name: x.name, price, cents: x.price_cents, currency: x.currency, api: true, cat: t?.cat || "", tag: t?.tag || "",
+    blurb: "One test card, picked by the server", tiers: [price], spots: [TEST_SPOT, TEST_SPOT] };
+};
+const pullSpot = pull => ({ ...TEST_SPOT, id: "pull", n: pull.restaurant_label || "Demo restaurant" });
+const when = iso => { const d = new Date(iso); return isNaN(d) ? "" : d.toLocaleDateString(undefined, { month: "short", day: "numeric" }) + " " + d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" }); };
+
+class Fail extends Error { constructor(status, code, msg) { super(msg || code); this.status = status; this.code = code; } }
+// Parse a fetch or throw a Fail with status 0 for timeouts and lost connections.
+async function call(url, opts = {}, ms = 15000) {
+  let r;
+  try { r = await fetch(url, { ...opts, signal: AbortSignal.timeout(ms) }); }
+  catch (e) { throw new Fail(0, e.name === "TimeoutError" ? "timeout" : navigator.onLine === false ? "offline" : "network"); }
+  let body = null; try { body = await r.json(); } catch (e) {}
+  if (!r.ok) throw new Fail(r.status, body?.error_code || body?.error || "http_" + r.status, body?.msg || body?.error_description || body?.message);
+  return body;
+}
+
+/* ---------- Auth: Supabase Auth over fetch (no client library added) ---------- */
+let keyCache = AUTH_KEY;
+async function authKey() {
+  if (keyCache) return keyCache;
+  try { const c = await call("/api/config", {}, 8000); keyCache = c?.supabase_publishable_key || ""; } catch (e) {}
+  if (!keyCache) throw new Fail(503, "auth_not_configured", "Sign-in isn't configured on this deployment yet (missing Supabase publishable key).");
+  return keyCache;
+}
+async function gotrue(path, body, token) {
+  const key = await authKey();
+  return call(`${AUTH_URL}/auth/v1/${path}`, { method: body === undefined ? "GET" : "POST", headers: { apikey: key, "Content-Type": "application/json", ...(token ? { Authorization: "Bearer " + token } : {}) }, body: body === undefined ? undefined : JSON.stringify(body) });
+}
+function loadSession() { try { const s = JSON.parse(localStorage.getItem(SESSION_KEY)); return s?.access_token && s.user?.id ? s : null; } catch (e) { return null; } }
+function keepSession(d) {
+  const s = { access_token: d.access_token, refresh_token: d.refresh_token, expires_at: +d.expires_at || Math.floor(Date.now() / 1000) + (+d.expires_in || 3600), user: { id: d.user.id, email: d.user.email } };
+  try { localStorage.setItem(SESSION_KEY, JSON.stringify(s)); } catch (e) {}
+  return s;
+}
+async function refresh() {
+  const s = loadSession();
+  if (!s?.refresh_token) return null;
+  try { return keepSession(await gotrue("token?grant_type=refresh_token", { refresh_token: s.refresh_token })); }
+  catch (e) { if (e.status === 0) throw e; return null; }
+}
+async function token() {
+  let s = loadSession();
+  if (s && s.expires_at - 60 < Date.now() / 1000) s = await refresh();
+  return s;
+}
+// Same-origin API call. One refresh on 401, then the session counts as expired.
+async function api(path, opts = {}, auth = false) {
+  const send = s => call(path, { ...opts, headers: { "Content-Type": "application/json", ...(opts.headers || {}), ...(s ? { Authorization: "Bearer " + s.access_token } : {}) } });
+  if (!auth) return send(null);
+  let s = await token();
+  if (!s) { signedOut("expired"); throw new Fail(401, "authentication_required"); }
+  try { return await send(s); }
+  catch (e) {
+    if (e.status !== 401) throw e;
+    s = await refresh();
+    if (!s) { signedOut("expired"); throw e; }
+    try { return await send(s); } catch (e2) { if (e2.status === 401) signedOut("expired"); throw e2; }
+  }
+}
+
+/* ---------- Pending purchase attempts (one per user, survives reload) ---------- */
+function pendingAll() { try { return JSON.parse(localStorage.getItem(PENDING_KEY)) || {}; } catch (e) { return {}; } }
+const pendingFor = uid => uid ? pendingAll()[uid] || null : null;
+function setPending(a) { const all = pendingAll(); all[a.user_id] = a; try { localStorage.setItem(PENDING_KEY, JSON.stringify(all)); } catch (e) {} }
+function clearPending(a) { const all = pendingAll(); if (all[a.user_id]?.key === a.key) { delete all[a.user_id]; try { localStorage.setItem(PENDING_KEY, JSON.stringify(all)); } catch (e) {} } }
+
 let S, busy = false;
-const fresh = () => ({ page: "home", packId: "quick", from: "home", cat: "all", q: "", wallet: [], balance: 250, slide: 0, pass: false, pm: "wallet" });
-function save() { try { localStorage.setItem("chefpack.app.v3", JSON.stringify({ wallet: S.wallet, balance: S.balance })); } catch (e) {} }
-function load() { try { const s = JSON.parse(localStorage.getItem("chefpack.app.v3")); return s && Array.isArray(s.wallet) ? { ...s, wallet: s.wallet.filter(w => R[w.id]) } : null; } catch (e) { return null; } }
-function drawTier() { let r = Math.random() * 100; for (let i = 0; i < ODDS.length; i++) if ((r -= ODDS[i]) < 0) return i; return 0; }
+const fresh = () => ({ page: "home", packId: "quick-bite", from: "home", cat: "all", q: "", slide: 0,
+  catalog: null, catErr: "", user: null, pulls: [], wstate: "signedout", werr: "", note: "" });
+const packOf = id => [...(S?.catalog || []), ...DEMO, ...PACKS, FREE].find(p => p.id === id);
 
 /* ---------- Router ---------- */
-function go(page, extra = {}) { if (busy) return; Object.assign(S, { page }, extra); render(true); }
+function go(page, extra = {}) { if (busy) return; Object.assign(S, { page }, extra); render(true); if (page === "wallet") loadWallet(); }
 function render(motion = false) {
   closeSheet();
-  $("top").innerHTML = topBar();
-  $("bottom").innerHTML = S.page === "pack" ? "" : tabBar();
+  chrome();
   const v = $("view");
   v.innerHTML = ({ home, pack, cards, wallet })[S.page]();
   v.scrollTop = 0; $("top").classList.remove("shadow");
   if (motion) { v.classList.remove("in-fade"); v.offsetWidth; v.classList.add("in-fade"); }
-  bindChrome();
   bind[S.page]?.();
 }
-const balBtn = () => `<button class="bal" id="bal" type="button" aria-label="Balance ${money(S.balance, true)}. Tap to add $100 of demo credit">${icon("wallet")}<span id="balAmt">${money(S.balance, true)}</span></button>`;
+// Redraw the top and tab bars without touching open sheets.
+function chrome() {
+  $("top").innerHTML = topBar();
+  $("bottom").innerHTML = S.page === "pack" ? "" : tabBar();
+  bindChrome();
+}
+const testBar = `<div class="testbar" role="note"><b>TEST MODE</b><span>No real money · cards NOT REDEEMABLE</span></div>`;
+const acctBtn = () => `<button class="bal" id="acct" type="button" aria-label="${S.user ? `Account: ${esc(S.user.email || "signed in")}` : "Sign in"}">${icon("wallet")}<span>${S.user ? esc((S.user.email || "Account").split("@")[0]) : "Sign in"}</span></button>`;
 function topBar() {
-  if (S.page === "pack") return `<div class="bar"><button class="round" id="back" type="button" aria-label="Back">${icon("back")}</button><span class="bartitle">${esc(packOf(S.packId).name)}</span>${balBtn()}</div>`;
+  if (S.page === "pack") return `${testBar}<div class="bar"><button class="round" id="back" type="button" aria-label="Back">${icon("back")}</button><span class="bartitle">${esc(packOf(S.packId).name)}</span>${acctBtn()}</div>`;
   const searchable = S.page === "home" || S.page === "cards";
-  return `<div class="bar"><button class="brand" id="brand" type="button" aria-label="Chef Pack home"><svg aria-hidden="true"><use href="#hat"/></svg><b>Chef Pack</b></button><span class="grow"></span><span class="pill">${icon("pin")}${CITY}</span>${balBtn()}</div>
+  return `${testBar}<div class="bar"><button class="brand" id="brand" type="button" aria-label="Chef Pack home"><svg aria-hidden="true"><use href="#hat"/></svg><b>Chef Pack</b></button><span class="grow"></span><span class="pill">${icon("pin")}${CITY}</span>${acctBtn()}</div>
     ${searchable ? `<label class="search">${icon("search")}<input id="q" type="search" inputmode="search" enterkeyhint="search" autocomplete="off" placeholder="${S.page === "cards" ? "Search gift cards" : "Search restaurants or packs"}" aria-label="Search" value="${esc(S.q)}"></label>` : ""}`;
 }
 function tabBar() {
   const t = (id, ic, label, extra = "") => `<button type="button" data-go="${id}" aria-current="${S.page === id ? "page" : "false"}">${icon(ic)}${label}${extra}</button>`;
-  return `<nav class="tabbar" aria-label="Main">${t("home", "home", "Home")}${t("cards", "cards", "Gift cards")}${t("wallet", "wallet", "Wallet", S.wallet.length ? `<span class="dot">${S.wallet.length}</span>` : "")}</nav>`;
-}
-function orderBar() {
-  const p = packOf(S.packId);
-  return `<div class="orderbar"><button class="btn" id="open" type="button">${p.free ? "Pick a restaurant" : `Open pack<span class="sum">${money(p.price + FEE, true)}</span>`}</button>
-    <span class="fine">${p.free ? "Free picks suggest a place. Packs come with a gift card." : `${money(p.price)} + ${money(FEE, true)} service fee · Demo credit, no real charge`}</span></div>`;
+  return `<nav class="tabbar" aria-label="Main">${t("home", "home", "Home")}${t("cards", "cards", "Gift cards")}${t("wallet", "wallet", "Wallet", S.pulls.length ? `<span class="dot">${S.pulls.length}</span>` : "")}</nav>`;
 }
 function bindChrome() {
   document.querySelectorAll("[data-go]").forEach(b => b.onclick = () => go(b.dataset.go, { q: "" }));
   if ($("brand")) $("brand").onclick = () => go("home", { cat: "all", q: "" });
   if ($("back")) $("back").onclick = () => go(S.from || "home");
-  $("bal").onclick = () => { S.balance += 100; save(); $("balAmt").textContent = money(S.balance, true); };
+  $("acct").onclick = () => accountSheet();
   if ($("q")) $("q").oninput = e => { S.q = e.target.value; S.page === "home" ? renderPacks() : renderShelf(); };
 }
 
@@ -521,47 +616,60 @@ function bindChrome() {
 // Crimped top and bottom edge for the foil pack.
 const ZIG = (() => { const n = 18, d = 2.2, top = [], bot = []; for (let i = 0; i <= n; i++) { const x = (i / n * 100).toFixed(2); top.push(`${x}% ${i % 2 ? d : 0}%`); bot.unshift(`${x}% ${i % 2 ? 100 - d : 100}%`); } return `polygon(${top.concat(bot).join(",")})`; })();
 const RARITY = [["Base", "#ececec", "#191919"], ["Upgrade", "#e3f5ea", "#0a7a41"], ["Big hit", "#e5eeff", "#1d56c4"], ["Jackpot", "#fbefc4", "#8a5d00"]];
-const band = p => `linear-gradient(90deg, ${p.spots.slice(0, 5).map(accent).join(", ")})`;
+const band = p => p.api ? "linear-gradient(90deg, #f5c542, #8a8a8a)" : `linear-gradient(90deg, ${p.spots.slice(0, 5).map(accent).join(", ")})`;
 // The sealed pack: black foil, crimped edges, the pack name and its guarantee.
 const foil = p => `<div class="foil"><div class="bag" style="clip-path:${ZIG};--a:${band(p)}"><span class="crimp t"></span><span class="crimp b"></span>
   <span class="fmark"><svg aria-hidden="true"><use href="#hat-w"/></svg>CHEF PACK</span><span class="fname">${esc(p.name)}</span><span class="fband"></span>
-  <span class="fval">${p.free ? "FREE PICK" : `${money(p.tiers[0])}+ CARD`}</span><span class="fsub">${p.free ? "NO CARD INSIDE" : "1 GIFT CARD"}</span></div></div>`;
-const tile = p => `<button class="ptile" type="button" data-pack="${p.id}">
-  <div class="mini">${p.free ? `<span class="mtag">Daily</span>` : p.tag ? `<span class="mtag">${esc(p.tag)}</span>` : ""}${gc(p.spots[0], "m1")}${gc(p.spots[1], "m2")}${foil(p)}</div>
-  <span><b>${esc(p.name)}</b><small>${p.free ? "A place to eat tonight" : `1 gift card · ${p.spots.length} restaurants`}</small>
-  <span class="row"><strong>${p.free ? "Free" : money(p.price)}</strong>${p.free ? "" : `<em>${money(p.tiers[0])}+ card</em>`}</span></span></button>`;
+  <span class="fval">${p.free ? "FREE PICK" : p.api ? `${money(p.price)} TEST CARD` : `${money(p.tiers[0])}+ CARD`}</span><span class="fsub">${p.free ? "NO CARD INSIDE" : p.api ? "NOT REDEEMABLE" : "DEMO ONLY"}</span></div></div>`;
+const tile = p => `<button class="ptile${p.demo ? " demo" : ""}" type="button" data-pack="${p.id}">
+  <div class="mini">${p.demo ? `<span class="mtag">Demo only</span>` : p.free ? `<span class="mtag">Daily</span>` : `<span class="mtag test">Test pack</span>`}${gc(p.spots[0], "m1")}${gc(p.spots[1], "m2")}${foil(p)}</div>
+  <span><b>${esc(p.name)}</b><small>${p.free ? "A place to eat tonight, no card" : p.api ? "1 test card · server-picked" : `Not for sale yet · ${p.spots.length} restaurants`}</small>
+  <span class="row"><strong>${p.free ? "Free" : p.demo ? "Coming later" : money(p.price)}</strong>${p.api ? `<em>${money(p.price)} test card</em>` : ""}</span></span></button>`;
 const openPack = id => go("pack", { packId: id, from: S.page, slide: 0 });
 
 /* ---------- Pages ---------- */
 function home() {
+  const qb = S.catalog?.find(p => p.id === "quick-bite");
   return `<div class="chips" role="group" aria-label="Categories">${CATS.map(([id, label]) => `<button class="chip" type="button" data-cat="${id}" aria-pressed="${S.cat === id}">${label}</button>`).join("")}</div>
     <section class="promo">
-      <div><h1>Can't decide on dinner?</h1><p>Rip a pack and pull a gift card to one of its restaurants, worth at least what you paid.</p><button class="btn white" id="pOpen" type="button">Open Quick Bite · $15</button></div>
+      <div><h1>Can't decide on dinner?</h1><p>Rip a test pack and the server deals you one demo card. Test mode: nothing is charged or redeemable.</p><button class="btn white" id="pOpen" type="button" ${qb ? "" : "disabled"}>${qb ? `Open ${esc(qb.name)} · ${money(qb.price)}` : "Loading packs…"}</button></div>
       <div class="fan" aria-hidden="true">${gc(R.chip)}${gc(R.og)}${gc(R.tbell)}</div>
     </section>
     <div id="packs"></div>`;
 }
 function renderPacks() {
+  if (!$("packs")) return;
   const q = S.q.trim().toLowerCase();
-  const list = ALL.filter(p => (S.cat === "all" || p.cat === S.cat) && (!q || p.name.toLowerCase().includes(q) || p.spots.some(s => s.n.toLowerCase().includes(q))));
+  const match = p => (S.cat === "all" || p.cat === S.cat) && (!q || p.name.toLowerCase().includes(q) || (!p.api && p.spots.some(s => s.n.toLowerCase().includes(q))));
+  const live = (S.catalog || []).filter(match), demo = [FREE, ...DEMO].filter(match);
   const browsing = S.cat === "all" && !q;
-  $("packs").innerHTML = (browsing ? `
-    <div class="sh"><h2>Popular packs</h2><small>${PACKS.length} packs</small></div>
-    <div class="hscroll">${["quick", "sitdown", "date", "pizza", "steak"].map(id => tile(packOf(id))).join("")}</div>
-    <div class="sh"><h2>All packs</h2></div>` : `<div class="sh"><h2>${q ? `Results for "${esc(S.q.trim())}"` : CATS.find(c => c[0] === S.cat)[1]}</h2><small>${list.length} pack${list.length === 1 ? "" : "s"}</small></div>`)
-    + (list.length ? `<div class="tiles">${list.map(tile).join("")}</div>` : `<div class="none">No packs match. Try another restaurant or category.</div>`)
-    + `<p class="foot">Demo: play credit only, no real charges or gift cards.<br>Restaurant names belong to their owners; no affiliation implied.</p>`;
+  const liveBody = S.catalog === null
+    ? (S.catErr ? `<div class="none" role="alert"><b>Couldn't load packs.</b><br>${esc(S.catErr)}<br><button class="btn soft" id="catRetry" type="button" style="margin-top:10px">Try again</button></div>` : `<div class="none" aria-live="polite">Loading packs from the test server…</div>`)
+    : live.length ? `<div class="${browsing ? "hscroll" : "tiles"}">${live.map(tile).join("")}</div>` : `<div class="none">${S.catalog.length ? "No test packs match." : "The server has no active packs."}</div>`;
+  $("packs").innerHTML = `<div class="sh"><h2>${q ? `Results for "${esc(S.q.trim())}"` : "Test packs"}</h2><small>${S.catalog ? `${live.length} live` : ""}</small></div>${liveBody}
+    <div class="sh"><h2>${browsing ? "More themes" : "Demo themes"}</h2><small>Demo only</small></div>
+    ${demo.length ? `<div class="tiles">${demo.map(tile).join("")}</div>` : `<div class="none">No demo themes match.</div>`}
+    <p class="foot">TEST MODE: packs come from the test server, nothing is charged, and cards are not redeemable.<br>Demo themes are previews and can't be bought yet.<br>Restaurant names belong to their owners; no affiliation implied.</p>`;
   $("packs").querySelectorAll("[data-pack]").forEach(b => b.onclick = () => openPack(b.dataset.pack));
+  if ($("catRetry")) $("catRetry").onclick = loadCatalog;
 }
 
-// What the showcase cycles through: each card value with its odds, or for the free pick a few restaurants.
+// What the showcase cycles through: the test card, each demo value with its illustrative odds, or a few free-pick restaurants.
 function slides(p) {
   if (p.free) return p.spots.slice(0, 5).map(s => ({ s, value: null, label: "Could land on", odds: s.c }));
-  return p.tiers.map((v, i) => ({ s: p.spots[(i * 3) % p.spots.length], value: v, label: RARITY[i][0], odds: `${ODDS[i]}%`, r: i }));
+  if (p.api) return [{ s: TEST_SPOT, value: p.price, label: "Test card", odds: "Not redeemable" }];
+  return p.tiers.map((v, i) => ({ s: p.spots[(i * 3) % p.spots.length], value: v, label: RARITY[i][0], odds: `${ODDS[i]}% (demo)`, r: i }));
+}
+function buyButton(p) {
+  if (p.free) return `<button class="btn buynow" id="open" type="button">Open free pick</button>`;
+  if (p.demo) return `<button class="btn buynow" id="open" type="button" disabled>Not for sale yet</button>`;
+  if (!S.user) return `<button class="btn buynow" id="open" type="button">Sign in to open · ${money(p.price)}</button>`;
+  const a = pendingFor(S.user.id);
+  if (a) return `<button class="btn buynow" id="open" type="button">${a.pack_id === p.id ? "Finish opening (same order)" : `Finish your ${esc(packOf(a.pack_id)?.name || a.pack_id)} order first`}</button>`;
+  return `<button class="btn buynow" id="open" type="button">Open test pack · ${money(p.price)}</button>`;
 }
 function pack() {
-  const p = packOf(S.packId), sl = slides(p), cur = Math.min(S.slide, sl.length - 1);
-  const total = p.price + FEE + (S.pass ? SWAP : 0);
+  const p = packOf(S.packId), sl = slides(p);
   return `<section class="show" aria-label="Possible pulls">
       <div class="stage" id="stage">${foil(p)}
         ${sl.map((x, i) => `<div class="slide" data-i="${i}">${gc(x.s, "", x.value)}</div>`).join("")}
@@ -572,20 +680,18 @@ function pack() {
     </section>
     <section class="buy">
       <h1>${esc(p.name)}</h1>
-      <p class="per">${p.free ? `Free · once a day · ${p.spots.length} restaurants` : `1 gift card / pack · ${p.spots.length} restaurants`}</p>
-      ${p.free ? "" : `<div class="big">${money(p.price)}<small>${money(p.tiers[0])}+ guaranteed</small></div>
-      <div class="opt"><div><b>Add a Swap Pass?</b><small>Don't like the restaurant? Swap it once after you open, for ${money(SWAP)} more.</small></div><button class="tog" id="pass" type="button" aria-pressed="${S.pass}" aria-label="Add a Swap Pass"></button></div>
-      <div class="pay" role="group" aria-label="Payment">
-        <button class="pm" type="button" data-pm="wallet" aria-pressed="${S.pm === "wallet"}">${icon("wallet")}<b>Chef Pack Wallet</b><small>${money(S.balance, true)}</small></button>
-        <button class="pm" type="button" data-pm="card" aria-pressed="${S.pm === "card"}">${icon("card")}<b>Other payment</b><small>Card, Apple Pay</small></button>
-      </div>`}
-      <button class="btn buynow" id="open" type="button">${p.free ? "Open free pick" : `Buy now · ${money(total, true)}`}</button>
-      <p class="fine">${p.free ? "Free picks suggest a place. Packs come with a gift card." : `${money(p.price)} pack + ${money(FEE, true)} fee${S.pass ? ` + ${money(SWAP)} Swap Pass` : ""} · Demo: charged to play credit`}</p>
+      <p class="per">${p.free ? `Free · ${p.spots.length} restaurants · a suggestion, no card` : p.api ? "1 test card / pack · the server picks the restaurant" : `Demo theme · ${p.spots.length} restaurants`}</p>
+      ${p.api ? `<div class="big">${money(p.price)}<small>${money(p.price)} test card</small></div>` : ""}
+      ${p.demo ? `<p class="note"><b>Demo only.</b> This theme isn't on the test server yet. Odds, upgrades and restaurants below are design previews, not live.</p>` : ""}
+      ${buyButton(p)}
+      <p class="fine" id="buyMsg" aria-live="polite">${p.free ? "Free picks suggest a place. No card, no account needed." : p.api ? "TEST MODE · no payment is taken · the card is NOT REDEEMABLE" : "Only Quick Bite, Sit-Down and Treat Yourself are live in test mode."}</p>
     </section>
-    ${p.free ? "" : `<div class="sh"><h2>Odds</h2><small>Per pack</small></div>
-    <div class="values">${p.tiers.map((v, i) => `<div><b>${RARITY[i][0]} · ${money(v)} card</b><span>${i ? `${ODDS[i]}%` : "88% · guaranteed floor"}</span></div>`).join("")}</div>`}
-    <div class="sh"><h2>Restaurants inside</h2><small>Equal chance</small></div>
-    <div class="shelf">${p.spots.map(s => `<div class="item">${gc(s)}<span>${esc(s.n)}</span><small>${esc(s.c)} · 1 in ${p.spots.length}</small></div>`).join("")}</div>`;
+    ${p.api ? `<div class="sh"><h2>What's inside</h2><small>Test mode</small></div>
+    <div class="values"><div><b>${money(p.price)} demo card</b><span>Every pack</span></div><div><b>Upgrades</b><span>None in test mode</span></div><div><b>Restaurant</b><span>Picked by the server</span></div><div><b>Redeemable</b><span>No</span></div></div>` : ""}
+    ${p.demo ? `<div class="sh"><h2>Odds</h2><small>Demo preview</small></div>
+    <div class="values">${p.tiers.map((v, i) => `<div><b>${RARITY[i][0]} · ${money(v)} card</b><span>${i ? `${ODDS[i]}%` : "88% · floor"}</span></div>`).join("")}</div>` : ""}
+    ${p.api ? "" : `<div class="sh"><h2>Restaurants inside</h2><small>${p.free ? "Equal chance" : "Demo preview"}</small></div>
+    <div class="shelf">${p.spots.map(s => `<div class="item">${gc(s)}<span>${esc(s.n)}</span><small>${esc(s.c)} · 1 in ${p.spots.length}</small></div>`).join("")}</div>`}`;
 }
 function setSlide(i) {
   const p = packOf(S.packId), sl = slides(p);
@@ -602,38 +708,209 @@ function setSlide(i) {
 }
 
 function cards() {
-  return `<div class="pagehead"><h1>Gift cards</h1><p>Every card you can get from a pack.</p></div><div id="shelf"></div>`;
+  return `<div class="pagehead"><h1>Gift cards</h1><p>Demo catalog: brands we plan to offer. Test packs don't include these yet.</p></div><div id="shelf"></div>`;
 }
 function renderShelf() {
   const q = S.q.trim().toLowerCase();
   const list = IN_PACKS.filter(s => !q || s.n.toLowerCase().includes(q) || s.c.toLowerCase().includes(q));
-  $("shelf").innerHTML = `<div class="sh"><h2>Dining &amp; Food</h2><small>${list.length} cards</small></div>`
+  $("shelf").innerHTML = `<div class="sh"><h2>Dining &amp; Food</h2><small>${list.length} cards · demo</small></div>`
     + (list.length ? `<div class="shelf">${list.map(s => `<button class="item" type="button" data-card="${s.id}">${gc(s)}<b>${money(s.min)} – ${money(s.max)}</b><span>${esc(s.n)}</span><small>${esc(s.c)}</small></button>`).join("")}</div>` : `<div class="none">No gift cards match.</div>`);
   $("shelf").querySelectorAll("[data-card]").forEach(b => b.onclick = () => showBrand(R[b.dataset.card]));
 }
 
 function wallet() {
-  return `<div class="pagehead"><h1>Wallet</h1><p>${S.wallet.length ? `${S.wallet.length} gift card${S.wallet.length === 1 ? "" : "s"} · ${money(S.wallet.reduce((a, w) => a + w.value, 0))} total` : "Your gift cards show up here."}</p></div>
-    ${S.wallet.length ? S.wallet.map((w, i) => { const s = R[w.id]; return `<button class="wrow" type="button" data-i="${i}">${gc(s)}<span style="min-width:0"><b>${esc(s.n)}</b><small>${w.t ? "Upgraded · " : ""}${esc(s.c)}</small></span><span class="r">${money(w.value)}</span></button>`; }).join("")
-      : `<div class="empty"><b>No gift cards yet</b><p>Open a pack and your card lands here, ready to use.</p><button class="btn" id="toHome" type="button" style="margin-top:8px">Browse packs</button></div>`}`;
+  const n = S.pulls.length;
+  const head = `<div class="pagehead"><h1>Wallet</h1><p>${S.user && n ? `${n} test card${n === 1 ? "" : "s"} · ${money(S.pulls.reduce((a, w) => a + w.face_value_cents, 0) / 100)} face value · not redeemable` : "Your test cards from the server show up here."}</p></div>`;
+  if (!S.user) return head + `<div class="empty"><b>Sign in to see your cards</b><p>Your wallet lives on the test server, tied to your account.</p><button class="btn" id="wSign" type="button" style="margin-top:8px">Sign in</button></div>`;
+  if (S.wstate === "error") return head + `<div class="empty" role="alert"><b>Couldn't load your wallet</b><p>${esc(S.werr)}</p><button class="btn" id="wRetry" type="button" style="margin-top:8px">Try again</button></div>`;
+  if (S.wstate === "loading" && !n) return head + `<div class="none" aria-live="polite">Loading your wallet…</div>`;
+  if (!n) return head + `<div class="empty"><b>No test cards yet</b><p>Open a test pack and the server adds your card here.</p><button class="btn" id="toHome" type="button" style="margin-top:8px">Browse packs</button></div>`;
+  return head + (S.wstate === "loading" ? `<p class="fine" aria-live="polite">Refreshing…</p>` : "")
+    + S.pulls.map((w, i) => `<button class="wrow" type="button" data-i="${i}">${gc(pullSpot(w))}<span style="min-width:0"><b>${esc(w.restaurant_label)}</b><small>Test card · NOT REDEEMABLE · ${esc(when(w.created_at))}</small></span><span class="r">${money(w.face_value_cents / 100)}</span></button>`).join("");
 }
 
-/* ---------- Open a pack: rip it like a sports pack ---------- */
+/* ---------- Data loading ---------- */
+const failText = e => e.status === 0 ? (e.code === "offline" ? "You're offline. Check your connection." : e.code === "timeout" ? "The server took too long to answer." : "Couldn't reach the server.")
+  : e.status === 401 ? "Please sign in again."
+  : e.status === 503 ? "The test server is unavailable right now (503)."
+  : e.status === 404 ? "This page has no test API (static demo hosting)."
+  : `The server returned an error (${e.status}).`;
+async function loadCatalog() {
+  S.catalog = null; S.catErr = ""; renderPacks();
+  try {
+    const r = await api("/api/packs");
+    if (!Array.isArray(r?.packs)) throw new Fail(502, "bad_catalog");
+    S.catalog = r.packs.map(fromApi);
+  } catch (e) { S.catErr = failText(e); }
+  if (S.page === "home") { renderPacks(); const qb = S.catalog?.find(p => p.id === "quick-bite"); if ($("pOpen")) { $("pOpen").disabled = !qb; $("pOpen").textContent = qb ? `Open ${qb.name} · ${money(qb.price)}` : "Packs unavailable"; } }
+}
+async function loadWallet() {
+  if (!S.user) return;
+  const uid = S.user.id;
+  S.wstate = "loading"; paintWallet();
+  try {
+    const r = await api("/api/wallet", {}, true);
+    if (S.user?.id !== uid) return;
+    S.pulls = Array.isArray(r?.pulls) ? r.pulls : []; S.wstate = "ready";
+  } catch (e) {
+    if (S.user?.id !== uid) return;
+    S.wstate = "error"; S.werr = failText(e);
+  }
+  paintWallet();
+}
+function paintWallet() {
+  if (!$("acct")) return;
+  chrome();
+  if (S.page === "wallet") { $("view").innerHTML = wallet(); bind.wallet(); }
+}
+
+/* ---------- Account ---------- */
+function signedIn(s) {
+  const switched = S.user && S.user.id !== s.user.id;
+  if (switched) { S.pulls = []; }
+  S.user = s.user; S.wstate = "loading";
+  if (S.page === "pack" || S.page === "wallet") render(); else { closeSheet(); chrome(); }
+  loadWallet();
+  const a = pendingFor(S.user.id);
+  if (a) pendingSheet(a);
+}
+// Forget everything user-specific. Pending attempts stay keyed to their user and are never replayed for someone else.
+function signedOut(why = "") {
+  try { localStorage.removeItem(SESSION_KEY); } catch (e) {}
+  const had = !!S.user;
+  S.user = null; S.pulls = []; S.wstate = "signedout"; S.werr = "";
+  document.querySelector(".opener")?.remove(); busy = false;
+  if (had && why === "expired") { render(); accountSheet("Your session expired. Sign in again."); }
+  else if (had) render();
+}
+async function logout() {
+  const s = loadSession();
+  signedOut();
+  if (s) gotrue("logout", {}, s.access_token).catch(() => {});
+}
+function accountSheet(msg = "") {
+  if (busy) return;
+  if (S.user) {
+    const m = sheet(`<div class="result"><p class="eyebrow">Signed in</p><h2 style="font-size:22px;word-break:break-all">${esc(S.user.email || "Test account")}</h2>
+      <p class="sub">TEST MODE account. Packs are free test orders and cards are not redeemable.</p>
+      <div class="sacts"><button class="btn soft" id="aWallet" type="button">Wallet</button><button class="btn" id="aOut" type="button">Sign out</button></div></div>`, "Account");
+    m.querySelector("#aOut").onclick = () => { closeSheet(); logout(); };
+    m.querySelector("#aWallet").onclick = () => go("wallet");
+    return;
+  }
+  const m = sheet(`<div class="result"><p class="eyebrow">TEST MODE · use a test email</p><h2>Sign in</h2>
+    <form class="form" id="aForm" novalidate>
+      <label>Email<input id="aEmail" type="email" autocomplete="email" required inputmode="email" autocapitalize="off" spellcheck="false"></label>
+      <label>Password<input id="aPass" type="password" autocomplete="current-password" required minlength="6"></label>
+      <p class="msg" id="aMsg" role="status" aria-live="polite">${esc(msg)}</p>
+      <button class="btn" id="aIn" type="submit">Sign in</button>
+      <button class="btn soft" id="aUp" type="button">Create test account</button>
+    </form></div>`, "Sign in");
+  const f = m.querySelector("#aForm"), out = m.querySelector("#aMsg");
+  const run = async mode => {
+    const email = m.querySelector("#aEmail").value.trim(), password = m.querySelector("#aPass").value;
+    if (!email || password.length < 6) { out.className = "msg err"; out.textContent = "Enter an email and a password of at least 6 characters."; return; }
+    f.querySelectorAll("button").forEach(b => b.disabled = true); out.className = "msg"; out.textContent = mode === "up" ? "Creating account…" : "Signing in…";
+    try {
+      if (mode === "up") {
+        const d = await gotrue(`signup?redirect_to=${encodeURIComponent(location.origin + location.pathname)}`, { email, password });
+        if (d?.access_token) return signedIn(keepSession(d));
+        out.className = "msg ok"; out.textContent = "Check your email for a confirmation link, then come back and sign in.";
+      } else return signedIn(keepSession(await gotrue("token?grant_type=password", { email, password })));
+    } catch (e) {
+      out.className = "msg err";
+      out.textContent = e.code === "auth_not_configured" ? e.message : e.status === 0 ? failText(e) : e.code === "email_not_confirmed" ? "Confirm your email first, then sign in." : e.message && e.message !== e.code ? e.message : "Sign-in failed. Check your email and password.";
+    }
+    f.querySelectorAll("button").forEach(b => b.disabled = false);
+  };
+  f.onsubmit = e => { e.preventDefault(); run("in"); };
+  m.querySelector("#aUp").onclick = () => run("up");
+  m.querySelector("#aEmail").focus({ preventScroll: true });
+}
+// Supabase sends confirmed users back with the session (or an error) in the URL hash.
+async function takeRedirect() {
+  const h = new URLSearchParams(location.hash.slice(1));
+  if (!h.get("access_token") && !h.get("error")) return null;
+  history.replaceState(null, "", location.pathname + location.search);
+  if (h.get("error")) return { error: h.get("error_description") || h.get("error") };
+  try {
+    const user = await gotrue("user", undefined, h.get("access_token"));
+    return { session: keepSession({ access_token: h.get("access_token"), refresh_token: h.get("refresh_token"), expires_at: h.get("expires_at"), expires_in: h.get("expires_in"), user }) };
+  } catch (e) { return { error: failText(e) }; }
+}
+
+/* ---------- Buy a test pack: one logical attempt per intentional purchase ---------- */
 function openFlow() {
   if (busy) return;
-  const p = packOf(S.packId), cost = p.price + FEE + (S.pass ? SWAP : 0);
-  if (!p.free && S.balance < cost) { $("open").textContent = "Add credit: tap your balance"; return; }
+  const p = packOf(S.packId);
+  if (p.free) return reveal(p, { p, s: rand(p.spots), t: 0, value: null, free: true });
+  if (p.demo) return;
+  if (!S.user) return accountSheet("Sign in to open a test pack.");
+  let a = pendingFor(S.user.id);
+  if (a && a.pack_id !== p.id) return pendingSheet(a);
+  if (!a) { a = { key: crypto.randomUUID(), pack_id: p.id, user_id: S.user.id, at: Date.now() }; setPending(a); }
+  send(a);
+}
+async function send(a) {
+  if (busy) return;
   busy = true;
-  if (!p.free) { S.balance -= cost; $("balAmt").textContent = money(S.balance, true); }
-  const s = rand(p.spots), t = p.free ? 0 : drawTier();
-  const res = { p, s, t, value: p.free ? null : p.tiers[t], free: !!p.free, swapped: false, pass: !p.free && S.pass };
-  if (!p.free) { res.code = code(); S.wallet.unshift({ id: s.id, value: res.value, t, code: res.code }); save(); }
+  const btn = $("open"); if (btn) { btn.disabled = true; btn.textContent = "Opening…"; }
+  closeSheet();
+  let r;
+  try {
+    r = await api("/api/orders", { method: "POST", headers: { "Idempotency-Key": a.key }, body: JSON.stringify({ pack_id: a.pack_id }) }, true);
+    if (!r?.order?.id || !r?.pull?.id) throw new Fail(502, "bad_order_response");
+  } catch (e) {
+    busy = false;
+    // 400/405/404 mean the server refused this attempt: nothing was created, so the key is retired.
+    if ([400, 404, 405].includes(e.status)) clearPending(a);
+    if (S.page === "pack") render();
+    if (S.user?.id === a.user_id) orderError(e, a);
+    return;
+  }
+  busy = false;
+  clearPending(a);
+  if (S.user?.id !== a.user_id) return;
+  if (!S.pulls.some(x => x.id === r.pull.id)) S.pulls.unshift(r.pull);
+  const p = packOf(r.order.pack_id) || packOf(a.pack_id);
+  reveal(p, { p, s: pullSpot(r.pull), t: 0, value: r.pull.face_value_cents / 100, api: true, order: r.order, pull: r.pull });
+  loadWallet();
+}
+function orderError(e, a) {
+  const name = esc(packOf(a.pack_id)?.name || a.pack_id);
+  const retry = ![400, 404, 405].includes(e.status);
+  const why = e.status === 400 ? "The server rejected this order (pack unavailable or the order didn't match). Nothing was opened."
+    : e.status === 405 ? "The server refused the request method (405). Nothing was opened."
+    : e.status === 401 ? "Your session expired before the server confirmed. Sign in again to finish this same order."
+    : `${failText(e)} We haven't shown a card because the server didn't confirm one.`;
+  const m = sheet(`<div class="result" role="alert"><p class="eyebrow">${retry ? "Not confirmed yet" : "Order not placed"}</p><h2>${name}</h2>
+    <p class="sub" style="margin-top:6px">${why}</p>
+    ${retry ? `<p class="note">Retrying sends the <b>same order</b>, so you can't get a second card by accident.</p>` : ""}
+    <div class="sacts">${e.status === 401 ? `<button class="btn" id="eSign" type="button" style="grid-column:1/-1">Sign in</button>` : retry ? `<button class="btn" id="eRetry" type="button" style="grid-column:1/-1">Retry same order</button>` : `<button class="btn soft" id="eOk" type="button" style="grid-column:1/-1">OK</button>`}</div></div>`, "Order status");
+  if (m.querySelector("#eRetry")) m.querySelector("#eRetry").onclick = () => send(a);
+  if (m.querySelector("#eSign")) m.querySelector("#eSign").onclick = () => accountSheet("Sign in to finish your order.");
+  if (m.querySelector("#eOk")) m.querySelector("#eOk").onclick = closeSheet;
+}
+function pendingSheet(a) {
+  const name = esc(packOf(a.pack_id)?.name || a.pack_id);
+  const m = sheet(`<div class="result"><p class="eyebrow">Unfinished order</p><h2>${name}</h2>
+    <p class="sub" style="margin-top:6px">We didn't get the server's confirmation for this test order. Finishing it resends the same order, so you won't get a second card.</p>
+    <div class="sacts"><button class="btn soft" id="pLater" type="button">Not now</button><button class="btn" id="pGo" type="button">Finish opening</button></div></div>`, "Unfinished order");
+  m.querySelector("#pGo").onclick = () => send(a);
+  m.querySelector("#pLater").onclick = closeSheet;
+}
+
+/* ---------- Reveal: rip it like a sports pack. The result is already decided (server or free pick). ---------- */
+function reveal(p, res) {
+  if (busy) return;
+  busy = true;
   closeSheet();
   const o = document.createElement("div");
   o.className = "opener"; o.setAttribute("role", "dialog"); o.setAttribute("aria-modal", "true"); o.setAttribute("aria-label", "Open your pack");
   o.innerHTML = `<button class="x" type="button" aria-label="Close" hidden>${icon("close")}</button>
+    ${res.api ? `<p class="otest">TEST MODE · NOT REDEEMABLE</p>` : ""}
     <div class="ostage ready" id="ostage" role="button" tabindex="0" aria-label="Tear the pack open">
-      <div class="card3"><div class="flip"><div class="face2 back"><div class="cardback"><svg aria-hidden="true"><use href="#hat-w"/></svg></div></div><div class="face2 front" id="front">${gc(s, "", res.value)}</div></div></div>
+      <div class="card3"><div class="flip"><div class="face2 back"><div class="cardback"><svg aria-hidden="true"><use href="#hat-w"/></svg></div></div><div class="face2 front" id="front">${gc(res.s, "", res.value)}</div></div></div>
       <div class="fw body">${foil(p)}</div><div class="fw lid">${foil(p)}</div><span class="tearline"></span>
     </div>
     <p class="ohint" id="ohint">Tap or swipe to tear it open</p><div class="ores" id="ores"></div>`;
@@ -672,55 +949,48 @@ function sheet(html, label, closable = true) {
   return m;
 }
 function showResult(r, o) {
-  const { p, s } = r, up = r.t > 0, rr = RARITY[r.t];
-  const paid = r.free ? PACKS.find(q => q.spots.includes(s)) : null;
-  const swapLabel = r.swapped ? "Swap used" : r.pass ? "Use your Swap Pass: swap restaurant" : `Not feeling it? Swap restaurant for ${money(SWAP)}`;
-  o.querySelector("#ores").innerHTML = `
-    ${r.free ? "" : `<span class="rp" style="--rb:${rr[1]};--rf:${rr[2]}">${rr[0]}${up ? ` · ${ODDS[r.t]}%` : ""}</span>`}
-    <p class="eyebrow">${r.free ? "How about tonight at" : r.swapped ? "Swapped, same value" : "Tonight you're eating at"}</p>
-    <h2>${esc(s.n)}</h2><p class="sub">${esc(s.c)} · ${CITY}</p>
-    ${r.free ? "" : `<div class="vline"><span><b>${money(r.value)}</b>${up ? `<s>${money(p.price)}</s>` : ""}</span><span>Gift card · in your wallet</span></div>`}
-    <div class="sacts">${r.free
-      ? `<button class="btn light" id="sPaid" type="button" style="grid-column:1/-1">Get a card · ${esc(paid.name)} ${money(paid.price)}</button><button class="btn soft" id="sAgain" type="button">Pick again</button><a class="btn soft" href="${maps(s.n)}" target="_blank" rel="noopener">Directions</a>`
-      : `<a class="btn light" href="${maps(s.n)}" target="_blank" rel="noopener">Directions</a><button class="btn soft" id="sCard" type="button">Show card</button><button class="btn soft" id="sMore" type="button" style="grid-column:1/-1">Open another</button>`}</div>
-    ${r.free ? "" : `<button class="linkbtn" id="sSwap" type="button" ${r.swapped || p.spots.length < 2 ? "disabled" : ""}>${swapLabel}</button>`}`;
-  const q = id => o.querySelector("#" + id);
   const close = () => { o.remove(); };
-  if (q("sCard")) q("sCard").onclick = () => { close(); showCard(0); };
-  if (q("sMore")) q("sMore").onclick = () => { close(); render(); };
+  const q = id => o.querySelector("#" + id);
+  if (r.api) {
+    o.querySelector("#ores").innerHTML = `<span class="rp" style="--rb:#fde68a;--rf:#5a3d00">Test card · not redeemable</span>
+      <p class="eyebrow">The server dealt you</p>
+      <h2>${esc(r.pull.restaurant_label)}</h2><p class="sub">Simulated delivery · order ${esc(String(r.order.id).slice(0, 8))}</p>
+      <div class="vline"><span><b>${money(r.value)}</b></span><span>Test card · in your wallet</span></div>
+      <div class="sacts"><button class="btn light" id="sWallet" type="button">View wallet</button><button class="btn soft" id="sMore" type="button">Open another</button></div>`;
+    q("sWallet").onclick = () => { close(); go("wallet"); };
+    q("sMore").onclick = () => { close(); render(); };
+    return;
+  }
+  // Free pick: a local suggestion with no card.
+  const { s } = r, paid = S.catalog?.find(x => x.id === "quick-bite");
+  o.querySelector("#ores").innerHTML = `
+    <p class="eyebrow">How about tonight at</p>
+    <h2>${esc(s.n)}</h2><p class="sub">${esc(s.c)} · ${CITY} · suggestion only, no card</p>
+    <div class="sacts">${paid ? `<button class="btn light" id="sPaid" type="button" style="grid-column:1/-1">Open a test pack · ${esc(paid.name)} ${money(paid.price)}</button>` : ""}<button class="btn soft" id="sAgain" type="button">Pick again</button><a class="btn soft" href="${maps(s.n)}" target="_blank" rel="noopener">Directions</a></div>`;
   if (q("sPaid")) q("sPaid").onclick = () => { close(); go("pack", { packId: paid.id, from: "home", slide: 0 }); };
-  if (q("sAgain")) q("sAgain").onclick = () => { close(); openFlow(); };
-  if (q("sSwap") && !q("sSwap").disabled) q("sSwap").onclick = () => {
-    if (!r.pass) { if (S.balance < SWAP) { q("sSwap").textContent = "Add credit to swap"; return; } S.balance -= SWAP; $("balAmt").textContent = money(S.balance, true); }
-    r.s = rand(p.spots.filter(x => x !== s)); r.swapped = true; S.wallet[0].id = r.s.id; save();
-    const st = o.querySelector("#ostage"); st.classList.remove("flipped");
-    setTimeout(() => { o.querySelector("#front").innerHTML = gc(r.s, "", r.value); st.classList.add("flipped"); showResult(r, o); }, 380);
-  };
+  q("sAgain").onclick = () => { close(); openFlow(); };
 }
 function showCard(i) {
-  const w = S.wallet[i], s = R[w.id];
-  let seed = [...w.code].reduce((a, ch) => (a * 31 + ch.charCodeAt(0)) >>> 0, 7), bars = "";
-  for (let k = 0; k < 52; k++) { seed = (seed * 1103515245 + 12345) >>> 0; bars += `<i style="flex:${1 + (seed >>> 16) % 3} 0 0"></i><span style="flex:${1 + (seed >>> 20) % 2} 0 0"></span>`; }
-  sheet(`<div class="slot">${gc(s, "", w.value)}</div>
-    <div class="result"><p class="eyebrow">Gift card${w.t ? " · upgraded" : ""}</p><h2>${esc(s.n)}</h2>
-      <div class="valuebox"><span><b>${money(w.value)}</b></span><span>Show at the register</span></div>
-      <div class="barcode" aria-label="Barcode">${bars}</div><div class="code">${w.code}</div>
-      <p class="sub" style="text-align:center;margin-top:6px">Demo code, not redeemable.</p>
-      <div class="sacts"><a class="btn" href="${maps(s.n)}" target="_blank" rel="noopener" style="grid-column:1/-1">Directions</a></div></div>`, s.n + " gift card");
+  const w = S.pulls[i];
+  sheet(`<div class="slot">${gc(pullSpot(w), "", w.face_value_cents / 100)}</div>
+    <div class="result"><p class="eyebrow">Test card · NOT REDEEMABLE</p><h2>${esc(w.restaurant_label)}</h2>
+      <div class="valuebox"><span><b>${money(w.face_value_cents / 100)}</b></span><span>Delivery: ${esc(w.delivery_status || "simulated")}</span></div>
+      <p class="sub" style="text-align:center;margin-top:10px">Test mode issues no barcode or code. This card can't be used at a restaurant.</p>
+      <p class="sub" style="text-align:center;margin-top:4px">Card ${esc(String(w.id).slice(0, 8))} · order ${esc(String(w.order_id).slice(0, 8))} · ${esc(when(w.created_at))}</p></div>`, "Test card");
 }
 function showBrand(s) {
-  const packs = PACKS.filter(p => p.spots.includes(s));
+  const packs = DEMO.filter(p => p.spots.includes(s));
   const m = sheet(`<div class="slot">${gc(s)}</div>
-    <div class="result"><h2>${esc(s.n)}</h2><p class="sub">${esc(s.c)} · cards from ${money(s.min)} to ${money(s.max)}</p>
-      <p class="eyebrow" style="margin-top:14px">In ${packs.length} pack${packs.length === 1 ? "" : "s"}</p>
-      <div class="inpacks">${packs.map(p => `<button type="button" data-pack="${p.id}">${esc(p.name)}<span>${money(p.price)} · 1 in ${p.spots.length}</span></button>`).join("")}</div></div>`, s.n);
+    <div class="result"><h2>${esc(s.n)}</h2><p class="sub">${esc(s.c)} · cards from ${money(s.min)} to ${money(s.max)} · demo catalog</p>
+      <p class="eyebrow" style="margin-top:14px">${packs.length ? `In ${packs.length} demo theme${packs.length === 1 ? "" : "s"}` : "Not in a demo theme yet"}</p>
+      <div class="inpacks">${packs.map(p => `<button type="button" data-pack="${p.id}">${esc(p.name)}<span>Demo only</span></button>`).join("")}</div></div>`, s.n);
   m.querySelectorAll("[data-pack]").forEach(b => b.onclick = () => go("pack", { packId: b.dataset.pack, from: "cards" }));
 }
 
 /* ---------- Bindings ---------- */
 const bind = {
   home() {
-    $("pOpen").onclick = () => openPack("quick");
+    $("pOpen").onclick = () => openPack("quick-bite");
     $("view").querySelectorAll("[data-cat]").forEach(b => b.onclick = () => { S.cat = S.cat === b.dataset.cat ? "all" : b.dataset.cat; $("view").querySelectorAll("[data-cat]").forEach(c => c.setAttribute("aria-pressed", c.dataset.cat === S.cat)); renderPacks(); });
     renderPacks();
   },
@@ -731,25 +1001,31 @@ const bind = {
     let x0 = null; const st = $("stage");
     st.addEventListener("touchstart", e => { x0 = e.touches[0].clientX; }, { passive: true });
     st.addEventListener("touchend", e => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 40) setSlide(S.slide + (dx < 0 ? 1 : -1)); x0 = null; });
-    if ($("pass")) $("pass").onclick = () => { S.pass = !S.pass; const y = $("view").scrollTop; render(); $("view").scrollTop = y; };
-    document.querySelectorAll("[data-pm]").forEach(b => b.onclick = () => { S.pm = b.dataset.pm; document.querySelectorAll("[data-pm]").forEach(c => c.setAttribute("aria-pressed", c.dataset.pm === S.pm)); });
     $("open").onclick = openFlow;
   },
   cards() { renderShelf(); },
   wallet() {
     if ($("toHome")) $("toHome").onclick = () => go("home");
+    if ($("wSign")) $("wSign").onclick = () => accountSheet();
+    if ($("wRetry")) $("wRetry").onclick = loadWallet;
     $("view").querySelectorAll("[data-i]").forEach(b => b.onclick = () => showCard(+b.dataset.i));
   }
 };
 
-function start(data) {
-  S = Object.assign(fresh(), (data && data.S) || load() || {});
-  if (!packOf(S.packId)) S.packId = "quick";
-  if (!({ home: 1, pack: 1, cards: 1, wallet: 1 })[S.page]) S.page = "home";
+async function start(data) {
+  S = Object.assign(fresh(), (data && data.S) || {}, { catalog: null, pulls: [], user: null, wstate: "signedout" });
+  // The old play-money wallet held fabricated cards and barcodes; it is never shown as inventory.
+  try { localStorage.removeItem("chefpack.app.v3"); } catch (e) {}
+  if (!({ home: 1, cards: 1, wallet: 1 })[S.page]) S.page = "home";
   busy = false;
   $("view").addEventListener("scroll", () => $("top").classList.toggle("shadow", $("view").scrollTop > 4), { passive: true });
   addEventListener("keydown", e => { if (e.key === "Escape" && !busy) { closeSheet(); document.querySelector(".opener")?.remove(); } });
   render();
+  loadCatalog();
+  const back = await takeRedirect();
+  const s = back?.session || loadSession();
+  if (s) signedIn(s);
+  if (back?.error) accountSheet(back.error);
 }
 window.claude?.hot?.snapshot?.(() => ({ S }));
 window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
