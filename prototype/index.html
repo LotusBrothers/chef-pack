@@ -391,6 +391,80 @@
   .oreveal.bannered .tbanner { opacity: 1; transform: none; }
   .oreveal .bigcard .gc { box-shadow: 0 18px 40px rgba(0,0,0,.5); }
 
+  /* ---------- Test-mode strip ---------- */
+  .testbar { flex: none; background: #fff6d6; color: #6b4e00; text-align: center; font-size: 11px; font-weight: 800; letter-spacing: .08em; padding: calc(var(--safe-t) + 4px) 12px 4px; }
+  #strip:not(:empty) + .top { padding-top: 8px; }
+  .avatar { width: 36px; height: 36px; border-radius: 50%; border: 0; background: var(--surface); font-weight: 800; font-size: 15px; display: grid; place-items: center; flex: none; }
+
+  /* ---------- Welcome and sign-in ---------- */
+  .auth { min-height: 100%; display: flex; flex-direction: column; padding-top: 10px; }
+  .auth .hero { position: relative; height: min(46vh, 380px); display: grid; place-items: center; }
+  .auth .hero .foil { width: min(46%, 190px); transform: rotate(-5deg); z-index: 2; }
+  .auth .hero .gc { position: absolute; width: min(50%, 210px); top: 30%; }
+  .auth .hero .g1 { left: 2%; transform: rotate(-14deg); } .auth .hero .g2 { right: 2%; transform: rotate(12deg); }
+  .auth h1 { margin: 8px 0 0; font-size: 34px; font-weight: 900; letter-spacing: -.035em; line-height: 1.02; text-align: center; }
+  .auth .lede { margin: 8px auto 0; color: var(--muted); text-align: center; max-width: 30ch; }
+  .authbtns { display: grid; gap: 10px; margin-top: 22px; }
+  .authbtns .btn { height: 52px; width: 100%; border-radius: 14px; }
+  .btn.apple { background: #000; }
+  .btn.google { background: #fff; color: var(--fg); box-shadow: inset 0 0 0 1.5px var(--line); }
+  .btn svg { width: 20px; height: 20px; }
+  .authnote { color: var(--muted); font-size: 12px; text-align: center; margin: 14px 0 4px; line-height: 1.5; }
+  .seg { display: grid; grid-template-columns: 1fr 1fr; background: var(--surface); border-radius: 12px; padding: 4px; margin-top: 18px; }
+  .seg button { border: 0; background: none; height: 40px; border-radius: 9px; font-weight: 800; font-size: 15px; color: var(--muted); }
+  .seg button[aria-pressed="true"] { background: #fff; color: var(--fg); box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+  .field { display: grid; gap: 6px; margin-top: 14px; }
+  .field label { font-size: 14px; font-weight: 700; }
+  .field input { height: 50px; border-radius: 12px; border: 1.5px solid var(--line); padding: 0 14px; font-size: 16px; background: #fff; outline: 0; }
+  .field input:focus { border-color: var(--fg); }
+  .formerr { color: #c0262d; font-size: 14px; font-weight: 600; min-height: 20px; margin: 10px 0 0; }
+
+  /* ---------- Wallet balance + deposit ---------- */
+  .balcard { margin-top: 14px; border-radius: 18px; padding: 18px; color: #fff; background: radial-gradient(120% 90% at 0% 0%, #2e2e2e 0%, #121212 50%, #060606 100%); box-shadow: inset 0 0 0 1px rgba(255,255,255,.08); }
+  .balcard small { display: block; color: rgba(255,255,255,.6); font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+  .balcard b { display: block; font-size: 38px; font-weight: 900; letter-spacing: -.02em; margin-top: 4px; font-variant-numeric: tabular-nums; }
+  .balcard .row { display: flex; gap: 8px; margin-top: 14px; }
+  .balcard .btn { height: 44px; flex: 1; }
+  .wseg { margin-top: 18px; }
+  .txrow { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .txrow .ti { width: 40px; height: 40px; border-radius: 50%; background: var(--surface); display: grid; place-items: center; }
+  .txrow .ti svg { width: 18px; height: 18px; }
+  .txrow b { display: block; font-weight: 700; font-size: 15px; }
+  .txrow small { color: var(--muted); font-size: 13px; }
+  .txrow .amt { font-weight: 800; font-variant-numeric: tabular-nums; }
+  .txrow .amt.plus { color: var(--green); }
+  .amts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 14px; }
+  .amts button { height: 48px; border-radius: 12px; border: 1.5px solid var(--line); background: #fff; font-weight: 800; font-size: 16px; }
+  .amts button[aria-pressed="true"] { border: 2px solid var(--fg); }
+  .paybtns { display: grid; gap: 8px; margin-top: 16px; }
+  .paybtns .btn { height: 52px; border-radius: 12px; width: 100%; }
+  .paybtns .btn.cardsoon { background: var(--surface); color: var(--muted); }
+  .paysheet { text-align: center; }
+  .paysheet .merchant { display: flex; align-items: center; gap: 12px; text-align: left; padding: 12px; background: var(--surface); border-radius: 14px; margin-top: 12px; }
+  .paysheet .merchant svg { width: 34px; height: 34px; }
+  .paysheet .merchant b { display: block; font-size: 15px; }
+  .paysheet .merchant small { color: var(--muted); font-size: 13px; }
+  .paysheet .total { display: flex; justify-content: space-between; padding: 14px 4px; border-bottom: 1px solid var(--line); font-size: 16px; }
+  .paysheet .total b { font-size: 20px; font-variant-numeric: tabular-nums; }
+  .paysheet .ok { width: 64px; height: 64px; border-radius: 50%; background: var(--green); color: #fff; display: grid; place-items: center; margin: 18px auto 8px; animation: bigpop .4s cubic-bezier(.2,1.4,.4,1) both; }
+  .paysheet .ok svg { width: 32px; height: 32px; }
+  .spinner { width: 34px; height: 34px; border-radius: 50%; border: 3px solid var(--surface-2); border-top-color: var(--fg); margin: 20px auto 8px; animation: turn .8s linear infinite; }
+
+  /* ---------- Opener: the pack takes most of the screen ---------- */
+  .opener .topbtns { position: fixed; top: calc(var(--safe-t) + 14px); left: 50%; transform: translateX(-50%); z-index: 3; }
+  .fastbtn { height: 36px; padding: 0 14px; border-radius: 99px; border: 0; background: rgba(255,255,255,.14); color: #fff; font-weight: 800; font-size: 13px; }
+  .fastbtn[aria-pressed="true"] { background: #ffc83d; color: #191919; }
+  .ostage { width: 300px; height: 404px; transform-origin: top center; transform: scale(var(--k, 1)); margin-bottom: calc((var(--k, 1) - 1) * 404px); }
+  .fw { top: 20px; width: 240px; margin-left: -120px; }
+  .tearline { top: 78px; width: 252px; margin-left: -126px; }
+  .spill { top: 78px; }
+  .otitle { margin-top: 44px; }
+  .rt { width: 150px; }
+  .oreel { height: 220px; }
+  .bigcard { width: min(82vw, 320px); }
+  .oreveal { width: min(92vw, 360px); height: 330px; }
+  .oreveal .rays, .oreveal .spark, .oreveal .spill { top: 165px; }
+
   /* ---------- Wallet ---------- */
   .pagehead h1 { margin: 4px 0 0; font-size: 30px; font-weight: 900; letter-spacing: -.03em; }
   .pagehead p { color: var(--muted); margin: 4px 0 0; font-size: 15px; }
@@ -426,6 +500,11 @@
     <symbol id="ic-card" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 10h18" stroke="currentColor" stroke-width="2"/></symbol>
     <symbol id="ic-sound" viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
     <symbol id="ic-muted" viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="m16 9 6 6m0-6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="ic-apple" viewBox="0 0 24 24"><path fill="currentColor" d="M16.4 12.6c0-2.5 2-3.6 2.1-3.7-1.2-1.7-3-1.9-3.6-2-1.5-.2-3 .9-3.7.9-.8 0-2-.9-3.2-.9-1.7 0-3.2 1-4 2.4-1.7 3-.4 7.3 1.2 9.7.8 1.2 1.8 2.5 3 2.4 1.2 0 1.7-.8 3.1-.8s1.9.8 3.2.8 2.1-1.2 2.9-2.4c.9-1.3 1.3-2.6 1.3-2.7-.1 0-2.3-.9-2.3-3.7zM14 5.2c.7-.8 1.1-1.9 1-3-1 0-2.1.6-2.8 1.4-.6.7-1.2 1.8-1 2.9 1 .1 2.1-.5 2.8-1.3z"/></symbol>
+    <symbol id="ic-g" viewBox="0 0 24 24"><path fill="#4285F4" d="M21.6 12.2c0-.7-.1-1.4-.2-2H12v3.8h5.4a4.6 4.6 0 0 1-2 3v2.5h3.2c1.9-1.7 3-4.3 3-7.3z"/><path fill="#34A853" d="M12 22c2.7 0 5-.9 6.6-2.4l-3.2-2.5c-.9.6-2 1-3.4 1-2.6 0-4.8-1.8-5.6-4.1H3.1v2.6A10 10 0 0 0 12 22z"/><path fill="#FBBC05" d="M6.4 14a6 6 0 0 1 0-3.9V7.5H3.1a10 10 0 0 0 0 9z"/><path fill="#EA4335" d="M12 5.9c1.5 0 2.8.5 3.8 1.5l2.8-2.8A10 10 0 0 0 3.1 7.5l3.3 2.6C7.2 7.7 9.4 5.9 12 5.9z"/></symbol>
+    <symbol id="ic-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ic-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
+    <symbol id="ic-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="m4 7 8 6 8-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
     <symbol id="ic-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
     <symbol id="hat-w" viewBox="0 0 32 32">
       <path fill="currentColor" d="M9.2 23.2v-6.1a6 6 0 0 1-.6-11.4 7.4 7.4 0 0 1 14.8 0 6 6 0 0 1-.6 11.4v6.1z"/>
@@ -435,6 +514,7 @@
 </svg>
 
 <div class="app" id="app">
+  <div id="strip"></div>
   <header class="top" id="top"></header>
   <main class="scroll" id="view"></main>
   <div id="bottom"></div>
@@ -534,15 +614,28 @@ function gc(s, cls = "", value = null) {
 }
 
 let S, busy = false;
-const fresh = () => ({ page: "home", packId: "quick", from: "home", cat: "all", q: "", wallet: [], balance: 250, slide: 3, pass: false, pm: "wallet", muted: false });
-function save() { try { localStorage.setItem("chefpack.app.v3", JSON.stringify({ wallet: S.wallet, balance: S.balance })); } catch (e) {} }
-function load() { try { const s = JSON.parse(localStorage.getItem("chefpack.app.v3")); return s && Array.isArray(s.wallet) ? { ...s, wallet: s.wallet.filter(w => R[w.id]) } : null; } catch (e) { return null; } }
+const fresh = () => ({ page: "home", packId: "quick", from: "home", cat: "all", q: "", user: null, auth: "start", authTab: "signup", wallet: [], tx: [], balance: 0, slide: 3, pass: false, pm: "wallet", wtab: "cards", muted: false, fastSpin: false });
+// TEST MODE accounts and balances live only in this browser, one store per account. Real accounts are Supabase Auth; real money is the payment provider (Tyler's backend).
+const acctKey = u => "chefpack.acct.v1:" + u.email.toLowerCase();
+function save() { try { if (!S.user) return; localStorage.setItem(acctKey(S.user), JSON.stringify({ wallet: S.wallet, balance: S.balance, tx: S.tx })); localStorage.setItem("chefpack.session.v1", JSON.stringify(S.user)); } catch (e) {} }
+function loadAccount(u) { try { const d = JSON.parse(localStorage.getItem(acctKey(u))); if (d && Array.isArray(d.wallet)) return { wallet: d.wallet.filter(w => R[w.id]), balance: +d.balance || 0, tx: Array.isArray(d.tx) ? d.tx : [] }; } catch (e) {} return { wallet: [], balance: 0, tx: [] }; }
+function load() { try { const u = JSON.parse(localStorage.getItem("chefpack.session.v1")); if (u && u.email) return { user: u, ...loadAccount(u) }; } catch (e) {} return null; }
+function signIn(u) { Object.assign(S, { user: u, ...loadAccount(u), page: "home", auth: "start" }); save(); render(true); }
+function signOut() { try { localStorage.removeItem("chefpack.session.v1"); } catch (e) {} Object.assign(S, { user: null, wallet: [], tx: [], balance: 0, page: "home", auth: "start" }); closeSheet(); render(true); }
+const addTx = (kind, label, cents, method) => { S.tx.unshift({ kind, label, amount: cents, method, at: Date.now() }); S.tx = S.tx.slice(0, 50); };
 function drawTier() { let r = Math.random() * 100; for (let i = 0; i < ODDS.length; i++) if ((r -= ODDS[i]) < 0) return i; return 0; }
 
 /* ---------- Router ---------- */
 function go(page, extra = {}) { if (busy) return; Object.assign(S, { page }, extra); render(true); }
 function render(motion = false) {
   closeSheet();
+  $("strip").innerHTML = `<div class="testbar" role="note">TEST MODE · DEMO MONEY · GIFT CARDS NOT REDEEMABLE</div>`;
+  if (!S.user) {
+    $("top").innerHTML = ""; $("bottom").innerHTML = "";
+    const v = $("view"); v.innerHTML = authPage(); v.scrollTop = 0;
+    if (motion) { v.classList.remove("in-fade"); v.offsetWidth; v.classList.add("in-fade"); }
+    bindAuth(); return;
+  }
   $("top").innerHTML = topBar();
   $("bottom").innerHTML = S.page === "pack" ? "" : tabBar();
   const v = $("view");
@@ -552,11 +645,12 @@ function render(motion = false) {
   bindChrome();
   bind[S.page]?.();
 }
-const balBtn = () => `<button class="bal" id="bal" type="button" aria-label="Balance ${money(S.balance, true)}. Tap to add $100 of demo credit">${icon("wallet")}<span id="balAmt">${money(S.balance, true)}</span></button>`;
+const balBtn = () => `<button class="bal" id="bal" type="button" aria-label="Wallet balance ${money(S.balance, true)}. Add funds">${icon("wallet")}<span id="balAmt">${money(S.balance, true)}</span></button>`;
+const initial = () => (S.user?.name || S.user?.email || "?").trim().charAt(0).toUpperCase();
 function topBar() {
   if (S.page === "pack") return `<div class="bar"><button class="round" id="back" type="button" aria-label="Back">${icon("back")}</button><span class="bartitle">${esc(packOf(S.packId).name)}</span>${balBtn()}</div>`;
   const searchable = S.page === "home" || S.page === "cards";
-  return `<div class="bar"><button class="brand" id="brand" type="button" aria-label="Chef Pack home"><svg aria-hidden="true"><use href="#hat"/></svg><b>Chef Pack</b></button><span class="grow"></span><span class="pill">${icon("pin")}${CITY}</span>${balBtn()}</div>
+  return `<div class="bar"><button class="brand" id="brand" type="button" aria-label="Chef Pack home"><svg aria-hidden="true"><use href="#hat"/></svg><b>Chef Pack</b></button><span class="grow"></span>${balBtn()}<button class="avatar" id="me" type="button" aria-label="Account">${esc(initial())}</button></div>
     ${searchable ? `<label class="search">${icon("search")}<input id="q" type="search" inputmode="search" enterkeyhint="search" autocomplete="off" placeholder="${S.page === "cards" ? "Search gift cards" : "Search restaurants or packs"}" aria-label="Search" value="${esc(S.q)}"></label>` : ""}`;
 }
 function tabBar() {
@@ -572,7 +666,8 @@ function bindChrome() {
   document.querySelectorAll("[data-go]").forEach(b => b.onclick = () => go(b.dataset.go, { q: "" }));
   if ($("brand")) $("brand").onclick = () => go("home", { cat: "all", q: "" });
   if ($("back")) $("back").onclick = () => go(S.from || "home");
-  $("bal").onclick = () => { S.balance += 100; save(); $("balAmt").textContent = money(S.balance, true); };
+  $("bal").onclick = () => deposit();
+  if ($("me")) $("me").onclick = showAccount;
   if ($("q")) $("q").oninput = e => { S.q = e.target.value; S.page === "home" ? renderPacks() : renderShelf(); };
 }
 
@@ -591,13 +686,102 @@ const tile = p => `<button class="ptile" type="button" data-pack="${p.id}">
   <span class="row"><strong>${p.free ? "Free" : money(p.price)}</strong>${p.free ? "" : `<em>${money(p.tiers[0])}+ card</em>`}</span></span></button>`;
 const openPack = id => go("pack", { packId: id, from: S.page, slide: 3 });
 
+/* ---------- Welcome, sign in, create account ---------- */
+function authPage() {
+  const hero = `<div class="hero" aria-hidden="true">${gc(R.chip, "g1", 25)}${gc(R.tbell, "g2", 100)}${foil(PACKS[0])}</div>`;
+  if (S.auth === "start") return `<div class="auth">${hero}
+    <h1>Can't decide on dinner? Rip a pack.</h1><p class="lede">Every pack holds a restaurant gift card worth at least what you paid.</p>
+    <div class="authbtns">
+      <button class="btn apple" id="aApple" type="button">${icon("apple")}Continue with Apple</button>
+      <button class="btn google" id="aGoogle" type="button">${icon("g")}Continue with Google</button>
+      <button class="btn soft" id="aEmail" type="button">${icon("mail")}Continue with email</button>
+    </div>
+    <p class="authnote">Test mode: accounts and money in this demo stay on this device.<br>18+ · By continuing you agree to the Terms and Privacy Policy.</p></div>`;
+  const up = S.authTab === "signup";
+  return `<div class="auth"><button class="round" id="aBack" type="button" aria-label="Back">${icon("back")}</button>
+    <h1 style="text-align:left;margin-top:14px">${up ? "Create your account" : "Welcome back"}</h1>
+    <div class="seg" role="group" aria-label="Account"><button type="button" data-tab="signup" aria-pressed="${up}">Create account</button><button type="button" data-tab="signin" aria-pressed="${!up}">Sign in</button></div>
+    <form id="aForm" novalidate>
+      ${up ? `<div class="field"><label for="aName">Name</label><input id="aName" autocomplete="name" required></div>` : ""}
+      <div class="field"><label for="aMail">Email</label><input id="aMail" type="email" inputmode="email" autocomplete="email" autocapitalize="off" required></div>
+      <div class="field"><label for="aPass">Password</label><input id="aPass" type="password" autocomplete="${up ? "new-password" : "current-password"}" minlength="8" required></div>
+      <p class="formerr" id="aErr" role="alert"></p>
+      <button class="btn" type="submit" style="width:100%;height:52px;border-radius:14px">${up ? "Create account" : "Sign in"}</button>
+    </form>
+    <p class="authnote">Test mode: no email is sent and passwords aren't stored.<br>Real accounts will use secure sign-in on Chef Pack's servers.</p></div>`;
+}
+function bindAuth() {
+  if (S.auth === "start") {
+    $("aApple").onclick = () => signIn({ name: "Apple user", email: "apple-user@test.chefpack", via: "apple" });
+    $("aGoogle").onclick = () => signIn({ name: "Google user", email: "google-user@test.chefpack", via: "google" });
+    $("aEmail").onclick = () => { S.auth = "email"; render(true); };
+    return;
+  }
+  $("aBack").onclick = () => { S.auth = "start"; render(true); };
+  document.querySelectorAll("[data-tab]").forEach(b => b.onclick = () => { S.authTab = b.dataset.tab; render(); });
+  $("aForm").onsubmit = e => {
+    e.preventDefault();
+    const name = $("aName")?.value.trim(), email = $("aMail").value.trim(), pass = $("aPass").value;
+    const err = m => { $("aErr").textContent = m; };
+    if (S.authTab === "signup" && !name) return err("Enter your name.");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return err("Enter a valid email address.");
+    if (pass.length < 8) return err("Use at least 8 characters for your password.");
+    signIn({ name: name || email.split("@")[0], email, via: "email" });
+  };
+}
+function showAccount() {
+  const m = sheet(`<div class="result" style="margin-top:6px"><p class="eyebrow">Account</p><h2>${esc(S.user.name)}</h2><p class="sub">${esc(S.user.email)}</p>
+    <div class="valuebox"><span><b>${money(S.balance, true)}</b></span><span>Wallet balance</span></div>
+    <div class="sacts"><button class="btn" id="acDep" type="button">Add funds</button><button class="btn soft" id="acOut" type="button">Sign out</button></div>
+    <p class="sub" style="text-align:center;margin-top:12px">Test mode account, stored on this device only.</p></div>`, "Account");
+  m.querySelector("#acDep").onclick = () => deposit();
+  m.querySelector("#acOut").onclick = signOut;
+}
+
+/* ---------- Money: deposit and checkout (TEST MODE simulates Apple Pay / Google Pay; no money moves) ---------- */
+function deposit(amount = 50, after) {
+  const m = sheet(`<div class="result" style="margin-top:6px"><p class="eyebrow">Wallet</p><h2>Add funds</h2><p class="sub">Balance ${money(S.balance, true)}</p>
+    <div class="amts" role="group" aria-label="Amount">${[25, 50, 100, 250].map(a => `<button type="button" data-amt="${a}" aria-pressed="${a === amount}">$${a}</button>`).join("")}</div>
+    <div class="paybtns">
+      <button class="btn apple" id="dApple" type="button">${icon("apple")}Pay with Apple Pay</button>
+      <button class="btn google" id="dGoogle" type="button">${icon("g")}Pay with Google Pay</button>
+      <button class="btn cardsoon" type="button" disabled>${icon("card")}Debit or credit card · coming soon</button>
+    </div>
+    <p class="sub" style="text-align:center;margin-top:10px">Test mode: nothing is charged.</p></div>`, "Add funds");
+  let amt = amount;
+  m.querySelectorAll("[data-amt]").forEach(b => b.onclick = () => { amt = +b.dataset.amt; m.querySelectorAll("[data-amt]").forEach(c => c.setAttribute("aria-pressed", c === b)); });
+  const pay = method => walletPay(method, amt * 100, `Add funds · ${money(amt)}`, () => {
+    S.balance = Math.round((S.balance + amt) * 100) / 100; addTx("deposit", "Added funds", amt * 100, method); save();
+    if ($("balAmt")) $("balAmt").textContent = money(S.balance, true);
+    if (after) after(); else if (S.page === "wallet" || S.page === "pack") { const y = $("view").scrollTop; render(); $("view").scrollTop = y; }
+  });
+  m.querySelector("#dApple").onclick = () => pay("Apple Pay");
+  m.querySelector("#dGoogle").onclick = () => pay("Google Pay");
+}
+// Simulated wallet payment sheet: confirm, processing, done. Real version: payment provider on Tyler's backend.
+function walletPay(method, cents, label, onPaid) {
+  const m = sheet(`<div class="paysheet"><p class="eyebrow">${method}</p>
+    <div class="merchant"><svg aria-hidden="true"><use href="#hat"/></svg><span><b>Chef Pack</b><small>${esc(label)}</small></span></div>
+    <div class="total"><span>Total</span><b>${money(cents / 100, true)}</b></div>
+    <div id="payBody"><div class="paybtns"><button class="btn ${method === "Apple Pay" ? "apple" : "google"}" id="pConfirm" type="button">${method === "Apple Pay" ? icon("apple") : icon("g")}Confirm with ${method === "Apple Pay" ? "Face ID" : "Google Pay"}</button></div>
+    <p class="sub" style="margin-top:10px">Test mode: simulated payment, no money moves.</p></div></div>`, method);
+  m.querySelector("#pConfirm").onclick = () => {
+    m.querySelector("#payBody").innerHTML = `<div class="spinner" aria-label="Processing"></div><p class="sub">Processing…</p>`;
+    setTimeout(() => {
+      m.querySelector("#payBody").innerHTML = `<div class="ok">${icon("check")}</div><p style="font-weight:800;margin:0">Paid ${money(cents / 100, true)}</p>`;
+      setTimeout(() => { closeSheet(); onPaid(); }, 700);
+    }, 900);
+  };
+}
+
 /* ---------- Pages ---------- */
 function home() {
   return `<div class="chips" role="group" aria-label="Categories">${CATS.map(([id, label]) => `<button class="chip" type="button" data-cat="${id}" aria-pressed="${S.cat === id}">${label}</button>`).join("")}</div>
     <section class="promo">
-      <div><h1>Can't decide on dinner?</h1><p>Rip a pack and pull a gift card to one of its restaurants, worth at least what you paid.</p><button class="btn white" id="pOpen" type="button">Open Quick Bite · $15</button></div>
+      <div><h1>Can't decide on dinner?</h1><p>${CITY} · Rip a pack and pull a gift card to one of its restaurants, worth at least what you paid.</p><button class="btn white" id="pOpen" type="button">Open Quick Bite · $15</button></div>
       <div class="fan" aria-hidden="true">${gc(R.chip)}${gc(R.og)}${gc(R.tbell)}</div>
     </section>
+    ${S.balance < 10 ? `<button class="promo" id="hDep" type="button" style="background:var(--green-bg);color:var(--fg);grid-template-columns:1fr auto;text-align:left;border:0;width:100%"><span><b style="font-size:17px;font-weight:900">Add funds to rip your first pack</b><br><span style="color:var(--muted);font-size:14px">Apple Pay or Google Pay · test mode</span></span><span class="btn" style="min-height:40px;font-size:14px">Add funds</span></button>` : ""}
     <div id="packs"></div>`;
 }
 function renderPacks() {
@@ -636,10 +820,10 @@ function pack() {
       <div class="opt"><div><b>Add a Swap Pass?</b><small>Don't like the restaurant? Swap it once after you open, for ${money(SWAP)} more.</small></div><button class="tog" id="pass" type="button" aria-pressed="${S.pass}" aria-label="Add a Swap Pass"></button></div>
       <div class="pay" role="group" aria-label="Payment">
         <button class="pm" type="button" data-pm="wallet" aria-pressed="${S.pm === "wallet"}">${icon("wallet")}<b>Chef Pack Wallet</b><small>${money(S.balance, true)}</small></button>
-        <button class="pm" type="button" data-pm="card" aria-pressed="${S.pm === "card"}">${icon("card")}<b>Other payment</b><small>Card, Apple Pay</small></button>
+        <button class="pm" type="button" data-pm="applepay" aria-pressed="${S.pm === "applepay"}">${icon("apple")}<b>Apple Pay</b><small>Pay just this pack</small></button>
       </div>`}
-      <button class="btn buynow" id="open" type="button">${p.free ? "Open free pick" : `Buy now · ${money(total, true)}`}</button>
-      <p class="fine">${p.free ? "Free picks suggest a place. Packs come with a gift card." : `${money(p.price)} pack + ${money(FEE, true)} fee${S.pass ? ` + ${money(SWAP)} Swap Pass` : ""} · Demo: charged to play credit`}</p>
+      <button class="btn buynow" id="open" type="button">${p.free ? "Open free pick" : S.pm === "wallet" && S.balance < total ? `Add funds to buy · ${money(total, true)}` : `Buy now · ${money(total, true)}`}</button>
+      <p class="fine">${p.free ? "Free picks suggest a place. Packs come with a gift card." : `${money(p.price)} pack + ${money(FEE, true)} fee${S.pass ? ` + ${money(SWAP)} Swap Pass` : ""} · Test mode, demo money`}</p>
     </section>
     ${p.free ? "" : `<div class="sh"><h2>Odds</h2><small>Per pack</small></div>
     <div class="values">${p.tiers.map((v, i) => `<div><b>${RARITY[i][0]} · ${money(v)} card</b><span>${i ? `${ODDS[i]}%` : "88% · guaranteed floor"}</span></div>`).join("")}</div>`}
@@ -672,9 +856,15 @@ function renderShelf() {
 }
 
 function wallet() {
-  return `<div class="pagehead"><h1>Wallet</h1><p>${S.wallet.length ? `${S.wallet.length} gift card${S.wallet.length === 1 ? "" : "s"} · ${money(S.wallet.reduce((a, w) => a + w.value, 0))} total` : "Your gift cards show up here."}</p></div>
-    ${S.wallet.length ? S.wallet.map((w, i) => { const s = R[w.id]; return `<button class="wrow" type="button" data-i="${i}">${gc(s)}<span style="min-width:0"><b>${esc(s.n)}</b><small>${w.t ? "Upgraded · " : ""}${esc(s.c)}</small></span><span class="r">${money(w.value)}</span></button>`; }).join("")
-      : `<div class="empty"><b>No gift cards yet</b><p>Open a pack and your card lands here, ready to use.</p><button class="btn" id="toHome" type="button" style="margin-top:8px">Browse packs</button></div>`}`;
+  const cards = S.wallet.length ? S.wallet.map((w, i) => { const sp = R[w.id]; return `<button class="wrow" type="button" data-i="${i}">${gc(sp)}<span style="min-width:0"><b>${esc(sp.n)}</b><small>${w.t ? "Upgraded · " : ""}${esc(sp.c)} · not redeemable</small></span><span class="r">${money(w.value)}</span></button>`; }).join("")
+    : `<div class="empty"><b>No gift cards yet</b><p>Rip a pack and your card lands here.</p><button class="btn" id="toHome" type="button" style="margin-top:8px">Browse packs</button></div>`;
+  const when = ms => new Date(ms).toLocaleDateString(undefined, { month: "short", day: "numeric" }) + " · " + new Date(ms).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+  const activity = S.tx.length ? S.tx.map(t => `<div class="txrow"><span class="ti">${icon(t.kind === "deposit" ? "plus" : t.kind === "pack" ? "cards" : "card")}</span><span style="min-width:0"><b>${esc(t.label)}</b><small>${esc(t.method)} · ${when(t.at)}</small></span><span class="amt ${t.amount > 0 ? "plus" : ""}">${t.amount > 0 ? "+" : "−"}${money(Math.abs(t.amount) / 100, true)}</span></div>`).join("")
+    : `<div class="empty"><b>No activity yet</b><p>Deposits and pack purchases show up here.</p></div>`;
+  return `<div class="pagehead"><h1>Wallet</h1></div>
+    <div class="balcard"><small>Balance · test mode</small><b>${money(S.balance, true)}</b><div class="row"><button class="btn white" id="wDep" type="button">${icon("plus")}Add funds</button></div></div>
+    <div class="seg wseg" role="group" aria-label="Wallet view"><button type="button" data-wt="cards" aria-pressed="${S.wtab === "cards"}">Gift cards (${S.wallet.length})</button><button type="button" data-wt="activity" aria-pressed="${S.wtab === "activity"}">Activity</button></div>
+    ${S.wtab === "cards" ? cards : activity}`;
 }
 
 /* ---------- Sound and haptics (only after the viewer taps; muted by the speaker button) ---------- */
@@ -725,12 +915,21 @@ function sparks(host, n) {
 }
 
 /* ---------- Open a pack: rip it like a sports pack ---------- */
-function openFlow() {
+function buy() {
+  const p = packOf(S.packId); if (busy) return;
+  if (p.free) return openFlow("free");
+  const total = (p.price + FEE + (S.pass ? SWAP : 0));
+  if (S.pm === "applepay") return walletPay("Apple Pay", Math.round(total * 100), `${p.name} pack`, () => openFlow("Apple Pay"));
+  if (S.balance < total) return deposit(Math.max(25, [25, 50, 100, 250].find(a => a >= total - S.balance) || 250), () => { const y = $("view").scrollTop; render(); $("view").scrollTop = y; });
+  openFlow("wallet");
+}
+function openFlow(method) {
   if (busy) return;
   const p = packOf(S.packId), cost = p.price + FEE + (S.pass ? SWAP : 0);
-  if (!p.free && S.balance < cost) { $("open").textContent = "Add credit: tap your balance"; return; }
+  if (!p.free && method === "wallet" && S.balance < cost) return;
   busy = true;
-  if (!p.free) { S.balance -= cost; $("balAmt").textContent = money(S.balance, true); }
+  if (!p.free && method === "wallet") { S.balance = Math.round((S.balance - cost) * 100) / 100; $("balAmt").textContent = money(S.balance, true); }
+  if (!p.free) addTx("pack", `${p.name} pack`, -Math.round(cost * 100), method === "wallet" ? "Wallet" : method);
   // DEMO MODE: the browser draws the tier and restaurant. In API mode this comes from POST /api/orders and the reel only plays it back.
   const s = rand(p.spots), t = p.free ? 0 : drawTier();
   const res = { p, s, t, value: p.free ? null : p.tiers[t], free: !!p.free, swapped: false, pass: !p.free && S.pass };
@@ -739,7 +938,7 @@ function openFlow() {
   closeSheet();
   const o = document.createElement("div");
   o.className = "opener"; o.setAttribute("role", "dialog"); o.setAttribute("aria-modal", "true"); o.setAttribute("aria-label", "Open your pack");
-  o.innerHTML = `<button class="mute" id="mute" type="button" aria-label="${S.muted ? "Turn sound on" : "Mute sound"}">${icon(S.muted ? "muted" : "sound")}</button><button class="x" type="button" aria-label="Close" hidden>${icon("close")}</button>
+  o.innerHTML = `<button class="mute" id="mute" type="button" aria-label="${S.muted ? "Turn sound on" : "Mute sound"}">${icon(S.muted ? "muted" : "sound")}</button><span class="topbtns"><button class="fastbtn" id="fastSpin" type="button" aria-pressed="${S.fastSpin}">Fast spin</button></span><button class="x" type="button" aria-label="Close" hidden>${icon("close")}</button>
     <p class="otitle">${esc(p.name)}</p>
     <div class="ostage ready" id="ostage" role="button" tabindex="0" aria-label="Rip the pack open">
       <span class="spill" aria-hidden="true"></span>
@@ -754,6 +953,10 @@ function openFlow() {
     <p class="ohint" id="ohint">Tap or swipe to rip it open</p><div class="ores" id="ores"></div>`;
   document.body.appendChild(o);
   const st = o.querySelector("#ostage"), reel = o.querySelector("#oreel"), strip = o.querySelector("#ostrip"), rv = o.querySelector("#oreveal");
+  // The sealed pack fills most of the screen: scale its 300×404 stage to the viewport.
+  const fit = () => st.style.setProperty("--k", Math.max(.8, Math.min(innerWidth * .92 / 300, (innerHeight - 170) / 404, 2.2)).toFixed(3));
+  fit(); addEventListener("resize", fit);
+  o.querySelector("#fastSpin").onclick = e => { e.stopPropagation(); S.fastSpin = !S.fastSpin; e.currentTarget.setAttribute("aria-pressed", S.fastSpin); };
   o.querySelector(".x").onclick = () => { o.remove(); if (S.page === "pack") render(); };
   o.querySelector("#mute").onclick = e => { e.stopPropagation(); S.muted = !S.muted; e.currentTarget.innerHTML = icon(S.muted ? "muted" : "sound"); e.currentTarget.setAttribute("aria-label", S.muted ? "Turn sound on" : "Mute sound"); };
   const fast = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -770,7 +973,7 @@ function openFlow() {
     reel.hidden = false; o.querySelector("#ohint").textContent = "";
     const pitch = strip.firstElementChild.getBoundingClientRect().width + 10, view = reel.clientWidth;
     const target = WIN * pitch + (pitch - 10) / 2 - view / 2 + (Math.random() - .5) * pitch * .6;
-    const over = Math.min(26, pitch * .2), D = fast ? 1 : 5600, SETTLE = fast ? 1 : 420;
+    const over = Math.min(26, pitch * .2), D = fast ? 1 : S.fastSpin ? 1900 : 5600, SETTLE = fast ? 1 : S.fastSpin ? 240 : 420;
     let t0 = null, lastIdx = -1, lastTick = 0;
     const place = x => { strip.style.transform = `translate(${-x}px, -50%)`; };
     const frame = now => {
@@ -846,9 +1049,9 @@ function showResult(r, o) {
   if (q("sCard")) q("sCard").onclick = () => { close(); showCard(0); };
   if (q("sMore")) q("sMore").onclick = () => { close(); render(); };
   if (q("sPaid")) q("sPaid").onclick = () => { close(); go("pack", { packId: paid.id, from: "home", slide: 3 }); };
-  if (q("sAgain")) q("sAgain").onclick = () => { close(); openFlow(); };
+  if (q("sAgain")) q("sAgain").onclick = () => { close(); openFlow("free"); };
   if (q("sSwap") && !q("sSwap").disabled) q("sSwap").onclick = () => {
-    if (!r.pass) { if (S.balance < SWAP) { q("sSwap").textContent = "Add credit to swap"; return; } S.balance -= SWAP; $("balAmt").textContent = money(S.balance, true); }
+    if (!r.pass) { if (S.balance < SWAP) { q("sSwap").textContent = "Add funds to swap"; return; } S.balance = Math.round((S.balance - SWAP) * 100) / 100; addTx("swap", "Swap restaurant", -SWAP * 100, "Wallet"); $("balAmt").textContent = money(S.balance, true); }
     r.s = rand(p.spots.filter(x => x !== s)); r.swapped = true; S.wallet[0].id = r.s.id; save();
     const bc = o.querySelector("#bigcard"); bc.innerHTML = gc(r.s, "", r.value); bc.classList.remove("popped"); void bc.offsetWidth; bc.classList.add("popped"); sfx("chime", 0); showResult(r, o);
   };
@@ -877,6 +1080,7 @@ function showBrand(s) {
 const bind = {
   home() {
     $("pOpen").onclick = () => openPack("quick");
+    if ($("hDep")) $("hDep").onclick = () => deposit();
     $("view").querySelectorAll("[data-cat]").forEach(b => b.onclick = () => { S.cat = S.cat === b.dataset.cat ? "all" : b.dataset.cat; $("view").querySelectorAll("[data-cat]").forEach(c => c.setAttribute("aria-pressed", c.dataset.cat === S.cat)); renderPacks(); });
     renderPacks();
   },
@@ -888,11 +1092,13 @@ const bind = {
     st.addEventListener("touchstart", e => { x0 = e.touches[0].clientX; }, { passive: true });
     st.addEventListener("touchend", e => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 40) setSlide(S.slide + (dx < 0 ? 1 : -1)); x0 = null; });
     if ($("pass")) $("pass").onclick = () => { S.pass = !S.pass; const y = $("view").scrollTop; render(); $("view").scrollTop = y; };
-    document.querySelectorAll("[data-pm]").forEach(b => b.onclick = () => { S.pm = b.dataset.pm; document.querySelectorAll("[data-pm]").forEach(c => c.setAttribute("aria-pressed", c.dataset.pm === S.pm)); });
-    $("open").onclick = openFlow;
+    document.querySelectorAll("[data-pm]").forEach(b => b.onclick = () => { S.pm = b.dataset.pm; const y = $("view").scrollTop; render(); $("view").scrollTop = y; });
+    $("open").onclick = buy;
   },
   cards() { renderShelf(); },
   wallet() {
+    $("wDep").onclick = () => deposit();
+    document.querySelectorAll("[data-wt]").forEach(b => b.onclick = () => { S.wtab = b.dataset.wt; render(); });
     if ($("toHome")) $("toHome").onclick = () => go("home");
     $("view").querySelectorAll("[data-i]").forEach(b => b.onclick = () => showCard(+b.dataset.i));
   }
@@ -902,6 +1108,7 @@ function start(data) {
   S = Object.assign(fresh(), (data && data.S) || load() || {});
   if (!packOf(S.packId)) S.packId = "quick";
   if (!({ home: 1, pack: 1, cards: 1, wallet: 1 })[S.page]) S.page = "home";
+  if (S.user && !S.tx) S.tx = [];
   busy = false;
   $("view").addEventListener("scroll", () => $("top").classList.toggle("shadow", $("view").scrollTop > 4), { passive: true });
   addEventListener("keydown", e => { if (e.key === "Escape" && !busy) { closeSheet(); document.querySelector(".opener")?.remove(); } });
