@@ -8,9 +8,9 @@ Chef Pack is a pack-opening game for restaurant gift cards. You pick a pack, spi
 
 Open `prototype/index.html` in a browser. It's one file with no build step and uses play money only.
 
-- **Home:** a floating-food hero, live drops, and 12 packs with filters, search and sorting
-- **Pack page:** open 1 to 4 packs at once on stacked reels, try a free demo spin, see the odds and the restaurant list
-- **Reveal:** the card flips over, you earn XP, and you can swap restaurants once
+- **Home:** category rail, promo banner, popular packs and all packs, with search
+- **Pack page:** store-style page with a reel, the odds, what's inside, and a sticky "Open pack" bar
+- **Result:** a bottom sheet with tonight's restaurant, card value, directions and one swap
 - **Wallet:** your gift cards with a barcode for each one
 - **Demo city:** Rogers, AR. The local restaurants are examples, so check them before showing this to anyone.
 
