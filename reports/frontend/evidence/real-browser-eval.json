@@ -1,0 +1,27 @@
+{
+  "tested_commit": "b93ad16beaf536edfbc47e21ffe82ffcbb6491d1",
+  "frontend_commit": "a35eeabad2f08035b10d1166867d0793d3e008c5",
+  "preview_url": "https://chef-pack-5x1k9eo2b-ctbedfords-projects.vercel.app/prototype/index.html",
+  "mode": "mock",
+  "observations": [
+    "Public config loads the dev Supabase project; real password login succeeds for two dedicated confirmed QA accounts.",
+    "Catalog renders quick-bite $15, sit-down $40, treat-yourself $100; other themes are demo-only.",
+    "Account A: double-click opening creates exactly one $15 order, ada83e44-cd2f-463d-b255-b829b44115c4; reveal displays server demo label.",
+    "Account A: wallet contains its browser order plus the separate API evaluation order; reload preserves session and both server cards.",
+    "Logout clears private cards. Account B initially sees an empty wallet and no A cards.",
+    "Account B: reload immediately after opening restores Unfinished order; Finish opening resumes the same order, 074e3876-ce7e-45ae-afb6-78b0b60716d7. Wallet remains one card. Database confirms exactly one B order.",
+    "The rip-pack button responds to Return. This is a partial keyboard check, not a complete focus walkthrough.",
+    "All three QA orders are fulfilled MOCK orders for 1500 cents. No payment or gift-card provider integration is enabled."
+  ],
+  "configuration": [
+    "Exact combined preview URL saved in Supabase Auth redirect allowlist.",
+    "Two individual QA accounts created confirmed; global email confirmation remains enabled.",
+    "Credentials and temporary Vercel access URL remain outside the repository."
+  ],
+  "not_verified": [
+    "New-user signup and email confirmation roundtrip.",
+    "Forced expired-session behavior in the real browser; actual refresh-token API exchange did pass.",
+    "Real browser offline/503/timeout fault injection; negative authentication and input cases passed at API level.",
+    "Full 390px and desktop visual/focus acceptance. Initial viewport emulation did not match DOM dimensions, so mobile-named screenshots are observations only, not proof of 390px acceptance."
+  ]
+}

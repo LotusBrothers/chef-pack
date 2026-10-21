@@ -1,55 +1,34 @@
-# Frontend handoff feedback
+# Frontend integration verification
 
-Readiness: BLOCKED. The frontend is connected to the mock API contract, but the golden journey has not run on a combined Vercel preview.
-Report scope: integration.
-Tested code commit: 53b2bedf9621aaecc97c3727a07c1e05d0ffebaf (frontend/justin). The local suite was re-run on this commit; screenshots are from cd8f344, before the c67f155 merge.
+Readiness: BLOCKED for full acceptance; core real mock flow verified.
+Tested code: b93ad16beaf536edfbc47e21ffe82ffcbb6491d1. Frontend source: a35eeabad2f08035b10d1166867d0793d3e008c5.
 Main included: 28515f4539c79dab41a21bbef8e0ca1c234d97d7.
-Combined preview: none available (see blockers).
-Machine-readable report: reports/frontend/current.json. Evidence: reports/frontend/evidence/.
+Combined preview: https://chef-pack-5x1k9eo2b-ctbedfords-projects.vercel.app/prototype/index.html
+Verification branch: backend/integration-verification. Justin's branch was preserved.
 
-## What changed (prototype/index.html)
-- **Sign-in:** signup (with email-confirmation handling and redirect), login, token refresh and logout via Supabase Auth REST over fetch. No client library was added; see ask 4.
-- **Catalog:** home renders GET /api/packs (quick-bite, sit-down, treat-yourself). The other themes are labeled "Demo only" with buying disabled. Free Pick stays a local no-card suggestion.
-- **Orders:** each intentional purchase saves `{key: crypto.randomUUID(), pack_id, user_id}` before POST /api/orders. Timeouts, lost connections, 503s and reloads retry the same key. 400/404/405 retire the key. A pending attempt is never replayed for another user.
-- **Reveal:** the reveal and reel play back the server pull (base tier only, because the server has no tier). No paid outcome is drawn in the browser.
-- **Wallet:** GET /api/wallet on sign-in, refresh and visit. The old localStorage play wallet and barcodes are deleted, never shown.
-- **Mock safety:** TEST MODE / NOT REDEEMABLE on every screen. API mode has no balance, fee, Swap Pass, payment picker, upgrade or barcode.
-- **Merged work:** includes the parallel UI work on this branch (tiered reveal, slot-machine reel, plus the larger pack opening and Fast spin from c67f155).
-- **c67f155 accounts and payments not kept:** that commit's browser-only accounts, wallet balance, deposits and simulated Apple Pay / Google Pay checkout were dropped, keeping the server API as the source of truth. The handoff forbids a fictitious balance or payment in API mode, and real accounts are Supabase Auth. Its welcome gate was built on those simulated sign-ins, so the Supabase sign-in sheet remains.
-- **Line endings:** restored line-ending-only differences in Tyler-owned files to main's exact bytes, so the scope check passes. An earlier merge (386a19d) had introduced them.
+## Resolved dependencies
+- GET /api/config implemented with public-key-only validation; backend PR #4 awaits review and merge. No privileged key is exposed.
+- Combined protected Vercel preview deployed READY with mock payments and cards. This is a preview, not a production promotion.
+- Exact preview URL saved to Supabase Auth redirect allowlist.
+- Two dedicated confirmed QA accounts created without sending invitations or disabling global confirmation. Credentials stay outside git.
+- Tyler's integration work accepts the existing Supabase REST-over-fetch approach for this dev test. No dependency added.
 
-## Checks run
-- `node scripts/check-frontend-scope.mjs origin/main HEAD`: passed (10 frontend files).
-- `node --test tests/backend/*.test.mjs`: 6/6 pass.
-- `node scripts/eval-api.mjs` (read-only, chef-pack-dev.vercel.app): HEALTH pass, CATALOG pass. Saved to evidence/api-eval-readonly.json.
-- **Browser (local only):** same-origin harness `tests/frontend/contract-harness.mjs`.
-  - Real /api/packs is proxied from chef-pack-dev.vercel.app.
-  - Auth, orders and wallet are a local stand-in that follows docs/FRONTEND-HANDOFF.md, with fault injection.
-  - Results are in each case's notes in current.json. They show the UI logic works and are not golden-journey passes.
-- `node scripts/check-frontend-report.mjs`: expected to FAIL because readiness is blocked, so the PR stays draft.
+## Evidence
+- reports/frontend/current.json: per-case status.
+- reports/frontend/evidence/real-api-eval.json: ten real API checks pass.
+- reports/frontend/evidence/real-browser-eval.json: real UI observations and unrun cases.
+- reports/frontend/evidence/real-wallet-user-b.png: B has only its one nonredeemable test card after pending-order reload recovery.
+- reports/frontend/evidence/justin-local-report.json: earlier local-harness evidence preserved; it is not real-preview proof.
+- Backend Node tests: 7/7 pass.
 
-## Case status
-All integration cases are BLOCKED on a real combined preview. Local harness results:
-- **CATALOG, OPEN, RETRY, WALLET, ISOLATION:** behaved correctly locally (one order per attempt, same-key retries, server-only wallet, no cross-user data).
-- **SIGNIN:** only the stand-in auth ran. Real Supabase signup, confirmation and redirects were not run.
-- **ERROR:** timeout, 503 and expired session were checked locally. Real offline and a real server 400 through the UI were NOT RUN.
-- **MOCK-SAFETY:** verified locally only.
-- **VISUAL:** NOT RUN as a full pass. Mobile and desktop screenshots were taken; the keyboard and focus walkthrough was not done.
+Confirmed real flow: login -> server catalog -> one mock pull -> server reveal -> persisted wallet -> logout/account switch -> isolation. Double-click and reload of an unfinished order produce no duplicate; concurrent same-key API retries also pass. Database has two A test orders (one browser and one API suite) and one B test order, all mock/1500 cents/fulfilled.
 
-## Asks for Tyler (blocking)
-1. **Supabase publishable key for the frontend.** Either approve committing the chef-pack-dev publishable key into `AUTH_KEY` in prototype/index.html, or add `GET /api/config` returning `{ "supabase_url": "...", "supabase_publishable_key": "..." }` from runtime env. The page already tries `/api/config` when `AUTH_KEY` is empty.
-2. **Combined Vercel preview of frontend/justin.** Justin's Vercel account (jhoai) cannot see the chef-pack project, and the repo has no Vercel Git integration, so pushing does not create a preview. Please connect the repo or deploy this branch as a preview with PAYMENTS_MODE=mock, GIFT_CARDS_MODE=mock, SUPABASE_URL and SUPABASE_PUBLISHABLE_KEY. Share the URL, and preview access if it is protected.
-3. **Auth redirect URLs.** Add the preview origin plus `/prototype/index.html` to Supabase Auth redirect URLs. Signup sends `redirect_to=<origin>/prototype/index.html`, and the page reads the session from the URL hash on return.
-4. **Auth client approval.** Confirm that Supabase Auth REST over fetch is acceptable, or approve a pinned supabase-js version. Today no dependency was added.
-5. **Two dedicated test accounts** (or approval for Justin's agent to create them on the preview), so the golden journey and `eval-api.mjs --write-tests` can run.
+## Remaining acceptance work
+SIGNIN: new signup/email-confirmation roundtrip and forced browser expiry.
+RETRY/ERROR: real browser timeout/offline/503/revoked-auth paths. Local harness checks do not substitute.
+VISUAL: full 390px/desktop and keyboard/focus walkthrough. Viewport emulation did not match DOM dimensions, so initial mobile-named screenshots are not a mobile pass.
 
-## Known mismatches and notes
-- **No tier:** the server pull has no tier, rarity or upgrade, so the reel always lands on the base tile in API mode.
-- **Demo restaurant label:** `restaurant_label` is "Demo restaurant — not redeemable". Branded art appears only in demo themes, the demo catalog and the promo fan.
-- **Wallet cap:** the API returns at most 100 pulls; the UI shows what it gets.
-- **Wallet header on errors:** during a wallet 503 the header keeps the last-known count above the error message.
-
-## Next action and owner
-Tyler: asks 1–3 above. Then Justin's agent reruns the golden journey on the preview, regenerates this report, and marks the PR ready only if every case passes.
-
-Note: the parallel session's report for c67f155 (commit 2204932) is superseded by this one. Its welcome/checkout screenshots were removed from evidence/ because those screens are not in the tested code; they remain in git history.
+## Next action
+Tyler: review/merge backend PR #4 under repository approval rules, then synchronize main into frontend/justin without resetting history.
+Justin or Tyler's agent: use this preview and sanitized evidence to complete remaining acceptance checks, deploy/retest after any code change, and update feedback/report on frontend/justin. Keep PR #3 draft until every required case actually passes.
+This verification branch combines the unmerged config deliberately for testing; do not merge it wholesale as a substitute for separate backend review. No automatic merge or production release was performed.

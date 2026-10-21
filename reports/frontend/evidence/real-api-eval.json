@@ -1,0 +1,67 @@
+{
+  "tested_commit": "b93ad16beaf536edfbc47e21ffe82ffcbb6491d1",
+  "base": "https://chef-pack-5x1k9eo2b-ctbedfords-projects.vercel.app",
+  "mode": "mock",
+  "results": [
+    {
+      "id": "HEALTH",
+      "status": "pass",
+      "evidence": "200 mock-only"
+    },
+    {
+      "id": "PUBLIC_CONFIG",
+      "status": "pass",
+      "evidence": "Only public configuration returned"
+    },
+    {
+      "id": "AUTH_DENIAL",
+      "status": "pass",
+      "evidence": "401 authentication_required"
+    },
+    {
+      "id": "OPEN",
+      "status": "pass",
+      "evidence": {
+        "order_id": "9f9a365d-dedb-4e7a-bb1f-fc8e8f312beb",
+        "pull_id": "fea395a0-c202-4b0f-9091-0b479d7ef366",
+        "amount_cents": 1500
+      }
+    },
+    {
+      "id": "CONCURRENT_RETRY",
+      "status": "pass",
+      "evidence": "Two concurrent retries returned identical order/pull"
+    },
+    {
+      "id": "KEY_CONFLICT",
+      "status": "pass",
+      "evidence": "400 for same key/different pack"
+    },
+    {
+      "id": "WALLET",
+      "status": "pass",
+      "evidence": {
+        "count": 2,
+        "matching_pull_count": 1
+      }
+    },
+    {
+      "id": "ISOLATION",
+      "status": "pass",
+      "evidence": {
+        "second_user_wallet_count": 0,
+        "first_user_pull_visible": false
+      }
+    },
+    {
+      "id": "SERVER_PRICE",
+      "status": "pass",
+      "evidence": "Client amount rejected with 400"
+    },
+    {
+      "id": "SESSION_REFRESH",
+      "status": "pass",
+      "evidence": "Supabase refresh token exchange succeeded"
+    }
+  ]
+}
