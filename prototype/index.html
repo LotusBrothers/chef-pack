@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#0d0d0f">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -19,23 +19,33 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
 <style>
   /* Layout: a mobile app shell (100dvh column, max 480px): fixed top bar, one scrolling content area, fixed tab bar or order bar.
-     Gift cards are the product: brand-color card tiles (real card art from the gift card provider replaces them later).
-     World: DoorDash-clean. White, near-black, one green for "guaranteed"/"upgraded". Minimal motion. */
+     System: iOS-native type (SF Pro on Apple devices, Inter elsewhere), black and white with one gold accent,
+     8pt spacing, 14px controls, 20px cards. Gift cards are the product; everything around them stays quiet. */
   :root {
     color-scheme: light;
     --bg: #ffffff;
-    --desk: #ececec;
-    --surface: #f5f5f5;
-    --surface-2: #ebebeb;
-    --line: #e8e8e8;
-    --fg: #191919;
-    --muted: #6b6b6b;
-    --green: #0a8a4a;
-    --green-bg: #e7f5ed;
-    --font: "Figtree", -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, "Segoe UI", Roboto, sans-serif;
+    --desk: #f2f2f4;
+    --surface: #f4f4f6;
+    --surface-2: #e9e9ed;
+    --line: rgba(0,0,0,.08);
+    --fg: #0b0b0c;
+    --fg-2: #3a3a3c;
+    --muted: #6e6e73;
+    --faint: #a1a1a6;
+    --ink: #0d0d0f;
+    --gold: #d9b25f;
+    --ok: #1a7f45;
+    --ok-bg: #e9f6ef;
+    --green: var(--ok);
+    --green-bg: var(--ok-bg);
+    --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", system-ui, "Segoe UI", Roboto, sans-serif;
+    --display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", system-ui, "Segoe UI", Roboto, sans-serif;
+    --ease: cubic-bezier(.2,.8,.2,1);
+    --shadow-1: 0 1px 2px rgba(0,0,0,.05), 0 1px 1px rgba(0,0,0,.03);
+    --shadow-2: 0 10px 30px rgba(0,0,0,.10), 0 2px 8px rgba(0,0,0,.05);
     --safe-t: env(safe-area-inset-top, 0px);
     --safe-b: env(safe-area-inset-bottom, 0px);
     --safe-l: env(safe-area-inset-left, 0px);
@@ -44,256 +54,233 @@
   }
   html, body { height: 100%; }
   html { background: var(--desk); }
-  body { background: var(--desk); color: var(--fg); font: 400 16px/1.4 var(--font); -webkit-font-smoothing: antialiased; -webkit-text-size-adjust: 100%;
-    overflow: hidden; overscroll-behavior: none; touch-action: manipulation; }
+  body { background: var(--desk); color: var(--fg); font: 400 16px/1.4 var(--font); letter-spacing: -.011em; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%; overflow: hidden; overscroll-behavior: none; touch-action: manipulation; font-feature-settings: "cv11", "ss01"; }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  button, input { font: inherit; color: inherit; }
+  button, input { font: inherit; color: inherit; letter-spacing: inherit; }
   button { cursor: pointer; -webkit-user-select: none; user-select: none; }
   a { color: inherit; text-decoration: none; }
   [hidden] { display: none !important; }
   :focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; border-radius: 10px; }
+  .num, .bal, .price { font-variant-numeric: tabular-nums; }
 
   /* ---------- Shell ---------- */
   .app { position: relative; height: 100%; max-width: 480px; margin: 0 auto; background: var(--bg); display: flex; flex-direction: column; overflow: hidden; }
-  @media (min-width: 520px) { .app { box-shadow: 0 0 0 1px var(--line), 0 20px 60px rgba(0,0,0,.07); } }
+  @media (min-width: 520px) { .app { box-shadow: 0 0 0 1px var(--line), 0 30px 80px rgba(0,0,0,.08); } }
   .scroll { flex: 1; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; overscroll-behavior-y: contain; scrollbar-width: none;
-    padding: 2px max(var(--gutter), var(--safe-r)) 28px max(var(--gutter), var(--safe-l)); }
+    padding: 4px max(var(--gutter), var(--safe-r)) 32px max(var(--gutter), var(--safe-l)); }
   .scroll::-webkit-scrollbar { display: none; }
-  .top { flex: none; background: var(--bg); padding: calc(var(--safe-t) + 8px) max(var(--gutter), var(--safe-r)) 10px max(var(--gutter), var(--safe-l)); z-index: 5; }
+  .top { flex: none; background: var(--bg); padding: var(--safe-t) max(var(--gutter), var(--safe-r)) 10px max(var(--gutter), var(--safe-l)); z-index: 5; transition: box-shadow .2s; }
   .top.shadow { box-shadow: 0 1px 0 var(--line); }
-  .bar { display: flex; align-items: center; gap: 8px; min-height: 44px; }
-  .brand { display: flex; align-items: center; gap: 7px; background: none; border: 0; padding: 0; min-height: 44px; flex: none; }
-  .brand svg { width: 32px; height: 32px; }
-  .authlogo { display: block; width: 56px; height: 56px; margin: 0 auto 14px; }
-  .brand b { font-size: 19px; font-weight: 900; letter-spacing: -.03em; }
+  .bar { display: flex; align-items: center; gap: 8px; min-height: 48px; }
+  .brand { display: flex; align-items: center; gap: 9px; background: none; border: 0; padding: 0; min-height: 44px; flex: none; }
+  .brand svg { width: 30px; height: 30px; }
+  .brand b { font: 700 18px/1 var(--display); letter-spacing: -.03em; }
+  .authlogo { display: block; width: 60px; height: 60px; margin: 6px auto 16px; filter: drop-shadow(0 8px 18px rgba(0,0,0,.18)); }
   .grow { flex: 1; min-width: 0; }
-  .pill { display: inline-flex; align-items: center; gap: 5px; background: var(--surface); border: 0; border-radius: 99px; padding: 0 12px; height: 36px; font-weight: 700; font-size: 14px; white-space: nowrap; }
-  .pill svg { width: 15px; height: 15px; flex: none; }
-  .bal { display: inline-flex; align-items: center; gap: 6px; background: var(--fg); color: #fff; border: 0; border-radius: 99px; padding: 0 12px; height: 36px; font-weight: 800; font-size: 14px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .pill { display: inline-flex; align-items: center; gap: 4px; background: none; border: 0; padding: 0 6px; height: 36px; font-weight: 600; font-size: 13px; color: var(--muted); white-space: nowrap; }
+  .pill svg { width: 14px; height: 14px; flex: none; }
+  .bal { display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: var(--surface); color: var(--fg); border: 0; border-radius: 99px; padding: 0 14px; height: 36px; font-weight: 600; font-size: 14px; white-space: nowrap; transition: transform .15s var(--ease); }
   .bal svg { width: 15px; height: 15px; }
-  .round { width: 40px; height: 40px; border-radius: 50%; border: 0; background: var(--surface); display: grid; place-items: center; flex: none; }
-  .round svg { width: 20px; height: 20px; }
-  .bartitle { flex: 1; min-width: 0; text-align: center; font-weight: 800; font-size: 17px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .search { display: flex; align-items: center; gap: 10px; background: var(--surface); border-radius: 99px; padding: 0 16px; height: 44px; margin-top: 8px; }
-  .search svg { width: 18px; height: 18px; flex: none; color: var(--muted); }
+  .bal.me { width: 36px; padding: 0; background: var(--fg); color: #fff; font-weight: 700; font-size: 15px; text-transform: uppercase; }
+  .round { width: 38px; height: 38px; border-radius: 50%; border: 0; background: var(--surface); display: grid; place-items: center; flex: none; }
+  .round svg { width: 19px; height: 19px; }
+  .bartitle { flex: 1; min-width: 0; text-align: center; font-weight: 600; font-size: 17px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .search { display: flex; align-items: center; gap: 10px; background: var(--surface); border-radius: 12px; padding: 0 14px; height: 44px; margin-top: 6px; transition: box-shadow .15s; }
+  .search:focus-within { box-shadow: inset 0 0 0 1.5px var(--fg); }
+  .search svg { width: 17px; height: 17px; flex: none; color: var(--muted); }
   /* 16px input text stops iOS Safari from zooming in on focus. */
   .search input { border: 0; background: none; outline: 0; width: 100%; font-size: 16px; min-width: 0; -webkit-appearance: none; appearance: none; }
-  .search input::placeholder { color: var(--muted); }
+  .search input::placeholder { color: var(--faint); }
   .search input::-webkit-search-cancel-button { -webkit-appearance: none; }
-  .tabbar { flex: none; display: grid; grid-template-columns: repeat(3, 1fr); background: var(--bg); border-top: 1px solid var(--line);
-    padding: 4px max(8px, var(--safe-r)) max(8px, var(--safe-b)) max(8px, var(--safe-l)); z-index: 5; }
-  .tabbar button { background: none; border: 0; display: grid; justify-items: center; align-content: center; gap: 3px; min-height: 50px; font-size: 11px; font-weight: 700; color: #8a8a8a; position: relative; }
+  .tabbar { flex: none; display: grid; grid-template-columns: repeat(3, 1fr); background: rgba(255,255,255,.92); -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px);
+    border-top: .5px solid rgba(0,0,0,.12); padding: 2px max(8px, var(--safe-r)) max(6px, var(--safe-b)) max(8px, var(--safe-l)); z-index: 5; }
+  .tabbar button { background: none; border: 0; display: grid; justify-items: center; align-content: center; gap: 3px; min-height: 50px; font-size: 10.5px; font-weight: 600; letter-spacing: 0; color: #9a9aa0; position: relative; }
   .tabbar button svg { width: 24px; height: 24px; }
   .tabbar button[aria-current="page"] { color: var(--fg); }
-  .tabbar .dot { position: absolute; top: 4px; left: calc(50% + 8px); min-width: 18px; height: 18px; border-radius: 9px; background: var(--fg); color: #fff; font-size: 11px; font-weight: 800; line-height: 18px; padding: 0 5px; }
-  .orderbar { flex: none; background: var(--bg); border-top: 1px solid var(--line); padding: 10px max(var(--gutter), var(--safe-r)) max(10px, var(--safe-b)) max(var(--gutter), var(--safe-l)); z-index: 5; display: grid; gap: 6px; }
-  .orderbar .btn { height: 52px; font-size: 17px; width: 100%; }
-  .orderbar .btn .sum { margin-left: auto; font-variant-numeric: tabular-nums; }
-  .orderbar .fine { text-align: center; color: var(--muted); font-size: 12px; }
-  .in-fade { animation: fade .18s ease-out both; }
-  @keyframes fade { from { opacity: 0; } }
+  .tabbar .dot { position: absolute; top: 3px; left: calc(50% + 7px); min-width: 17px; height: 17px; border-radius: 9px; background: #e5484d; color: #fff; font-size: 10.5px; font-weight: 700; line-height: 17px; padding: 0 5px; }
+  .orderbar { flex: none; background: rgba(255,255,255,.94); -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px); border-top: .5px solid rgba(0,0,0,.12);
+    padding: 10px max(var(--gutter), var(--safe-r)) max(10px, var(--safe-b)) max(var(--gutter), var(--safe-l)); z-index: 5; display: grid; gap: 6px; }
+  .orderbar .btn { height: 54px; font-size: 17px; width: 100%; margin: 0; }
+  .orderbar .fine { text-align: center; color: var(--muted); font-size: 12px; margin: 0; }
+  .in-fade { animation: fade .22s var(--ease) both; }
+  @keyframes fade { from { opacity: 0; transform: translateY(4px); } }
 
   /* ---------- Shared ---------- */
-  .btn { border: 0; border-radius: 99px; padding: 0 20px; min-height: 48px; font-weight: 800; font-size: 16px; background: var(--fg); color: #fff; display: inline-flex; align-items: center; justify-content: center; gap: 8px; white-space: nowrap; }
-  .btn:active { opacity: .85; }
-  .btn:disabled { opacity: .5; cursor: default; }
+  .btn { border: 0; border-radius: 14px; padding: 0 20px; min-height: 50px; font-weight: 600; font-size: 16px; letter-spacing: -.01em; background: var(--fg); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px; white-space: nowrap; transition: transform .15s var(--ease), opacity .15s, background .15s; }
+  .btn:active, .bal:active, .chip:active, .ptile:active, .item:active, .wrow:active, .feature .btn:active { transform: scale(.97); }
+  .btn:disabled { opacity: .45; cursor: default; transform: none; }
   .btn.soft { background: var(--surface); color: var(--fg); }
   .btn.white { background: #fff; color: var(--fg); }
-  .sh { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin: 26px 0 12px; }
-  .sh h2 { margin: 0; font-size: 21px; font-weight: 800; letter-spacing: -.02em; }
-  .sh small { color: var(--muted); font-size: 14px; font-weight: 700; white-space: nowrap; }
-  .guar { color: var(--green); font-weight: 700; }
+  .sh { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin: 30px 0 12px; }
+  .sh h2 { margin: 0; font: 700 21px/1.2 var(--display); letter-spacing: -.025em; }
+  .sh small { color: var(--muted); font-size: 13px; font-weight: 500; white-space: nowrap; }
+  .guar { color: var(--ok); font-weight: 600; }
 
   /* ---------- Gift card: one premium black card for every brand ---------- */
   .gc { position: relative; aspect-ratio: 1.586; border-radius: 5.5% / 8.7%; container-type: inline-size; overflow: hidden; color: #fff;
     background:
-      repeating-linear-gradient(115deg, rgba(255,255,255,.018) 0 1px, transparent 1px 3px),
-      radial-gradient(120% 90% at 0% 0%, #2c2c2c 0%, #121212 48%, #070707 100%);
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,.08); }
-  .gc::after { content: ""; position: absolute; inset: 0; background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,.07) 45%, transparent 60%); pointer-events: none; }
-  .gc .gtop { position: absolute; left: 6.5%; top: 9%; display: flex; align-items: center; gap: 2cqi; font-size: 4.6cqi; font-weight: 800; letter-spacing: .18em; color: rgba(255,255,255,.55); }
-  .gc .gtop svg { width: 6cqi; height: 6cqi; }
-  .gc .gmark { position: absolute; inset: 22% 8% 26%; display: grid; place-items: center; text-align: center; }
-  .gc .gmark .gn { font-weight: 800; letter-spacing: -.01em; line-height: 1.02; text-wrap: balance; }
+      radial-gradient(140% 100% at 0% 0%, rgba(255,255,255,.10) 0%, transparent 45%),
+      linear-gradient(160deg, #1d1d20 0%, #0c0c0d 55%, #050505 100%);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.09), inset 0 1px 0 rgba(255,255,255,.12); }
+  .gc::after { content: ""; position: absolute; inset: 0; background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,.06) 48%, transparent 60%); pointer-events: none; }
+  .gc .gtop { position: absolute; left: 7%; top: 10%; display: flex; align-items: center; gap: 2cqi; font-size: 4.8cqi; font-weight: 600; letter-spacing: .01em; color: rgba(255,255,255,.62); }
+  .gc .gtop svg { width: 5.6cqi; height: 5.6cqi; }
+  .gc .gmark { position: absolute; inset: 24% 8% 28%; display: grid; place-items: center; text-align: center; }
+  .gc .gmark .gn { font-family: var(--display); font-weight: 700; letter-spacing: -.025em; line-height: 1.04; text-wrap: balance; }
   .gc .gmark svg { height: 100%; max-width: 70%; fill: #fff; }
-  .gc .gbot { position: absolute; left: 6.5%; right: 6.5%; bottom: 9%; display: flex; justify-content: space-between; align-items: baseline; }
-  .gc .gbot span { font-size: 4.2cqi; font-weight: 700; letter-spacing: .2em; color: rgba(255,255,255,.5); }
-  .gc .gbot b { font-size: 9cqi; font-weight: 800; letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
-  .gc .acc { position: absolute; left: 0; right: 0; bottom: 0; height: 1.6cqi; background: var(--a); opacity: .9; }
+  .gc .gbot { position: absolute; left: 7%; right: 7%; bottom: 10%; display: flex; justify-content: space-between; align-items: baseline; }
+  .gc .gbot span { font-size: 4.4cqi; font-weight: 500; letter-spacing: .01em; color: rgba(255,255,255,.45); }
+  .gc .gbot b { font-family: var(--display); font-size: 9.5cqi; font-weight: 700; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+  .gc .acc { position: absolute; left: 7%; width: 14%; bottom: 0; height: 1.4cqi; border-radius: 1cqi 1cqi 0 0; background: var(--a); }
   .gc .gimg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   .gc.settle { animation: settle .35s cubic-bezier(.2,1.3,.4,1) both; }
   @keyframes settle { from { transform: scale(.94); } }
   @container (max-width: 130px) { .gc .gtop, .gc .gbot span { display: none; } .gc .gmark { inset: 14% 8% 18%; } }
 
   /* ---------- Home ---------- */
-  .chips { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin: 4px calc(-1 * var(--gutter)) 0; padding: 0 var(--gutter); }
+  .chips { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin: 6px calc(-1 * var(--gutter)) 0; padding: 0 var(--gutter); }
   .chips::-webkit-scrollbar { display: none; }
-  .chip { flex: none; height: 36px; padding: 0 14px; border-radius: 99px; border: 0; background: var(--surface); font-weight: 700; font-size: 14px; }
-  .chip[aria-pressed="true"] { background: var(--fg); color: #fff; }
-  .promo { margin-top: 14px; border-radius: 16px; background: #191919; color: #fff; padding: 18px; display: grid; grid-template-columns: minmax(0, 1fr) 120px; gap: 10px; align-items: center; }
-  .promo h1 { margin: 0; font-size: 22px; line-height: 1.1; font-weight: 900; letter-spacing: -.03em; }
-  .promo p { margin: 6px 0 14px; color: #bdbdbd; font-size: 14px; }
-  .promo .btn { min-height: 40px; font-size: 14px; padding: 0 16px; }
-  .promo .fan { position: relative; height: 92px; }
-  .promo .fan .gc { position: absolute; width: 84px; box-shadow: 0 6px 16px rgba(0,0,0,.5), inset 0 0 0 1px rgba(255,255,255,.14); }
-  .promo .fan .gc:nth-child(1) { left: 0; top: 18px; transform: rotate(-8deg); }
-  .promo .fan .gc:nth-child(2) { left: 18px; top: 6px; transform: rotate(-1deg); }
-  .promo .fan .gc:nth-child(3) { left: 36px; top: 20px; transform: rotate(7deg); }
+  .chip { flex: none; height: 34px; padding: 0 14px; border-radius: 99px; border: 1px solid var(--line); background: #fff; font-weight: 600; font-size: 14px; color: var(--fg-2); transition: background .15s, color .15s, transform .15s var(--ease); }
+  .chip[aria-pressed="true"] { background: var(--fg); border-color: var(--fg); color: #fff; }
+  .feature { position: relative; margin-top: 16px; border-radius: 22px; overflow: hidden; color: #fff; isolation: isolate;
+    background: radial-gradient(80% 90% at 85% 40%, #2b2a28 0%, #141415 55%, #0a0a0b 100%);
+    display: grid; grid-template-columns: minmax(0, 1fr) 40%; gap: 8px; align-items: center; padding: 22px 8px 22px 20px; min-height: 230px; box-shadow: var(--shadow-2); }
+  .feature::before { content: ""; position: absolute; right: -10%; top: 50%; width: 70%; aspect-ratio: 1; transform: translateY(-50%); border-radius: 50%; z-index: -1;
+    background: radial-gradient(circle, rgba(217,178,95,.30), transparent 62%); }
+  .feature .kicker { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--gold); letter-spacing: .06em; text-transform: uppercase; }
+  .feature h1 { margin: 8px 0 8px; font: 700 27px/1.06 var(--display); letter-spacing: -.035em; }
+  .feature p { margin: 0 0 18px; color: rgba(255,255,255,.64); font-size: 14.5px; line-height: 1.4; }
+  .feature .btn { min-height: 42px; height: 42px; border-radius: 99px; font-size: 14.5px; padding: 0 18px; }
+  .fart { position: relative; align-self: stretch; min-height: 180px; }
+  .fart .foil { position: absolute; left: 50%; top: 50%; width: 76%; transform: translate(-50%, -50%) rotate(7deg); filter: drop-shadow(0 18px 24px rgba(0,0,0,.55)); }
 
-  .hscroll { display: grid; grid-auto-flow: column; grid-auto-columns: 78%; gap: 12px; overflow-x: auto; scrollbar-width: none; margin: 0 calc(-1 * var(--gutter)); padding: 0 var(--gutter) 2px; scroll-snap-type: x mandatory; scroll-padding-left: var(--gutter); }
+  .hscroll { display: grid; grid-auto-flow: column; grid-auto-columns: 44%; gap: 12px; overflow-x: auto; scrollbar-width: none; margin: 0 calc(-1 * var(--gutter)); padding: 0 var(--gutter) 4px; scroll-snap-type: x mandatory; scroll-padding-left: var(--gutter); }
   .hscroll::-webkit-scrollbar { display: none; }
   .hscroll > * { scroll-snap-align: start; }
-  .packs { display: grid; gap: 20px; }
-  .pack { background: none; border: 0; padding: 0; text-align: left; display: grid; gap: 9px; min-width: 0; width: 100%; }
-  .pi .tag { display: none; }
-  .tag { display: inline-block; vertical-align: 2px; margin-left: 4px; background: var(--surface); color: var(--fg); font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 99px; }
-  .pk { position: relative; aspect-ratio: 1.586; border-radius: 5.5% / 8.7%; container-type: inline-size; overflow: hidden; color: #fff; text-align: left;
-    background:
-      repeating-linear-gradient(115deg, rgba(255,255,255,.018) 0 1px, transparent 1px 3px),
-      radial-gradient(120% 90% at 0% 0%, #2e2e2e 0%, #121212 48%, #060606 100%);
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,.09), 0 10px 24px rgba(0,0,0,.18); }
-  .pk::after { content: ""; position: absolute; inset: 0; background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,.07) 45%, transparent 60%); pointer-events: none; }
-  .pk .ptop { position: absolute; left: 6%; right: 6%; top: 8%; display: flex; justify-content: space-between; align-items: center; }
-  .pk .brandmark { display: flex; align-items: center; gap: 1.8cqi; font-size: 4cqi; font-weight: 800; letter-spacing: .18em; color: rgba(255,255,255,.6); }
-  .pk .brandmark svg { width: 5.4cqi; height: 5.4cqi; }
-  .pk .ptag { font-size: 3.6cqi; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; background: rgba(255,255,255,.12); padding: 1.2cqi 2.6cqi; border-radius: 99px; }
-  .pk .pname { position: absolute; left: 6%; right: 6%; top: 27%; font-size: 10.5cqi; font-weight: 900; letter-spacing: -.03em; line-height: 1; }
-  .pk .pbrands { position: absolute; left: 6%; right: 6%; top: 44%; font-size: 3.9cqi; font-weight: 600; color: rgba(255,255,255,.62); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .pk .pbot { position: absolute; left: 6%; right: 6%; bottom: 10%; display: flex; justify-content: space-between; align-items: flex-end; }
-  .pk .pbot span { font-size: 3.6cqi; font-weight: 700; letter-spacing: .16em; color: rgba(255,255,255,.5); line-height: 1.5; }
-  .pk .pbot span b { display: block; font-size: 6cqi; letter-spacing: -.01em; color: #fff; font-weight: 800; font-variant-numeric: tabular-nums; }
-  .pk .pbot .pprice { font-size: 10cqi; font-weight: 900; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
-  .pk .pacc { position: absolute; left: 0; right: 0; bottom: 0; height: 1.6cqi; background: var(--a); }
-  .pi { display: flex; justify-content: space-between; gap: 10px; align-items: start; }
-  .pi b { display: block; font-size: 16px; font-weight: 800; }
-  .pi small { display: block; color: var(--muted); font-size: 14px; margin-top: 1px; }
-  .pi .price { flex: none; background: var(--surface); border-radius: 99px; padding: 5px 11px; font-weight: 800; font-size: 14px; font-variant-numeric: tabular-nums; }
-  .none { color: var(--muted); padding: 30px 16px; text-align: center; background: var(--surface); border-radius: 14px; }
+  .tag { display: inline-block; vertical-align: 2px; margin-left: 4px; background: var(--surface); color: var(--fg); font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 99px; }
+  .none { color: var(--muted); padding: 28px 16px; text-align: center; background: var(--surface); border-radius: 16px; font-size: 15px; }
 
   /* ---------- Gift card shelf ---------- */
-  .shelf { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 12px; }
-  .item { background: none; border: 0; padding: 0; text-align: left; display: grid; gap: 7px; min-width: 0; }
-  .item b { font-size: 15px; font-weight: 800; font-variant-numeric: tabular-nums; }
-  .item span { font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: -4px; }
-  .item small { font-size: 12px; color: var(--muted); margin-top: -6px; }
+  .shelf { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 12px; }
+  .item { background: none; border: 0; padding: 0; text-align: left; display: grid; gap: 4px; min-width: 0; transition: transform .15s var(--ease); }
+  .item .gc { margin-bottom: 6px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.09), 0 6px 14px rgba(0,0,0,.12); }
+  .item span { font-size: 15px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; order: 1; }
+  .item b { font-size: 13px; font-weight: 500; color: var(--muted); font-variant-numeric: tabular-nums; order: 2; }
+  .item small { font-size: 13px; color: var(--muted); order: 2; }
 
   /* ---------- Pack screen ---------- */
   .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-  .stitle { margin-top: 14px; }
-  .stitle h1:not(.sr) { margin: 16px 0 0; font-size: 28px; font-weight: 900; letter-spacing: -.03em; line-height: 1.1; }
-  .meta { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 6px; color: var(--muted); font-size: 14px; }
-  .meta b { color: var(--fg); font-weight: 700; }
-  .values { margin-top: 16px; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
-  .values div { display: flex; justify-content: space-between; padding: 12px 14px; border-top: 1px solid var(--line); font-size: 15px; }
-  .values div:first-child { border-top: 0; background: var(--green-bg); }
-  .values div:first-child span { color: var(--green); font-weight: 700; }
-  .values b { font-weight: 800; font-variant-numeric: tabular-nums; }
-  .values span { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .values { margin-top: 4px; background: var(--surface); border-radius: 16px; overflow: hidden; }
+  .values div { display: flex; justify-content: space-between; gap: 12px; padding: 14px 16px; font-size: 15px; position: relative; }
+  .values div + div::before { content: ""; position: absolute; top: 0; left: 16px; right: 0; border-top: 1px solid var(--line); }
+  .values b { font-weight: 500; font-variant-numeric: tabular-nums; }
+  .values span { color: var(--muted); font-variant-numeric: tabular-nums; text-align: right; }
 
   /* ---------- Sheet ---------- */
-  .scrim { position: fixed; inset: 0; z-index: 50; background: rgba(0,0,0,.4); display: flex; align-items: flex-end; justify-content: center; animation: fade .2s both; touch-action: none; }
-  .sheet { position: relative; width: 100%; max-width: 480px; background: var(--bg); border-radius: 20px 20px 0 0; animation: up .28s cubic-bezier(.2,.9,.3,1) both; max-height: calc(100% - var(--safe-t) - 24px); overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y;
-    padding: 22px 18px max(18px, var(--safe-b)); }
+  .scrim { position: fixed; inset: 0; z-index: 50; background: rgba(0,0,0,.36); display: flex; align-items: flex-end; justify-content: center; animation: scrimin .2s both; touch-action: none; }
+  @keyframes scrimin { from { opacity: 0; } }
+  .sheet { position: relative; width: 100%; max-width: 480px; background: var(--bg); border-radius: 26px 26px 0 0; animation: up .38s cubic-bezier(.16,1,.3,1) both; max-height: calc(100% - var(--safe-t) - 24px); overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y;
+    padding: 24px 20px max(20px, var(--safe-b)); box-shadow: 0 -10px 40px rgba(0,0,0,.12); }
   @keyframes up { from { transform: translateY(100%); } }
-  .grab { width: 40px; height: 5px; border-radius: 3px; background: var(--surface-2); position: absolute; top: 8px; left: 50%; margin-left: -20px; }
-  .x { position: absolute; top: 14px; right: 14px; width: 36px; height: 36px; border-radius: 50%; border: 0; background: var(--surface); display: grid; place-items: center; z-index: 3; }
-  .x svg { width: 18px; height: 18px; }
-  .slot { width: 74%; margin: 16px auto 0; }
-  .slot .gc { box-shadow: 0 18px 36px rgba(0,0,0,.28); }
-  .status { text-align: center; margin-top: 16px; color: var(--muted); font-weight: 600; font-size: 15px; min-height: 21px; }
+  .grab { width: 36px; height: 5px; border-radius: 3px; background: #d4d4d8; position: absolute; top: 8px; left: 50%; margin-left: -18px; }
+  .x { position: absolute; top: 14px; right: 14px; width: 32px; height: 32px; border-radius: 50%; border: 0; background: var(--surface); color: var(--muted); display: grid; place-items: center; z-index: 3; }
+  .x svg { width: 15px; height: 15px; }
+  .slot { width: 76%; margin: 18px auto 0; }
+  .slot .gc { box-shadow: inset 0 0 0 1px rgba(255,255,255,.09), 0 20px 40px rgba(0,0,0,.28); }
+  .status { text-align: center; margin-top: 16px; color: var(--muted); font-weight: 500; font-size: 15px; min-height: 21px; }
   .status:empty { display: none; }
-  .result { display: grid; gap: 4px; margin-top: 16px; animation: fade .25s both; }
-  .eyebrow { color: var(--muted); font-size: 14px; font-weight: 600; margin: 0; }
-  .result h2 { margin: 0; font-size: 26px; font-weight: 900; letter-spacing: -.03em; line-height: 1.1; }
-  .result .sub { color: var(--muted); font-size: 14px; margin: 0; }
-  .upg { justify-self: start; background: var(--green); color: #fff; font-weight: 800; font-size: 13px; padding: 4px 10px; border-radius: 99px; margin-bottom: 4px; }
-  .valuebox { margin-top: 10px; display: flex; align-items: baseline; justify-content: space-between; gap: 10px; background: var(--surface); border-radius: 14px; padding: 12px 14px; }
-  .valuebox b { font-size: 26px; font-weight: 900; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+  .result { display: grid; gap: 4px; margin-top: 18px; animation: fade .25s both; }
+  .eyebrow { color: var(--muted); font-size: 13px; font-weight: 500; margin: 0; }
+  .result h2 { margin: 0; font: 700 26px/1.12 var(--display); letter-spacing: -.03em; }
+  .result .sub { color: var(--muted); font-size: 14px; margin: 0; line-height: 1.45; }
+  .upg { justify-self: start; background: var(--ok); color: #fff; font-weight: 600; font-size: 13px; padding: 4px 10px; border-radius: 99px; margin-bottom: 4px; }
+  .valuebox { margin-top: 12px; display: flex; align-items: center; justify-content: space-between; gap: 10px; background: var(--surface); border-radius: 14px; padding: 14px 16px; }
+  .valuebox b { font: 700 26px/1 var(--display); letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
   .valuebox s { color: var(--muted); font-size: 15px; margin-left: 6px; }
-  .valuebox span { color: var(--muted); font-size: 13px; font-weight: 600; }
-  .sacts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
-  .sacts .btn { min-height: 50px; }
-  .linkbtn { background: none; border: 0; color: var(--fg); font-weight: 700; font-size: 15px; text-decoration: underline; text-underline-offset: 3px; min-height: 44px; justify-self: center; }
+  .valuebox span { color: var(--muted); font-size: 13px; font-weight: 500; }
+  .sacts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+  .sacts .btn { min-height: 52px; }
+  .linkbtn { background: none; border: 0; color: var(--fg); font-weight: 600; font-size: 15px; text-decoration: underline; text-underline-offset: 3px; min-height: 44px; justify-self: center; }
   .linkbtn:disabled { color: var(--muted); text-decoration: none; cursor: default; }
   .barcode { height: 76px; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; display: flex; align-items: stretch; margin-top: 12px; }
   .barcode i { background: #000; display: block; }
-  .code { text-align: center; font-weight: 700; letter-spacing: .14em; font-size: 15px; margin-top: 8px; user-select: all; font-variant-numeric: tabular-nums; }
-  .inpacks { display: grid; gap: 8px; margin-top: 8px; }
-  .inpacks button { display: flex; justify-content: space-between; align-items: center; min-height: 52px; padding: 0 14px; border: 1px solid var(--line); border-radius: 12px; background: #fff; font-weight: 700; font-size: 15px; text-align: left; }
-  .inpacks span { color: var(--muted); font-weight: 600; font-size: 14px; }
+  .code { text-align: center; font-weight: 600; letter-spacing: .14em; font-size: 15px; margin-top: 8px; user-select: all; font-variant-numeric: tabular-nums; }
+  .inpacks { display: grid; margin-top: 8px; background: var(--surface); border-radius: 16px; overflow: hidden; }
+  .inpacks button { display: flex; justify-content: space-between; align-items: center; min-height: 52px; padding: 0 16px; border: 0; background: none; font-weight: 500; font-size: 15px; text-align: left; position: relative; }
+  .inpacks button + button::before { content: ""; position: absolute; top: 0; left: 16px; right: 0; border-top: 1px solid var(--line); }
+  .inpacks span { color: var(--muted); font-weight: 500; font-size: 14px; }
 
   /* ---------- Foil pack: the sealed pack you rip open ---------- */
-  .foil { position: relative; width: 100%; aspect-ratio: .66; container-type: inline-size; filter: drop-shadow(0 14px 18px rgba(0,0,0,.3)); }
+  .foil { position: relative; width: 100%; aspect-ratio: .66; container-type: inline-size; filter: drop-shadow(0 14px 18px rgba(0,0,0,.32)); }
   .foil .bag { position: absolute; inset: 0; overflow: hidden; color: #fff;
-    background: linear-gradient(100deg, #0b0b0b 0%, #2b2b2b 18%, #0e0e0e 34%, #232323 52%, #090909 70%, #303030 88%, #111 100%); }
-  .foil .bag::before { content: ""; position: absolute; inset: 0; background: linear-gradient(115deg, transparent 32%, rgba(255,255,255,.16) 47%, transparent 60%); }
-  .foil .crimp { position: absolute; left: 0; right: 0; height: 7%; background: repeating-linear-gradient(90deg, rgba(255,255,255,.16) 0 1.2cqi, rgba(0,0,0,.3) 1.2cqi 2.4cqi); }
+    background:
+      linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.07) 22%, rgba(255,255,255,0) 40%, rgba(255,255,255,.05) 70%, rgba(255,255,255,0) 100%),
+      linear-gradient(180deg, #1c1c1f 0%, #0d0d0e 60%, #070708 100%); }
+  .foil .bag::before { content: ""; position: absolute; inset: 0; background: linear-gradient(118deg, transparent 34%, rgba(255,255,255,.13) 47%, transparent 58%); }
+  .foil .crimp { position: absolute; left: 0; right: 0; height: 5.5%; background: repeating-linear-gradient(90deg, rgba(255,255,255,.10) 0 .8cqi, rgba(0,0,0,.35) .8cqi 1.6cqi); }
   .foil .crimp.t { top: 0; } .foil .crimp.b { bottom: 0; }
-  .foil .fmark { position: absolute; top: 20%; left: 0; right: 0; display: flex; justify-content: center; align-items: center; gap: 2cqi; font-size: 6cqi; font-weight: 800; letter-spacing: .2em; color: rgba(255,255,255,.78); }
-  .foil .fmark svg { width: 9cqi; height: 9cqi; }
-  .foil .fname { position: absolute; top: 34%; left: 7%; right: 7%; text-align: center; font-size: 15cqi; font-weight: 900; line-height: .95; letter-spacing: -.03em; text-wrap: balance; }
-  .foil .fband { position: absolute; left: -10%; right: -10%; top: 63%; height: 4.5cqi; background: var(--a); transform: rotate(-8deg); }
-  .foil .fval { position: absolute; bottom: 19%; left: 0; right: 0; text-align: center; font-size: 7cqi; font-weight: 900; letter-spacing: .02em; }
-  .foil .fsub { position: absolute; bottom: 12.5%; left: 0; right: 0; text-align: center; font-size: 4.6cqi; font-weight: 800; letter-spacing: .22em; color: rgba(255,255,255,.55); }
+  .foil .fmark { position: absolute; top: 21%; left: 0; right: 0; display: flex; justify-content: center; align-items: center; gap: 2cqi; font-size: 5cqi; font-weight: 600; letter-spacing: .16em; color: rgba(255,255,255,.62); }
+  .foil .fmark svg { width: 7.5cqi; height: 7.5cqi; }
+  .foil .fname { position: absolute; top: 34%; left: 8%; right: 8%; text-align: center; font: 700 15cqi/.95 var(--display); letter-spacing: -.045em; text-wrap: balance; }
+  .foil .fband { position: absolute; left: 30%; right: 30%; top: 62%; height: 1.4cqi; border-radius: 1cqi; background: var(--a); }
+  .foil .fval { position: absolute; bottom: 19%; left: 0; right: 0; text-align: center; font: 700 7cqi/1 var(--display); letter-spacing: -.01em; }
+  .foil .fsub { position: absolute; bottom: 12%; left: 0; right: 0; text-align: center; font-size: 4.2cqi; font-weight: 600; letter-spacing: .14em; color: rgba(255,255,255,.45); }
 
   /* ---------- Home pack tiles ---------- */
-  .tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 12px; }
+  .tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 12px; }
   .hscroll .ptile { width: 100%; }
-  .ptile { background: none; border: 0; padding: 0; text-align: left; display: grid; gap: 8px; min-width: 0; }
-  .mini { position: relative; aspect-ratio: 1; border-radius: 16px; background: var(--surface); overflow: hidden; }
-  .hscroll .mini { aspect-ratio: 1.3; }
-  .mini .foil { position: absolute; left: 50%; top: 52%; width: 40%; transform: translate(-50%, -50%) rotate(-4deg); z-index: 2; }
-  .hscroll .mini .foil { width: 31%; }
-  .mini .gc { position: absolute; width: 54%; top: 34%; }
-  .hscroll .mini .gc { width: 42%; top: 30%; }
-  .mini .m1 { left: 2%; transform: rotate(-12deg); }
-  .mini .m2 { right: 2%; transform: rotate(10deg); }
-  .mini .mtag { position: absolute; left: 10px; top: 10px; z-index: 3; background: #fff; font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 99px; box-shadow: 0 1px 4px rgba(0,0,0,.12); }
-  .ptile b { display: block; font-size: 15px; font-weight: 800; }
-  .ptile small { display: block; color: var(--muted); font-size: 13px; margin-top: 1px; }
-  .ptile .row { display: flex; align-items: baseline; gap: 8px; margin-top: 2px; }
-  .ptile .row strong { font-size: 16px; font-weight: 900; font-variant-numeric: tabular-nums; }
-  .ptile .row em { font-style: normal; color: var(--green); font-size: 12px; font-weight: 700; }
+  .ptile { background: none; border: 0; padding: 0; text-align: left; display: grid; gap: 10px; min-width: 0; transition: transform .15s var(--ease); }
+  .mini { position: relative; aspect-ratio: 1; border-radius: 20px; overflow: hidden; isolation: isolate;
+    background: radial-gradient(75% 65% at 50% 42%, color-mix(in srgb, var(--a, #888) 30%, #1d1d20) 0%, #0f0f11 72%); }
+  .mini .foil { position: absolute; left: 50%; top: 54%; width: 46%; transform: translate(-50%, -50%) rotate(-5deg); z-index: 2; transition: transform .3s var(--ease); }
+  .ptile:hover .mini .foil { transform: translate(-50%, -52%) rotate(-3deg); }
+  .mini .mtag { position: absolute; left: 10px; top: 10px; z-index: 3; background: rgba(255,255,255,.14); color: #fff; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); font-size: 11px; font-weight: 600; padding: 4px 9px; border-radius: 99px; }
+  .mini .mtag.test { background: rgba(245,184,74,.18); color: #f5c26b; }
+  .ptile b { display: block; font-size: 16px; font-weight: 600; letter-spacing: -.015em; }
+  .ptile small { display: block; color: var(--muted); font-size: 13px; margin-top: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ptile .row { display: flex; align-items: baseline; gap: 6px; margin-top: 3px; }
+  .ptile .row strong { font-size: 15px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .ptile .row em { font-style: normal; color: var(--muted); font-size: 13px; font-weight: 500; }
+  .ptile.demo .row strong { color: var(--muted); font-weight: 500; }
 
-  /* ---------- Pack page: showcase + buy panel ---------- */
-  .show { position: relative; background: var(--surface); border-radius: 18px; padding: 16px 0 14px; overflow: hidden; }
-  .stage { position: relative; height: 210px; touch-action: pan-y; }
-  .stage .foil { position: absolute; left: 1%; top: 50%; width: 27%; transform: translateY(-50%) rotate(-7deg); z-index: 1; }
-  .slide { position: absolute; left: 50%; top: 50%; width: 60%; z-index: var(--z); opacity: var(--op); filter: brightness(var(--br));
-    transform: translate(-50%, -50%) translateX(calc(var(--o) * 52%)) scale(var(--sc)); transition: transform .35s cubic-bezier(.2,.8,.2,1), opacity .35s, filter .35s; }
-  .slide .gc { box-shadow: 0 12px 26px rgba(0,0,0,.25); }
-  .navb { position: absolute; top: 50%; z-index: 30; width: 38px; height: 38px; margin-top: -19px; border-radius: 50%; border: 0; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.14); display: grid; place-items: center; }
+  /* ---------- Pack page: showcase + details ---------- */
+  .show { position: relative; margin: -4px calc(-1 * var(--gutter)) 0; padding: 22px 0 16px; overflow: hidden; color: #fff;
+    background: radial-gradient(70% 80% at 50% 40%, #2a2926 0%, #121213 60%, #0a0a0b 100%); }
+  .stage { position: relative; height: 220px; touch-action: pan-y; }
+  .stage .foil { position: absolute; left: 3%; top: 50%; width: 25%; transform: translateY(-50%) rotate(-7deg); z-index: 1; }
+  .slide { position: absolute; left: 50%; top: 50%; width: 62%; z-index: var(--z); opacity: var(--op); filter: brightness(var(--br));
+    transform: translate(-50%, -50%) translateX(calc(var(--o) * 52%)) scale(var(--sc)); transition: transform .4s var(--ease), opacity .4s, filter .4s; }
+  .slide .gc { box-shadow: inset 0 0 0 1px rgba(255,255,255,.1), 0 20px 40px rgba(0,0,0,.5); }
+  .navb { position: absolute; top: 50%; z-index: 30; width: 34px; height: 34px; margin-top: -17px; border-radius: 50%; border: 0; background: rgba(255,255,255,.14); color: #fff;
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); display: grid; place-items: center; }
   .navb[hidden] { display: none; }
-  .navb svg { width: 18px; height: 18px; }
-  .navb.l { left: 10px; } .navb.r { right: 10px; }
-  .navb:disabled { opacity: .35; }
-  .rarline { display: flex; justify-content: center; gap: 6px; margin-top: 12px; }
-  .rarline span { font-size: 13px; font-weight: 800; padding: 4px 10px; border-radius: 8px; background: #fff; font-variant-numeric: tabular-nums; }
+  .navb svg { width: 16px; height: 16px; }
+  .navb.l { left: 12px; } .navb.r { right: 12px; }
+  .navb:disabled { opacity: .3; }
+  .rarline { display: flex; justify-content: center; gap: 6px; margin-top: 14px; }
+  .rarline span { font-size: 12.5px; font-weight: 600; padding: 5px 10px; border-radius: 99px; background: rgba(255,255,255,.1); color: rgba(255,255,255,.85); font-variant-numeric: tabular-nums; }
   .rarline .rn { background: var(--rb); color: var(--rf); }
-  .dots { display: flex; justify-content: center; gap: 2px; margin-top: 8px; }
-  .dots button { width: 22px; height: 22px; border: 0; background: none; display: grid; place-items: center; padding: 0; }
-  .dots button::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #c9c9c9; }
-  .dots button[aria-current="true"]::before { background: var(--fg); }
-  .buy { margin-top: 14px; border: 1px solid var(--line); border-radius: 18px; padding: 18px; box-shadow: 0 6px 20px rgba(0,0,0,.05); }
-  .buy h1 { margin: 0; font-size: 28px; font-weight: 900; letter-spacing: -.01em; text-transform: uppercase; line-height: 1.05; }
-  .buy .per { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
-  .buy .big { font-size: 34px; font-weight: 900; letter-spacing: -.02em; margin-top: 10px; font-variant-numeric: tabular-nums; }
-  .buy .big small { font-size: 14px; font-weight: 700; color: var(--green); margin-left: 8px; letter-spacing: 0; }
+  .dots { display: flex; justify-content: center; gap: 0; margin-top: 8px; }
+  .dots button { width: 20px; height: 20px; border: 0; background: none; display: grid; place-items: center; padding: 0; }
+  .dots button::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.3); transition: width .2s var(--ease), background .2s; }
+  .dots button[aria-current="true"]::before { background: #fff; width: 16px; border-radius: 3px; }
+  .dots:has(button:only-child) { display: none; }
+  .buy { padding: 22px 0 0; }
+  .buy h1 { margin: 0; font: 700 30px/1.08 var(--display); letter-spacing: -.035em; }
+  .buy .per { margin: 6px 0 0; color: var(--muted); font-size: 15px; line-height: 1.4; }
+  .buy .big { display: flex; align-items: baseline; gap: 8px; margin-top: 14px; font: 700 30px/1 var(--display); letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+  .buy .big small { font: 500 14px/1 var(--font); color: var(--muted); letter-spacing: 0; }
+  .buynow { width: 100%; height: 54px; border-radius: 14px; background: var(--fg); font-size: 17px; }
+  .buynow:disabled { background: var(--surface-2); color: var(--muted); opacity: 1; }
   .opt { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: center; margin-top: 14px; }
-  .opt b { font-size: 16px; font-weight: 800; }
+  .opt b { font-size: 16px; font-weight: 600; }
   .opt small { display: block; color: var(--muted); font-size: 14px; margin-top: 2px; }
-  .tog { width: 52px; height: 32px; border-radius: 99px; border: 0; background: var(--surface-2); position: relative; flex: none; }
-  .tog::after { content: ""; position: absolute; top: 3px; left: 3px; width: 26px; height: 26px; border-radius: 50%; background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,.2); transition: transform .2s; }
-  .tog[aria-pressed="true"] { background: var(--green); }
+  .tog { width: 51px; height: 31px; border-radius: 99px; border: 0; background: var(--surface-2); position: relative; flex: none; }
+  .tog::after { content: ""; position: absolute; top: 2px; left: 2px; width: 27px; height: 27px; border-radius: 50%; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,.18); transition: transform .2s var(--ease); }
+  .tog[aria-pressed="true"] { background: var(--ok); }
   .tog[aria-pressed="true"]::after { transform: translateX(20px); }
-  .pay { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
-  .pm { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 10px; align-items: center; text-align: left; min-height: 60px; padding: 10px 12px; border-radius: 12px; border: 1.5px solid var(--line); background: #fff; }
-  .pm svg { width: 22px; height: 22px; grid-row: span 2; }
-  .pm b { font-size: 14px; font-weight: 800; line-height: 1.2; }
-  .pm small { font-size: 12px; color: var(--muted); grid-column: 2; }
-  .pm[aria-pressed="true"] { border: 2px solid var(--fg); padding: 9.5px 11.5px; }
-  .buynow { width: 100%; height: 52px; margin-top: 12px; border-radius: 12px; background: var(--green); font-size: 17px; }
-  .buy .fine { text-align: center; color: var(--muted); font-size: 12px; margin: 8px 0 0; }
 
   /* ---------- Opening: rip the pack ---------- */
   .opener { position: fixed; inset: 0; z-index: 60; color: #fff; background: radial-gradient(circle at 50% 32%, #2c2c2c, #050505 68%);
@@ -410,37 +397,59 @@
   .opener .otest { margin-top: 44px; }
   .opener .otest + .otitle { margin-top: 6px; }
 
-  /* ---------- Wallet ---------- */
-  .pagehead h1 { margin: 4px 0 0; font-size: 30px; font-weight: 900; letter-spacing: -.03em; }
-  .pagehead p { color: var(--muted); margin: 4px 0 0; font-size: 15px; }
-  .wrow { width: 100%; display: grid; grid-template-columns: 76px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 12px 0; background: none; border: 0; border-bottom: 1px solid var(--line); text-align: left; }
-  .wrow b { display: block; font-weight: 700; font-size: 16px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .wrow small { color: var(--muted); font-size: 14px; }
-  .wrow .r { font-weight: 800; font-size: 16px; font-variant-numeric: tabular-nums; }
-  .empty { margin-top: 18px; background: var(--surface); border-radius: 16px; padding: 30px 16px; text-align: center; display: grid; justify-items: center; gap: 8px; }
-  .empty b { font-size: 18px; font-weight: 800; }
-  .empty p { margin: 0; color: var(--muted); }
-  .foot { color: var(--muted); font-size: 12px; text-align: center; margin: 28px 0 4px; line-height: 1.5; }
+  /* ---------- Opener refinements: calmer chrome around the hype ---------- */
+  .opener { background: radial-gradient(90% 60% at 50% 34%, #222225 0%, #0b0b0c 62%, #050506 100%); }
+  .opener .x, .mute, .fastbtn { background: rgba(255,255,255,.1); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+  .fastbtn { font-weight: 600; font-size: 13px; }
+  .fastbtn[aria-pressed="true"] { background: var(--gold); color: #141414; }
+  .otitle { font-weight: 600; letter-spacing: .18em; color: rgba(255,255,255,.5); }
+  .ohint { font-weight: 500; color: rgba(255,255,255,.6); }
+  .omark { background: var(--gold); box-shadow: 0 0 16px rgba(217,178,95,.8); }
+  .omark::before { border-top-color: var(--gold); } .omark::after { border-bottom-color: var(--gold); }
+  .ores h2 { font: 700 28px/1.1 var(--display); letter-spacing: -.035em; }
+  .ores .rp { font-weight: 600; border-radius: 99px; }
+  .ores .vline { border-radius: 16px; padding: 14px 16px; background: rgba(255,255,255,.07); }
+  .ores .vline b { font: 700 26px/1 var(--display); letter-spacing: -.02em; }
+  .ores .sacts .btn { min-height: 52px; }
 
+  /* ---------- Wallet ---------- */
+  .pagehead { padding-top: 6px; }
+  .pagehead h1 { margin: 0; font: 700 32px/1.1 var(--display); letter-spacing: -.035em; }
+  .pagehead p { color: var(--muted); margin: 6px 0 0; font-size: 15px; line-height: 1.4; }
+  .wsum { margin-top: 18px; border-radius: 22px; padding: 20px; color: #fff; background: radial-gradient(90% 120% at 100% 0%, #2b2a28, #111112 60%); box-shadow: var(--shadow-2); }
+  .wsum small { display: block; color: rgba(255,255,255,.6); font-size: 13px; font-weight: 500; }
+  .wsum b { display: block; margin-top: 6px; font: 700 34px/1 var(--display); letter-spacing: -.035em; font-variant-numeric: tabular-nums; }
+  .wsum span { display: block; margin-top: 10px; color: rgba(255,255,255,.55); font-size: 13px; }
+  .wrow { width: 100%; display: grid; grid-template-columns: 72px minmax(0, 1fr) auto; gap: 14px; align-items: center; padding: 12px 0; background: none; border: 0; text-align: left; position: relative; transition: transform .15s var(--ease); }
+  .wrow + .wrow::before { content: ""; position: absolute; top: 0; left: 86px; right: 0; border-top: 1px solid var(--line); }
+  .wrow .gc { box-shadow: inset 0 0 0 1px rgba(255,255,255,.09), 0 3px 8px rgba(0,0,0,.15); }
+  .wrow b { display: block; font-weight: 600; font-size: 16px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .wrow small { color: var(--muted); font-size: 13px; }
+  .wrow .r { font-weight: 600; font-size: 16px; font-variant-numeric: tabular-nums; }
+  .empty { margin-top: 18px; background: var(--surface); border-radius: 20px; padding: 36px 20px; text-align: center; display: grid; justify-items: center; gap: 6px; }
+  .empty b { font: 700 19px/1.2 var(--display); letter-spacing: -.02em; }
+  .empty p { margin: 0 0 6px; color: var(--muted); font-size: 15px; max-width: 280px; }
+  .foot { color: var(--faint); font-size: 12px; text-align: center; margin: 32px 0 4px; line-height: 1.55; }
 
   /* ---------- Test mode and account ---------- */
-  .testbar { display: flex; justify-content: center; flex-wrap: wrap; gap: 2px 8px; background: #fde68a; color: #4a3200; border-radius: 10px; padding: 5px 10px; font-size: 12px; font-weight: 700; margin-bottom: 4px; text-align: center; }
-  .testbar b { font-weight: 900; letter-spacing: .08em; }
+  .testbar { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 2px 8px; margin: 0 calc(-1 * max(var(--gutter), var(--safe-r))) 0 calc(-1 * max(var(--gutter), var(--safe-l)));
+    background: var(--ink); color: rgba(255,255,255,.72); padding: 6px 12px; font-size: 11.5px; font-weight: 500; letter-spacing: 0; text-align: center; }
+  .testbar b { display: inline-flex; align-items: center; gap: 6px; color: #f5c26b; font-weight: 700; letter-spacing: .08em; font-size: 10.5px; }
+  .testbar b::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #f5b84a; box-shadow: 0 0 0 3px rgba(245,184,74,.2); }
   #acct span { max-width: 96px; overflow: hidden; text-overflow: ellipsis; }
-  .mini .mtag.test { background: #fde68a; color: #4a3200; }
-  .ptile.demo .mini > :not(.mtag) { opacity: .55; filter: grayscale(.5); }
-  .ptile.demo .row strong { color: var(--muted); font-size: 14px; }
-  .note { margin: 12px 0 0; background: var(--surface); border-radius: 12px; padding: 12px 14px; font-size: 14px; color: var(--muted); line-height: 1.45; }
-  .note b { color: var(--fg); }
-  .form { display: grid; gap: 10px; margin-top: 14px; }
-  .form label { display: grid; gap: 4px; font-weight: 700; font-size: 14px; }
-  .form input { height: 48px; border: 1.5px solid var(--line); border-radius: 12px; padding: 0 14px; font-size: 16px; background: #fff; min-width: 0; }
-  .form input:focus { outline: 2px solid var(--fg); outline-offset: 0; border-color: transparent; }
+  .note { margin: 14px 0 0; background: var(--surface); border-radius: 14px; padding: 14px 16px; font-size: 14px; color: var(--muted); line-height: 1.45; }
+  .note b { color: var(--fg); font-weight: 600; }
+  .form { display: grid; gap: 12px; margin-top: 16px; }
+  .form label { display: grid; gap: 6px; font-weight: 500; font-size: 13px; color: var(--muted); }
+  .form input { height: 50px; border: 0; border-radius: 12px; padding: 0 14px; font-size: 16px; background: var(--surface); color: var(--fg); min-width: 0; transition: box-shadow .15s, background .15s; }
+  .form input:focus { outline: 0; background: #fff; box-shadow: inset 0 0 0 1.5px var(--fg); }
+  .form .btn { width: 100%; }
   .msg { margin: 0; min-height: 20px; font-size: 14px; color: var(--muted); }
-  .msg.err { color: #b42318; font-weight: 600; }
-  .msg.ok { color: var(--green); font-weight: 600; }
-  .otest { margin: 0 0 4px; background: #fde68a; color: #4a3200; font-size: 12px; font-weight: 900; letter-spacing: .08em; padding: 4px 10px; border-radius: 8px; }
-  .buynow:disabled { background: var(--surface-2); color: var(--muted); opacity: 1; }
+  .msg.err { color: #c4320a; font-weight: 500; }
+  .msg.ok { color: var(--ok); font-weight: 500; }
+  .otest { margin: 0 0 4px; display: inline-flex; align-items: center; gap: 6px; background: rgba(245,184,74,.1); color: #f5c26b; border: 1px solid rgba(245,184,74,.25); font-size: 10.5px; font-weight: 700; letter-spacing: .08em; padding: 5px 10px; border-radius: 99px; }
+  .result .eyebrow + h2 { margin-top: 2px; }
+  .sheet .result > .eyebrow:first-of-type { color: var(--muted); }
 
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
@@ -670,11 +679,13 @@ function render(motion = false) {
 // Redraw the top and tab bars without touching open sheets.
 function chrome() {
   $("top").innerHTML = topBar();
-  $("bottom").innerHTML = S.page === "pack" ? "" : tabBar();
+  $("bottom").innerHTML = S.page === "pack" ? orderBar() : tabBar();
   bindChrome();
 }
-const testBar = `<div class="testbar" role="note"><b>TEST MODE</b><span>No real money · cards NOT REDEEMABLE</span></div>`;
-const acctBtn = () => `<button class="bal" id="acct" type="button" aria-label="${S.user ? `Account: ${esc(S.user.email || "signed in")}` : "Sign in"}">${icon("wallet")}<span>${S.user ? esc((S.user.email || "Account").split("@")[0]) : "Sign in"}</span></button>`;
+const testBar = `<div class="testbar" role="note"><b>TEST MODE</b><span>No real money · Cards NOT REDEEMABLE</span></div>`;
+const acctBtn = () => S.user
+  ? `<button class="bal me" id="acct" type="button" aria-label="Account: ${esc(S.user.email || "signed in")}">${esc((S.user.email || "A").trim().charAt(0))}</button>`
+  : `<button class="bal" id="acct" type="button" aria-label="Sign in"><span>Sign in</span></button>`;
 function topBar() {
   if (S.page === "pack") return `${testBar}<div class="bar"><button class="round" id="back" type="button" aria-label="Back">${icon("back")}</button><span class="bartitle">${esc(packOf(S.packId).name)}</span>${acctBtn()}</div>`;
   const searchable = S.page === "home" || S.page === "cards";
@@ -690,6 +701,7 @@ function bindChrome() {
   if ($("brand")) $("brand").onclick = () => go("home", { cat: "all", q: "" });
   if ($("back")) $("back").onclick = () => go(S.from || "home");
   $("acct").onclick = () => accountSheet();
+  if ($("open")) $("open").onclick = openFlow;
   if ($("q")) $("q").oninput = e => { S.q = e.target.value; S.page === "home" ? renderPacks() : renderShelf(); };
 }
 
@@ -697,24 +709,25 @@ function bindChrome() {
 // Crimped top and bottom edge for the foil pack.
 const ZIG = (() => { const n = 18, d = 2.2, top = [], bot = []; for (let i = 0; i <= n; i++) { const x = (i / n * 100).toFixed(2); top.push(`${x}% ${i % 2 ? d : 0}%`); bot.unshift(`${x}% ${i % 2 ? 100 - d : 100}%`); } return `polygon(${top.concat(bot).join(",")})`; })();
 const RARITY = [["Base", "#ececec", "#191919"], ["Upgrade", "#e3f5ea", "#0a7a41"], ["Big hit", "#e5eeff", "#1d56c4"], ["Jackpot", "#fbefc4", "#8a5d00"]];
-const band = p => p.api ? "linear-gradient(90deg, #f5c542, #8a8a8a)" : `linear-gradient(90deg, ${p.spots.slice(0, 5).map(accent).join(", ")})`;
+const band = p => p.api ? "#d9b25f" : `linear-gradient(90deg, ${p.spots.slice(0, 4).map(accent).join(", ")})`;
+const tone = p => p.api ? "#d9b25f" : p.free ? "#7a7a80" : accent(p.spots[0]);
 // The sealed pack: black foil, crimped edges, the pack name and its guarantee.
 const foil = p => `<div class="foil"><div class="bag" style="clip-path:${ZIG};--a:${band(p)}"><span class="crimp t"></span><span class="crimp b"></span>
   <span class="fmark"><svg aria-hidden="true"><use href="#hat-w"/></svg>CHEF PACK</span><span class="fname">${esc(p.name)}</span><span class="fband"></span>
-  <span class="fval">${p.free ? "FREE PICK" : p.api ? `${money(p.price)} TEST CARD` : `${money(p.tiers[0])}+ CARD`}</span><span class="fsub">${p.free ? "NO CARD INSIDE" : p.api ? "NOT REDEEMABLE" : "DEMO ONLY"}</span></div></div>`;
+  <span class="fval">${p.free ? "Free pick" : p.api ? `${money(p.price)} card` : `${money(p.tiers[0])}+ card`}</span><span class="fsub">${p.free ? "NO CARD INSIDE" : p.api ? "TEST · NOT REDEEMABLE" : "PREVIEW"}</span></div></div>`;
 const tile = p => `<button class="ptile${p.demo ? " demo" : ""}" type="button" data-pack="${p.id}">
-  <div class="mini">${p.demo ? `<span class="mtag">Demo only</span>` : p.free ? `<span class="mtag">Daily</span>` : `<span class="mtag test">Test pack</span>`}${gc(p.spots[0], "m1")}${gc(p.spots[1], "m2")}${foil(p)}</div>
-  <span><b>${esc(p.name)}</b><small>${p.free ? "A place to eat tonight, no card" : p.api ? "1 test card · server-picked" : `Not for sale yet · ${p.spots.length} restaurants`}</small>
-  <span class="row"><strong>${p.free ? "Free" : p.demo ? "Coming later" : money(p.price)}</strong>${p.api ? `<em>${money(p.price)} test card</em>` : ""}</span></span></button>`;
+  <div class="mini" style="--a:${tone(p)}">${p.demo ? `<span class="mtag">Coming soon</span>` : p.free ? `<span class="mtag">Daily</span>` : `<span class="mtag test">Test</span>`}${foil(p)}</div>
+  <span><b>${esc(p.name)}</b><small>${p.free ? "A place to eat tonight" : p.api ? "1 gift card · test mode" : esc(p.blurb)}</small>
+  <span class="row"><strong>${p.free ? "Free" : p.demo ? `From ${money(p.price)}` : money(p.price)}</strong>${p.demo ? `<em>· ${p.spots.length} restaurants</em>` : ""}</span></span></button>`;
 const openPack = id => go("pack", { packId: id, from: S.page, slide: 3 });
 
 /* ---------- Pages ---------- */
 function home() {
   const qb = S.catalog?.find(p => p.id === "quick-bite");
   return `<div class="chips" role="group" aria-label="Categories">${CATS.map(([id, label]) => `<button class="chip" type="button" data-cat="${id}" aria-pressed="${S.cat === id}">${label}</button>`).join("")}</div>
-    <section class="promo">
-      <div><h1>Can't decide on dinner?</h1><p>Rip a test pack and the server deals you one demo card. Test mode: nothing is charged or redeemable.</p><button class="btn white" id="pOpen" type="button" ${qb ? "" : "disabled"}>${qb ? `Open ${esc(qb.name)} · ${money(qb.price)}` : "Loading packs…"}</button></div>
-      <div class="fan" aria-hidden="true">${gc(R.chip)}${gc(R.og)}${gc(R.tbell)}</div>
+    <section class="feature">
+      <div><span class="kicker">Tonight</span><h1>Can't decide on dinner?</h1><p>Rip a pack. It picks the restaurant for you.</p><button class="btn white" id="pOpen" type="button" ${qb ? "" : "disabled"}>${qb ? `Open ${esc(qb.name)} · ${money(qb.price)}` : "Loading packs…"}</button></div>
+      <div class="fart" aria-hidden="true">${foil(qb || { name: "Quick Bite", price: 15, api: true, spots: [] })}</div>
     </section>
     <div id="packs"></div>`;
 }
@@ -725,12 +738,12 @@ function renderPacks() {
   const live = (S.catalog || []).filter(match), demo = [FREE, ...DEMO].filter(match);
   const browsing = S.cat === "all" && !q;
   const liveBody = S.catalog === null
-    ? (S.catErr ? `<div class="none" role="alert"><b>Couldn't load packs.</b><br>${esc(S.catErr)}<br><button class="btn soft" id="catRetry" type="button" style="margin-top:10px">Try again</button></div>` : `<div class="none" aria-live="polite">Loading packs from the test server…</div>`)
-    : live.length ? `<div class="${browsing ? "hscroll" : "tiles"}">${live.map(tile).join("")}</div>` : `<div class="none">${S.catalog.length ? "No test packs match." : "The server has no active packs."}</div>`;
-  $("packs").innerHTML = `<div class="sh"><h2>${q ? `Results for "${esc(S.q.trim())}"` : "Test packs"}</h2><small>${S.catalog ? `${live.length} live` : ""}</small></div>${liveBody}
-    <div class="sh"><h2>${browsing ? "More themes" : "Demo themes"}</h2><small>Demo only</small></div>
-    ${demo.length ? `<div class="tiles">${demo.map(tile).join("")}</div>` : `<div class="none">No demo themes match.</div>`}
-    <p class="foot">TEST MODE: packs come from the test server, nothing is charged, and cards are not redeemable.<br>Demo themes are previews and can't be bought yet.<br>Restaurant names belong to their owners; no affiliation implied.</p>`;
+    ? (S.catErr ? `<div class="none" role="alert"><b>Couldn't load packs.</b><br>${esc(S.catErr)}<br><button class="btn soft" id="catRetry" type="button" style="margin-top:10px">Try again</button></div>` : `<div class="none" aria-live="polite">Loading packs…</div>`)
+    : live.length ? `<div class="${browsing && live.length > 2 ? "hscroll" : "tiles"}">${live.map(tile).join("")}</div>` : `<div class="none">${S.catalog.length ? "No test packs match." : "The server has no active packs."}</div>`;
+  $("packs").innerHTML = `<div class="sh"><h2>${q ? `Results for "${esc(S.q.trim())}"` : "Packs"}</h2><small>${S.catalog ? `${live.length} available` : ""}</small></div>${liveBody}
+    <div class="sh"><h2>${browsing ? "Coming soon" : "More themes"}</h2><small>Preview</small></div>
+    ${demo.length ? `<div class="tiles">${demo.map(tile).join("")}</div>` : `<div class="none">No themes match.</div>`}
+    <p class="foot">Test mode: nothing is charged and cards are not redeemable.<br>Coming-soon themes are previews and can't be bought yet.<br>Restaurant names belong to their owners; no affiliation implied.</p>`;
   $("packs").querySelectorAll("[data-pack]").forEach(b => b.onclick = () => openPack(b.dataset.pack));
   if ($("catRetry")) $("catRetry").onclick = loadCatalog;
 }
@@ -743,11 +756,15 @@ function slides(p) {
 }
 function buyButton(p) {
   if (p.free) return `<button class="btn buynow" id="open" type="button">Open free pick</button>`;
-  if (p.demo) return `<button class="btn buynow" id="open" type="button" disabled>Not for sale yet</button>`;
+  if (p.demo) return `<button class="btn buynow" id="open" type="button" disabled>Coming soon</button>`;
   if (!S.user) return `<button class="btn buynow" id="open" type="button">Sign in to open · ${money(p.price)}</button>`;
   const a = pendingFor(S.user.id);
   if (a) return `<button class="btn buynow" id="open" type="button">${a.pack_id === p.id ? "Finish opening (same order)" : `Finish your ${esc(packOf(a.pack_id)?.name || a.pack_id)} order first`}</button>`;
-  return `<button class="btn buynow" id="open" type="button">Open test pack · ${money(p.price)}</button>`;
+  return `<button class="btn buynow" id="open" type="button">Open pack · ${money(p.price)}</button>`;
+}
+function orderBar() {
+  const p = packOf(S.packId);
+  return `<div class="orderbar">${buyButton(p)}<p class="fine" id="buyMsg" aria-live="polite">${p.free ? "Free picks suggest a place. No card, no account needed." : p.api ? "TEST MODE · No payment is taken · Card is NOT REDEEMABLE" : "Not available yet."}</p></div>`;
 }
 function pack() {
   const p = packOf(S.packId), sl = slides(p);
@@ -761,17 +778,15 @@ function pack() {
     </section>
     <section class="buy">
       <h1>${esc(p.name)}</h1>
-      <p class="per">${p.free ? `Free · ${p.spots.length} restaurants · a suggestion, no card` : p.api ? "1 test card / pack · the server picks the restaurant" : `Demo theme · ${p.spots.length} restaurants`}</p>
-      ${p.api ? `<div class="big">${money(p.price)}<small>${money(p.price)} test card</small></div>` : ""}
-      ${p.demo ? `<p class="note"><b>Demo only.</b> This theme isn't on the test server yet. Odds, upgrades and restaurants below are design previews, not live.</p>` : ""}
-      ${buyButton(p)}
-      <p class="fine" id="buyMsg" aria-live="polite">${p.free ? "Free picks suggest a place. No card, no account needed." : p.api ? "TEST MODE · no payment is taken · the card is NOT REDEEMABLE" : "Only Quick Bite, Sit-Down and Treat Yourself are live in test mode."}</p>
+      <p class="per">${p.free ? `A free suggestion from ${p.spots.length} restaurants. No card inside.` : p.api ? "One restaurant gift card per pack, picked for you." : esc(p.blurb) + ` · ${p.spots.length} restaurants`}</p>
+      ${p.api ? `<div class="big">${money(p.price)}<small>per pack</small></div>` : ""}
+      ${p.demo ? `<p class="note"><b>Coming soon.</b> This theme isn't available yet. The odds and restaurants below are a preview.</p>` : ""}
     </section>
-    ${p.api ? `<div class="sh"><h2>What's inside</h2><small>Test mode</small></div>
-    <div class="values"><div><b>${money(p.price)} demo card</b><span>Every pack</span></div><div><b>Upgrades</b><span>None in test mode</span></div><div><b>Restaurant</b><span>Picked by the server</span></div><div><b>Redeemable</b><span>No</span></div></div>` : ""}
-    ${p.demo ? `<div class="sh"><h2>Odds</h2><small>Demo preview</small></div>
-    <div class="values">${p.tiers.map((v, i) => `<div><b>${RARITY[i][0]} · ${money(v)} card</b><span>${i ? `${ODDS[i]}%` : "88% · floor"}</span></div>`).join("")}</div>` : ""}
-    ${p.api ? "" : `<div class="sh"><h2>Restaurants inside</h2><small>${p.free ? "Equal chance" : "Demo preview"}</small></div>
+    ${p.api ? `<div class="sh"><h2>What's inside</h2></div>
+    <div class="values"><div><b>Gift card</b><span>${money(p.price)}</span></div><div><b>Restaurant</b><span>Picked when you open</span></div><div><b>Upgrades</b><span>Not in test mode</span></div><div><b>Redeemable</b><span>No · test card</span></div></div>` : ""}
+    ${p.demo ? `<div class="sh"><h2>Odds</h2><small>Preview</small></div>
+    <div class="values">${p.tiers.map((v, i) => `<div><b>${RARITY[i][0]} · ${money(v)} card</b><span>${ODDS[i]}%</span></div>`).join("")}</div>` : ""}
+    ${p.api ? "" : `<div class="sh"><h2>Restaurants</h2><small>${p.free ? "Equal chance" : `${p.spots.length} inside`}</small></div>
     <div class="shelf">${p.spots.map(s => `<div class="item">${gc(s)}<span>${esc(s.n)}</span><small>${esc(s.c)} · 1 in ${p.spots.length}</small></div>`).join("")}</div>`}`;
 }
 function setSlide(i) {
@@ -790,25 +805,26 @@ function setSlide(i) {
 }
 
 function cards() {
-  return `<div class="pagehead"><h1>Gift cards</h1><p>Demo catalog: brands we plan to offer. Test packs don't include these yet.</p></div><div id="shelf"></div>`;
+  return `<div class="pagehead"><h1>Gift cards</h1><p>Restaurants we plan to offer. Not in test packs yet.</p></div><div id="shelf"></div>`;
 }
 function renderShelf() {
   const q = S.q.trim().toLowerCase();
   const list = IN_PACKS.filter(s => !q || s.n.toLowerCase().includes(q) || s.c.toLowerCase().includes(q));
-  $("shelf").innerHTML = `<div class="sh"><h2>Dining &amp; Food</h2><small>${list.length} cards · demo</small></div>`
+  $("shelf").innerHTML = `<div class="sh"><h2>Dining &amp; Food</h2><small>${list.length} brands</small></div>`
     + (list.length ? `<div class="shelf">${list.map(s => `<button class="item" type="button" data-card="${s.id}">${gc(s)}<b>${money(s.min)} – ${money(s.max)}</b><span>${esc(s.n)}</span><small>${esc(s.c)}</small></button>`).join("")}</div>` : `<div class="none">No gift cards match.</div>`);
   $("shelf").querySelectorAll("[data-card]").forEach(b => b.onclick = () => showBrand(R[b.dataset.card]));
 }
 
 function wallet() {
   const n = S.pulls.length;
-  const head = `<div class="pagehead"><h1>Wallet</h1><p>${S.user && n ? `${n} test card${n === 1 ? "" : "s"} · ${money(S.pulls.reduce((a, w) => a + w.face_value_cents, 0) / 100)} face value · not redeemable` : "Your test cards from the server show up here."}</p></div>`;
-  if (!S.user) return head + `<div class="empty"><b>Sign in to see your cards</b><p>Your wallet lives on the test server, tied to your account.</p><button class="btn" id="wSign" type="button" style="margin-top:8px">Sign in</button></div>`;
+  const head = `<div class="pagehead"><h1>Wallet</h1>${S.user && n ? "" : `<p>Cards you pull from packs show up here.</p>`}</div>`
+    + (S.user && n ? `<div class="wsum"><small>Total card value</small><b>${money(S.pulls.reduce((a, w) => a + w.face_value_cents, 0) / 100)}</b><span>${n} test card${n === 1 ? "" : "s"} · NOT REDEEMABLE</span></div><div class="sh"><h2>Cards</h2></div>` : "");
+  if (!S.user) return head + `<div class="empty"><b>Sign in to see your cards</b><p>Your wallet is tied to your account.</p><button class="btn" id="wSign" type="button" style="margin-top:8px">Sign in</button></div>`;
   if (S.wstate === "error") return head + `<div class="empty" role="alert"><b>Couldn't load your wallet</b><p>${esc(S.werr)}</p><button class="btn" id="wRetry" type="button" style="margin-top:8px">Try again</button></div>`;
   if (S.wstate === "loading" && !n) return head + `<div class="none" aria-live="polite">Loading your wallet…</div>`;
-  if (!n) return head + `<div class="empty"><b>No test cards yet</b><p>Open a test pack and the server adds your card here.</p><button class="btn" id="toHome" type="button" style="margin-top:8px">Browse packs</button></div>`;
+  if (!n) return head + `<div class="empty"><b>No cards yet</b><p>Open a pack and your card lands here.</p><button class="btn" id="toHome" type="button" style="margin-top:8px">Browse packs</button></div>`;
   return head + (S.wstate === "loading" ? `<p class="fine" aria-live="polite">Refreshing…</p>` : "")
-    + S.pulls.map((w, i) => `<button class="wrow" type="button" data-i="${i}">${gc(pullSpot(w))}<span style="min-width:0"><b>${esc(w.restaurant_label)}</b><small>Test card · NOT REDEEMABLE · ${esc(when(w.created_at))}</small></span><span class="r">${money(w.face_value_cents / 100)}</span></button>`).join("");
+    + S.pulls.map((w, i) => `<button class="wrow" type="button" data-i="${i}">${gc(pullSpot(w))}<span style="min-width:0"><b>${esc(w.restaurant_label)}</b><small>${esc(when(w.created_at))} · Test card</small></span><span class="r">${money(w.face_value_cents / 100)}</span></button>`).join("");
 }
 
 /* ---------- Data loading ---------- */
@@ -880,7 +896,7 @@ function accountSheet(msg = "") {
     m.querySelector("#aWallet").onclick = () => go("wallet");
     return;
   }
-  const m = sheet(`<div class="result"><svg class="authlogo" aria-hidden="true"><use href="#hat"/></svg><p class="eyebrow">TEST MODE · use a test email</p><h2>Sign in</h2>
+  const m = sheet(`<div class="result"><svg class="authlogo" aria-hidden="true"><use href="#hat"/></svg><h2 style="text-align:center">Welcome to Chef Pack</h2><p class="eyebrow" style="text-align:center">TEST MODE · use a test email</p>
     <form class="form" id="aForm" novalidate>
       <label>Email<input id="aEmail" type="email" autocomplete="email" required inputmode="email" autocapitalize="off" spellcheck="false"></label>
       <label>Password<input id="aPass" type="password" autocomplete="current-password" required minlength="6"></label>
@@ -1135,10 +1151,10 @@ function showResult(r, o) {
   const close = () => { o.remove(); };
   const q = id => o.querySelector("#" + id);
   if (r.api) {
-    o.querySelector("#ores").innerHTML = `<span class="rp" style="--rb:#fde68a;--rf:#5a3d00">Test card · not redeemable</span>
-      <p class="eyebrow">The server dealt you</p>
+    o.querySelector("#ores").innerHTML = `<span class="rp" style="--rb:rgba(245,184,74,.14);--rf:#f5c26b">Test card · NOT REDEEMABLE</span>
+      <p class="eyebrow">You pulled</p>
       <h2>${esc(r.pull.restaurant_label)}</h2><p class="sub">Simulated delivery · order ${esc(String(r.order.id).slice(0, 8))}</p>
-      <div class="vline"><span><b>${money(r.value)}</b></span><span>Test card · in your wallet</span></div>
+      <div class="vline"><span><b>${money(r.value)}</b></span><span>Added to your wallet</span></div>
       <div class="sacts"><button class="btn light" id="sWallet" type="button">View wallet</button><button class="btn soft" id="sMore" type="button">Open another</button></div>`;
     q("sWallet").onclick = () => { close(); go("wallet"); };
     q("sMore").onclick = () => { close(); render(); };
@@ -1184,7 +1200,6 @@ const bind = {
     let x0 = null; const st = $("stage");
     st.addEventListener("touchstart", e => { x0 = e.touches[0].clientX; }, { passive: true });
     st.addEventListener("touchend", e => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 40) setSlide(S.slide + (dx < 0 ? 1 : -1)); x0 = null; });
-    $("open").onclick = openFlow;
   },
   cards() { renderShelf(); },
   wallet() {

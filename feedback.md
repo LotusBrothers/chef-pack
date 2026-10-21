@@ -5,6 +5,7 @@ Report scope: integration.
 Tested code commit: 53b2bedf9621aaecc97c3727a07c1e05d0ffebaf (frontend/justin). The local suite was re-run on this commit; screenshots are from cd8f344, before the c67f155 merge.
 Main included: 28515f4539c79dab41a21bbef8e0ca1c234d97d7.
 Later commit 1cfd1fb: a visual-only logo change (white chef hat on a black badge in the top bar and sign-in sheet). The case results below were not re-run on it. It was checked at iPhone 13 size with no page errors, and the scope check passes.
+Later visual-only redesign (this push): a new type and color system, a slim TEST MODE bar (it still reads TEST MODE and NOT REDEEMABLE), a featured pack card, dark pack tiles, a full-width pack showcase, an iOS-style details list, the buy button in a fixed bottom bar, and a wallet total card. API calls, idempotency, auth and data handling are unchanged. Checked at iPhone 13 and 1280px on the local contract harness (catalog, sign-up, open, reveal, wallet, gift cards) with no page errors. The case results below were not re-run.
 Combined preview: none available (see blockers).
 Machine-readable report: reports/frontend/current.json. Evidence: reports/frontend/evidence/.
 
