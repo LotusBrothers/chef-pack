@@ -102,14 +102,26 @@
   .sh small { color: var(--muted); font-size: 14px; font-weight: 700; white-space: nowrap; }
   .guar { color: var(--green); font-weight: 700; }
 
-  /* ---------- Gift card tile ---------- */
-  .gc { position: relative; aspect-ratio: 1.6; border-radius: 10px; background: var(--b); color: var(--f); display: grid; place-items: center; padding: 8%; overflow: hidden; text-align: center; }
-  .gc.light { box-shadow: inset 0 0 0 1px var(--line); }
-  .gc::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(140deg, rgba(255,255,255,.14), transparent 45%); pointer-events: none; }
-  .gc .gn { font-weight: 900; letter-spacing: -.02em; line-height: 1; text-wrap: balance; }
+  /* ---------- Gift card: one premium black card for every brand ---------- */
+  .gc { position: relative; aspect-ratio: 1.586; border-radius: 5.5% / 8.7%; container-type: inline-size; overflow: hidden; color: #fff;
+    background:
+      repeating-linear-gradient(115deg, rgba(255,255,255,.018) 0 1px, transparent 1px 3px),
+      radial-gradient(120% 90% at 0% 0%, #2c2c2c 0%, #121212 48%, #070707 100%);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.08); }
+  .gc::after { content: ""; position: absolute; inset: 0; background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,.07) 45%, transparent 60%); pointer-events: none; }
+  .gc .gtop { position: absolute; left: 6.5%; top: 9%; display: flex; align-items: center; gap: 2cqi; font-size: 4.6cqi; font-weight: 800; letter-spacing: .18em; color: rgba(255,255,255,.55); }
+  .gc .gtop svg { width: 6cqi; height: 6cqi; }
+  .gc .gmark { position: absolute; inset: 22% 8% 26%; display: grid; place-items: center; text-align: center; }
+  .gc .gmark .gn { font-weight: 800; letter-spacing: -.01em; line-height: 1.02; text-wrap: balance; }
+  .gc .gmark svg { height: 100%; max-width: 70%; fill: #fff; }
+  .gc .gbot { position: absolute; left: 6.5%; right: 6.5%; bottom: 9%; display: flex; justify-content: space-between; align-items: baseline; }
+  .gc .gbot span { font-size: 4.2cqi; font-weight: 700; letter-spacing: .2em; color: rgba(255,255,255,.5); }
+  .gc .gbot b { font-size: 9cqi; font-weight: 800; letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
+  .gc .acc { position: absolute; left: 0; right: 0; bottom: 0; height: 1.6cqi; background: var(--a); opacity: .9; }
   .gc .gimg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   .gc.settle { animation: settle .35s cubic-bezier(.2,1.3,.4,1) both; }
   @keyframes settle { from { transform: scale(.94); } }
+  @container (max-width: 130px) { .gc .gtop, .gc .gbot span { display: none; } .gc .gmark { inset: 14% 8% 18%; } }
 
   /* ---------- Home ---------- */
   .chips { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin: 4px calc(-1 * var(--gutter)) 0; padding: 0 var(--gutter); }
@@ -121,7 +133,7 @@
   .promo p { margin: 6px 0 14px; color: #bdbdbd; font-size: 14px; }
   .promo .btn { min-height: 40px; font-size: 14px; padding: 0 16px; }
   .promo .fan { position: relative; height: 92px; }
-  .promo .fan .gc { position: absolute; width: 84px; box-shadow: 0 6px 16px rgba(0,0,0,.35); }
+  .promo .fan .gc { position: absolute; width: 84px; box-shadow: 0 6px 16px rgba(0,0,0,.5), inset 0 0 0 1px rgba(255,255,255,.14); }
   .promo .fan .gc:nth-child(1) { left: 0; top: 18px; transform: rotate(-8deg); }
   .promo .fan .gc:nth-child(2) { left: 18px; top: 6px; transform: rotate(-1deg); }
   .promo .fan .gc:nth-child(3) { left: 36px; top: 20px; transform: rotate(7deg); }
@@ -132,9 +144,8 @@
   .packs { display: grid; gap: 20px; }
   .pack { background: none; border: 0; padding: 0; text-align: left; display: grid; gap: 9px; min-width: 0; width: 100%; }
   .mosaic { position: relative; border-radius: 14px; background: var(--surface); padding: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .mosaic .gc { border-radius: 8px; }
   .mosaic .more { position: absolute; right: 16px; bottom: 16px; background: #fff; color: var(--fg); font-size: 12px; font-weight: 800; padding: 4px 9px; border-radius: 99px; box-shadow: 0 1px 4px rgba(0,0,0,.15); }
-  .tag { position: absolute; left: 16px; top: 16px; z-index: 2; background: #fff; color: var(--fg); font-size: 12px; font-weight: 800; padding: 4px 9px; border-radius: 99px; box-shadow: 0 1px 4px rgba(0,0,0,.15); }
+  .tag { display: inline-block; vertical-align: 2px; margin-left: 4px; background: var(--surface); color: var(--fg); font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 99px; }
   .pi { display: flex; justify-content: space-between; gap: 10px; align-items: start; }
   .pi b { display: block; font-size: 16px; font-weight: 800; }
   .pi small { display: block; color: var(--muted); font-size: 14px; margin-top: 1px; }
@@ -168,7 +179,7 @@
   .x { position: absolute; top: 14px; right: 14px; width: 36px; height: 36px; border-radius: 50%; border: 0; background: var(--surface); display: grid; place-items: center; z-index: 3; }
   .x svg { width: 18px; height: 18px; }
   .slot { width: 74%; margin: 16px auto 0; }
-  .slot .gc { border-radius: 14px; box-shadow: 0 14px 30px rgba(0,0,0,.16); }
+  .slot .gc { box-shadow: 0 18px 36px rgba(0,0,0,.28); }
   .status { text-align: center; margin-top: 16px; color: var(--muted); font-weight: 600; font-size: 15px; min-height: 21px; }
   .status:empty { display: none; }
   .result { display: grid; gap: 4px; margin-top: 16px; animation: fade .25s both; }
@@ -195,7 +206,6 @@
   .pagehead h1 { margin: 4px 0 0; font-size: 30px; font-weight: 900; letter-spacing: -.03em; }
   .pagehead p { color: var(--muted); margin: 4px 0 0; font-size: 15px; }
   .wrow { width: 100%; display: grid; grid-template-columns: 76px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 12px 0; background: none; border: 0; border-bottom: 1px solid var(--line); text-align: left; }
-  .wrow .gc { border-radius: 7px; }
   .wrow b { display: block; font-weight: 700; font-size: 16px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .wrow small { color: var(--muted); font-size: 14px; }
   .wrow .r { font-weight: 800; font-size: 16px; font-variant-numeric: tabular-nums; }
@@ -223,6 +233,10 @@
     <symbol id="ic-cards" viewBox="0 0 24 24"><rect x="3" y="7" width="15" height="11" rx="2" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M7 4h12a2 2 0 0 1 2 2v9" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
     <symbol id="ic-back" viewBox="0 0 24 24"><path d="M15 5 8 12l7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="ic-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
+    <symbol id="hat-w" viewBox="0 0 32 32">
+      <path fill="currentColor" d="M9.2 23.2v-6.1a6 6 0 0 1-.6-11.4 7.4 7.4 0 0 1 14.8 0 6 6 0 0 1-.6 11.4v6.1z"/>
+      <rect fill="currentColor" x="9.2" y="24.4" width="13.6" height="3.4" rx="1.2"/>
+    </symbol>
   </defs>
 </svg>
 
@@ -277,6 +291,8 @@ const RAW = {
 };
 const R = Object.fromEntries(Object.entries(RAW).map(([id, [n, c, min, max, b, f]]) => [id, { id, n, c, min, max, b, f }]));
 const IMAGES = {};
+// Brand logos as single-path SVGs (white on the black card). Empty in the shared build; licensed logos come with the provider's catalog.
+const LOGOS = {};
 // Packs. Every card value must be a denomination each restaurant in the pack sells; the check below logs any that aren't.
 const mk = (id, name, price, cat, blurb, ids, tiers, tag = "") => ({ id, name, price, cat, blurb, tag, tiers, spots: ids.map(i => R[i]) });
 const PACKS = [
@@ -312,10 +328,15 @@ const code = () => Array.from({ length: 3 }, () => Math.random().toString(36).sl
 const upOdds = () => ODDS.slice(1).reduce((a, b) => a + b, 0);
 const esc = t => String(t).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 const isLight = hex => { const h = hex.replace("#", ""), f = h.length === 3 ? h.split("").map(x => x + x).join("") : h; const [r, g, b] = [0, 2, 4].map(i => parseInt(f.slice(i, i + 2), 16)); return (r * 299 + g * 587 + b * 114) / 1000 > 225; };
-// One gift card. The name scales with the card (container query units) and shrinks for long names.
-function gc(s, cls = "") {
-  const k = s.n.length > 20 ? 7.6 : s.n.length > 13 ? 9 : 11;
-  return `<div class="gc ${isLight(s.b) ? "light" : ""} ${cls}" style="--b:${s.b};--f:${s.f};container-type:inline-size">${IMAGES[s.id] ? `<img class="gimg" src="${IMAGES[s.id]}" alt="${esc(s.n)} gift card">` : `<span class="gn" style="font-size:${k}cqi">${esc(s.n)}</span>`}</div>`;
+const isDark = hex => { const h = hex.replace("#", ""), f = h.length === 3 ? h.split("").map(x => x + x).join("") : h; const [r, g, b] = [0, 2, 4].map(i => parseInt(f.slice(i, i + 2), 16)); return (r * 299 + g * 587 + b * 114) / 1000 < 40; };
+// The brand's own color (not its white or black) becomes the card's thin accent stripe.
+const accent = s => (isLight(s.b) || isDark(s.b)) ? (isLight(s.f) ? "#8a8a8a" : s.f) : s.b;
+// One gift card: a black card with the Chef Pack mark, the brand's logo (LOGOS) or wordmark, and the value when known.
+function gc(s, cls = "", value = null) {
+  if (IMAGES[s.id]) return `<div class="gc ${cls}"><img class="gimg" src="${IMAGES[s.id]}" alt="${esc(s.n)} gift card"></div>`;
+  const k = s.n.length > 20 ? 7.4 : s.n.length > 13 ? 8.8 : s.n.length > 8 ? 10.5 : 12.5;
+  const markup = LOGOS[s.id] ? `<svg viewBox="0 0 24 24" role="img" aria-label="${esc(s.n)}"><path d="${LOGOS[s.id]}"/></svg>` : `<span class="gn" style="font-size:${k}cqi">${esc(s.n)}</span>`;
+  return `<div class="gc ${cls}" style="--a:${accent(s)}"><span class="gtop"><svg aria-hidden="true"><use href="#hat-w"/></svg>CHEF PACK</span><span class="gmark">${markup}</span><span class="gbot"><span>GIFT CARD</span>${value !== null ? `<b>${money(value)}</b>` : ""}</span><span class="acc"></span></div>`;
 }
 
 let S, busy = false;
@@ -363,9 +384,9 @@ function bindChrome() {
 }
 
 /* ---------- Pieces ---------- */
-const mosaic = p => `<div class="mosaic">${p.tag ? `<span class="tag">${esc(p.tag)}</span>` : ""}${p.spots.slice(0, 4).map(s => gc(s)).join("")}${p.spots.length > 4 ? `<span class="more">+${p.spots.length - 4} more</span>` : ""}</div>`;
+const mosaic = p => `<div class="mosaic">${p.spots.slice(0, 4).map(s => gc(s)).join("")}${p.spots.length > 4 ? `<span class="more">+${p.spots.length - 4} more</span>` : ""}</div>`;
 const packCard = p => `<button class="pack" type="button" data-pack="${p.id}">${mosaic(p)}
-  <div class="pi"><div><b>${esc(p.name)}</b><small>${p.free ? "Free · a place to eat, no card" : `<span class="guar">${money(p.price)}+ gift card</span> · ${p.spots.length} restaurants`}</small></div><span class="price">${p.free ? "Free" : money(p.price)}</span></div></button>`;
+  <div class="pi"><div><b>${esc(p.name)}${p.tag ? ` <span class="tag">${esc(p.tag)}</span>` : ""}</b><small>${p.free ? "Free · a place to eat, no card" : `<span class="guar">${money(p.price)}+ gift card</span> · ${p.spots.length} restaurants`}</small></div><span class="price">${p.free ? "Free" : money(p.price)}</span></div></button>`;
 const openPack = id => go("pack", { packId: id, from: S.page });
 
 /* ---------- Pages ---------- */
@@ -433,7 +454,7 @@ function spin() {
   let k = 0;
   const step = () => {
     if (k < delays.length) { $("slot").innerHTML = gc(rand(others)); setTimeout(step, delays[k++]); return; }
-    $("slot").innerHTML = gc(s, "settle");
+    $("slot").innerHTML = gc(s, "settle", p.free ? null : p.tiers[t]);
     busy = false;
     const res = { p, s, t, value: p.free ? 0 : p.tiers[t], free: !!p.free, swapped: false };
     if (!p.free) { res.code = code(); S.wallet.unshift({ id: s.id, value: res.value, t, code: res.code }); save(); }
@@ -478,14 +499,14 @@ function showResult(r, m) {
   if (q("sAgain")) q("sAgain").onclick = () => spin();
   if (q("sSwap") && !q("sSwap").disabled) q("sSwap").onclick = () => {
     r.s = rand(p.spots.filter(x => x !== s)); r.swapped = true; S.wallet[0].id = r.s.id; save();
-    $("slot").innerHTML = gc(r.s, "settle"); showResult(r, m);
+    $("slot").innerHTML = gc(r.s, "settle", r.value); showResult(r, m);
   };
 }
 function showCard(i) {
   const w = S.wallet[i], s = R[w.id];
   let seed = [...w.code].reduce((a, ch) => (a * 31 + ch.charCodeAt(0)) >>> 0, 7), bars = "";
   for (let k = 0; k < 52; k++) { seed = (seed * 1103515245 + 12345) >>> 0; bars += `<i style="flex:${1 + (seed >>> 16) % 3} 0 0"></i><span style="flex:${1 + (seed >>> 20) % 2} 0 0"></span>`; }
-  sheet(`<div class="slot">${gc(s)}</div>
+  sheet(`<div class="slot">${gc(s, "", w.value)}</div>
     <div class="result"><p class="eyebrow">Gift card${w.t ? " · upgraded" : ""}</p><h2>${esc(s.n)}</h2>
       <div class="valuebox"><span><b>${money(w.value)}</b></span><span>Show at the register</span></div>
       <div class="barcode" aria-label="Barcode">${bars}</div><div class="code">${w.code}</div>
