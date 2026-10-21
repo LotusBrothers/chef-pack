@@ -362,6 +362,35 @@
   .mute { position: fixed; top: calc(var(--safe-t) + 14px); left: max(14px, var(--safe-l)); width: 36px; height: 36px; border-radius: 50%; border: 0; background: rgba(255,255,255,.14); color: #fff; display: grid; place-items: center; z-index: 3; }
   .mute svg { width: 18px; height: 18px; }
 
+  /* ---------- Slot reel: the spin between the rip and the reveal ---------- */
+  .otitle { margin: 2px 0 0; font-size: 12px; font-weight: 800; letter-spacing: .22em; color: rgba(255,255,255,.55); text-transform: uppercase; }
+  .ostage { height: 360px; }
+  .ostage.gone { display: none; }
+  .oreel { position: relative; width: 100vw; max-width: 600px; height: 200px; margin-top: max(70px, 18vh); flex: none; overflow: hidden; animation: fade .35s both;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 16%, #000 84%, transparent); mask-image: linear-gradient(90deg, transparent, #000 16%, #000 84%, transparent); }
+  .omark { position: absolute; left: 50%; top: 4px; bottom: 4px; width: 3px; margin-left: -1.5px; border-radius: 2px; background: #ffc83d; box-shadow: 0 0 16px #ffc83d; z-index: 3; }
+  .omark::before, .omark::after { content: ""; position: absolute; left: 50%; margin-left: -8px; border: 8px solid transparent; }
+  .omark::before { top: -4px; border-top-color: #ffc83d; }
+  .omark::after { bottom: -4px; border-bottom-color: #ffc83d; }
+  .ostrip { position: absolute; top: 50%; left: 0; display: flex; gap: 10px; will-change: transform; transform: translate(0, -50%); }
+  .rt { flex: none; width: 132px; padding: 8px 8px 10px; border-radius: 14px; --c: #ffffff;
+    background: radial-gradient(120% 70% at 50% 105%, color-mix(in srgb, var(--c) 42%, transparent), transparent 70%), #151515;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.08); transition: transform .35s cubic-bezier(.2,1.3,.4,1), opacity .35s, box-shadow .35s; }
+  .rt .tl { display: block; margin-top: 8px; text-align: center; font-size: 10px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--c); }
+  .oreel.landed .rt { opacity: .3; }
+  .oreel.landed .rt.won { opacity: 1; transform: scale(1.12); box-shadow: inset 0 0 0 2px var(--c), 0 0 34px var(--c); }
+  .oreveal { position: relative; width: 300px; height: 300px; flex: none; display: grid; place-items: center; margin-top: 18px; --tc: #fff; }
+  .oreveal .rays, .oreveal .spark { top: 150px; }
+  .oreveal .spill { top: 150px; opacity: .5; transform: scale(1.3); }
+  .oreveal .tbanner { top: 0; }
+  .bigcard { position: relative; z-index: 2; width: 250px; }
+  .bigcard.popped { animation: bigpop .55s cubic-bezier(.2,1.4,.4,1) both; }
+  @keyframes bigpop { from { transform: scale(.55); opacity: 0; } }
+  .oreveal.hit .bigcard .gc { animation: glow 1.8s ease-in-out .3s infinite; }
+  .oreveal.raying .rays { opacity: .75; }
+  .oreveal.bannered .tbanner { opacity: 1; transform: none; }
+  .oreveal .bigcard .gc { box-shadow: 0 18px 40px rgba(0,0,0,.5); }
+
   /* ---------- Wallet ---------- */
   .pagehead h1 { margin: 4px 0 0; font-size: 30px; font-weight: 900; letter-spacing: -.03em; }
   .pagehead p { color: var(--muted); margin: 4px 0 0; font-size: 15px; }
@@ -667,6 +696,10 @@ function sfx(kind, tier = 0, dur = 1) {
       lp.type = "lowpass"; lp.frequency.setValueAtTime(400, now); lp.frequency.exponentialRampToValueAtTime(3000, now + dur);
       g.gain.setValueAtTime(0, now); g.gain.linearRampToValueAtTime(.06, now + dur * .8); g.gain.linearRampToValueAtTime(0, now + dur);
       o.connect(lp).connect(g).connect(a.destination); o.start(now); o.stop(now + dur + .05);
+    } else if (kind === "tick") {
+      const o = a.createOscillator(), g = a.createGain();
+      o.type = "square"; o.frequency.value = 1700; g.gain.setValueAtTime(.035, now); g.gain.exponentialRampToValueAtTime(.0001, now + .03);
+      o.connect(g).connect(a.destination); o.start(now); o.stop(now + .035);
     } else if (kind === "chime") {
       const notes = [[784], [523, 659, 784], [523, 659, 784, 1047], [523, 659, 784, 1047, 1319, 1568]][tier];
       notes.forEach((hz, i) => { const o = a.createOscillator(), g = a.createGain(), t0 = now + i * .085;
@@ -698,59 +731,83 @@ function openFlow() {
   if (!p.free && S.balance < cost) { $("open").textContent = "Add credit: tap your balance"; return; }
   busy = true;
   if (!p.free) { S.balance -= cost; $("balAmt").textContent = money(S.balance, true); }
-  // DEMO MODE: the browser draws the tier and restaurant. In API mode this comes from POST /api/orders and the animation only plays it back.
+  // DEMO MODE: the browser draws the tier and restaurant. In API mode this comes from POST /api/orders and the reel only plays it back.
   const s = rand(p.spots), t = p.free ? 0 : drawTier();
   const res = { p, s, t, value: p.free ? null : p.tiers[t], free: !!p.free, swapped: false, pass: !p.free && S.pass };
   if (!p.free) { res.code = code(); S.wallet.unshift({ id: s.id, value: res.value, t, code: res.code }); save(); }
+  const tier = t, tname = ["Base", "Upgrade", "Big hit", "Jackpot"][tier];
   closeSheet();
   const o = document.createElement("div");
   o.className = "opener"; o.setAttribute("role", "dialog"); o.setAttribute("aria-modal", "true"); o.setAttribute("aria-label", "Open your pack");
-  const tier = p.free ? 0 : t, tname = ["Base", "Upgrade", "Big hit", "Jackpot"][tier];
   o.innerHTML = `<button class="mute" id="mute" type="button" aria-label="${S.muted ? "Turn sound on" : "Mute sound"}">${icon(S.muted ? "muted" : "sound")}</button><button class="x" type="button" aria-label="Close" hidden>${icon("close")}</button>
-    <div class="ostage ready" id="ostage" role="button" tabindex="0" aria-label="Tear the pack open" style="--tc:${TIER_COLOR[tier]}">
-      <span class="rays" aria-hidden="true"></span><span class="spill" aria-hidden="true"></span>
-      ${tier ? `<div class="tbanner" aria-live="polite">${tname.toUpperCase()}<small>${ODDS[tier]}% PULL</small></div>` : ""}
-      <div class="card3"><div class="flip"><div class="face2 back"><div class="cardback"><svg aria-hidden="true"><use href="#hat-w"/></svg></div></div><div class="face2 front" id="front">${gc(s, "", tier ? p.price : res.value)}</div></div></div>
+    <p class="otitle">${esc(p.name)}</p>
+    <div class="ostage ready" id="ostage" role="button" tabindex="0" aria-label="Rip the pack open">
+      <span class="spill" aria-hidden="true"></span>
       <div class="fw body">${foil(p)}</div><div class="fw lid">${foil(p)}</div><span class="tearline"></span>
     </div>
-    <p class="ohint" id="ohint">Tap or swipe to tear it open</p><div class="ores" id="ores"></div>`;
+    <div class="oreel" id="oreel" hidden aria-hidden="true"><span class="omark"></span><div class="ostrip" id="ostrip"></div></div>
+    <div class="oreveal" id="oreveal" hidden style="--tc:${TIER_COLOR[tier]}">
+      <span class="rays" aria-hidden="true"></span><span class="spill" aria-hidden="true"></span>
+      ${tier ? `<div class="tbanner" aria-live="polite">${tname.toUpperCase()}<small>${ODDS[tier]}% PULL</small></div>` : ""}
+      <div class="bigcard" id="bigcard">${gc(s, "", tier ? p.price : res.value)}</div>
+    </div>
+    <p class="ohint" id="ohint">Tap or swipe to rip it open</p><div class="ores" id="ores"></div>`;
   document.body.appendChild(o);
-  const st = o.querySelector("#ostage");
+  const st = o.querySelector("#ostage"), reel = o.querySelector("#oreel"), strip = o.querySelector("#ostrip"), rv = o.querySelector("#oreveal");
   o.querySelector(".x").onclick = () => { o.remove(); if (S.page === "pack") render(); };
   o.querySelector("#mute").onclick = e => { e.stopPropagation(); S.muted = !S.muted; e.currentTarget.innerHTML = icon(S.muted ? "muted" : "sound"); e.currentTarget.setAttribute("aria-label", S.muted ? "Turn sound on" : "Mute sound"); };
+  const fast = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const at = (ms, fn) => setTimeout(fn, fast ? 0 : ms);
+
+  // Reel: filler over-shows upgrades so Jackpots fly past; sometimes one sits right next to the stop.
+  const WIN = 46, N = WIN + 7;
+  const filler = () => { if (p.free) return 0; const r = Math.random(); return r < .55 ? 0 : r < .8 ? 1 : r < .93 ? 2 : 3; };
+  const items = Array.from({ length: N }, (_, i) => i === WIN ? { s, t: tier } : { s: rand(p.spots), t: filler() });
+  if (!p.free && tier < 3 && Math.random() < .6) items[WIN + (Math.random() < .5 ? 1 : -1)].t = 3;
+  strip.innerHTML = items.map((it, i) => `<div class="rt ${i === WIN ? "win" : ""}" style="--c:${TIER_COLOR[it.t]}">${gc(it.s, "", p.free ? null : p.tiers[it.t])}<span class="tl">${p.free ? esc(it.s.c) : ["Base", "Upgrade", "Big hit", "Jackpot"][it.t]}</span></div>`).join("");
+
+  const spin = () => {
+    reel.hidden = false; o.querySelector("#ohint").textContent = "";
+    const pitch = strip.firstElementChild.getBoundingClientRect().width + 10, view = reel.clientWidth;
+    const target = WIN * pitch + (pitch - 10) / 2 - view / 2 + (Math.random() - .5) * pitch * .6;
+    const over = Math.min(26, pitch * .2), D = fast ? 1 : 5600, SETTLE = fast ? 1 : 420;
+    let t0 = null, lastIdx = -1, lastTick = 0;
+    const place = x => { strip.style.transform = `translate(${-x}px, -50%)`; };
+    const frame = now => {
+      t0 = t0 ?? now; const e = now - t0;
+      let x;
+      if (e < D) { const k = e / D; x = (target + over) * (1 - Math.pow(1 - k, 4)); }
+      else { const k = Math.min(1, (e - D) / SETTLE); x = target + over * (1 - (1 - Math.pow(1 - k, 3))); }
+      place(x);
+      const idx = Math.floor((x + view / 2) / pitch);
+      if (idx !== lastIdx) { lastIdx = idx; if (now - lastTick > 38) { lastTick = now; sfx("tick"); buzz(4); } }
+      if (e < D + SETTLE) requestAnimationFrame(frame); else land();
+    };
+    requestAnimationFrame(frame);
+  };
+  const land = () => {
+    reel.classList.add("landed"); buzz(tier ? [30, 40, 60] : 20);
+    at(tier ? 900 : 600, () => {
+      reel.hidden = true; rv.hidden = false;
+      rv.querySelector("#bigcard").classList.add("popped");
+      sfx("chime", tier);
+      if (tier) rv.classList.add("hit", "bannered");
+      if (tier >= 2) { rv.classList.add("raying"); sparks(rv, tier === 3 ? 40 : 20); }
+      at(450, () => {
+        busy = false; o.querySelector(".x").hidden = false; showResult(res, o);
+        if (tier) countUp([o.querySelector(".ores .vline b"), o.querySelector("#bigcard .gbot b")], p.price, res.value, 900 + tier * 250);
+      });
+    });
+  };
   let done = false, x0 = null;
   const rip = () => {
     if (done) return; done = true;
     audio();
     st.classList.remove("ready"); st.setAttribute("aria-label", "Pack opened"); o.querySelector("#ohint").textContent = "";
-    const fast = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const at = (ms, fn) => setTimeout(fn, fast ? 0 : ms);
-    // Bigger tiers: longer, harder shake with a glow leaking out, then a slower pull.
-    const shakeMs = [320, 520, 900, 1350][tier], riseMs = [500, 800, 1100, 1500][tier], hold = [0, 150, 300, 450][tier];
-    st.querySelector(".card3").style.setProperty("--rise", (fast ? 0 : riseMs) + "ms");
-    st.classList.add(tier >= 2 ? "shake2" : "shake");
-    if (tier >= 1) at(shakeMs * .35, () => st.classList.add("tease"));
-    if (tier >= 2) at(shakeMs * .55, () => { st.classList.remove("shake2"); void st.offsetWidth; st.classList.add("shake2", "tease2"); buzz(40); });
-    if (tier >= 3) at(shakeMs * .8, () => { st.classList.remove("shake2"); void st.offsetWidth; st.classList.add("shake2"); buzz(60); });
-    at(shakeMs, () => { st.classList.remove("shake", "shake2"); st.classList.add("torn", "spilling"); sfx("rip"); buzz(30); });
-    const riseAt = shakeMs + 280;
-    at(riseAt, () => { st.classList.add("rise"); if (tier) sfx("rise", tier, riseMs / 1000); });
-    const flipAt = riseAt + riseMs + hold;
-    at(flipAt, () => {
-      st.querySelector(".card3").style.setProperty("--rise", "600ms");
-      st.classList.add("dropped", "center", "flipped");
-      if (tier) st.classList.add("hit");
-      if (tier >= 2) st.classList.add("raying");
-    });
-    at(flipAt + 450, () => {
-      sfx("chime", tier); buzz(tier >= 2 ? [40, 60, 90] : tier ? 50 : 20);
-      if (tier) st.classList.add("bannered");
-      if (tier >= 2) sparks(st, tier === 3 ? 36 : 18);
-    });
-    at(flipAt + 750, () => {
-      busy = false; o.querySelector(".x").hidden = false; showResult(res, o);
-      if (tier) countUp([o.querySelector(".ores .vline b"), o.querySelector("#front .gbot b")], p.price, res.value, 900 + tier * 250);
-    });
+    st.classList.add("shake");
+    at(300, () => { st.classList.remove("shake"); st.classList.add("torn", "spilling"); sfx("rip"); buzz(30); });
+    at(700, () => st.classList.add("dropped"));
+    at(1050, () => { st.classList.add("gone"); spin(); });
   };
   st.addEventListener("click", rip);
   st.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); rip(); } });
@@ -793,8 +850,7 @@ function showResult(r, o) {
   if (q("sSwap") && !q("sSwap").disabled) q("sSwap").onclick = () => {
     if (!r.pass) { if (S.balance < SWAP) { q("sSwap").textContent = "Add credit to swap"; return; } S.balance -= SWAP; $("balAmt").textContent = money(S.balance, true); }
     r.s = rand(p.spots.filter(x => x !== s)); r.swapped = true; S.wallet[0].id = r.s.id; save();
-    const st = o.querySelector("#ostage"); st.classList.remove("flipped");
-    setTimeout(() => { o.querySelector("#front").innerHTML = gc(r.s, "", r.value); st.classList.add("flipped"); showResult(r, o); }, 380);
+    const bc = o.querySelector("#bigcard"); bc.innerHTML = gc(r.s, "", r.value); bc.classList.remove("popped"); void bc.offsetWidth; bc.classList.add("popped"); sfx("chime", 0); showResult(r, o);
   };
 }
 function showCard(i) {
