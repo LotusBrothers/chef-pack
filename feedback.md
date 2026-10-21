@@ -51,3 +51,5 @@ All integration cases are BLOCKED on a real combined preview. Local harness resu
 
 ## Next action and owner
 Tyler: asks 1–3 above. Then Justin's agent reruns the golden journey on the preview, regenerates this report, and marks the PR ready only if every case passes.
+
+Note: the parallel session's report for c67f155 (commit 2204932) is superseded by this one. Its welcome/checkout screenshots were removed from evidence/ because those screens are not in the tested code; they remain in git history.
