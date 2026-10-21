@@ -1,0 +1,34 @@
+{
+  "device": "iPhone 13 (390x664 CSS px viewport, touch)",
+  "url": "http://127.0.0.1:8080/prototype/ (local static server, tested build)",
+  "steps": [
+    "mobile-01-welcome",
+    "mobile-02-create-account",
+    "mobile-03-home-empty-balance",
+    "mobile-04-add-funds",
+    "mobile-05-apple-pay-simulated",
+    "mobile-06-pack-showcase",
+    "mobile-07-buy-panel",
+    "mobile-08-sealed-pack",
+    "mobile-09-reel-spinning",
+    "mobile-10-reveal-upgrade",
+    "mobile-11-wallet",
+    "mobile-12-activity"
+  ],
+  "errors": [],
+  "testModeStrip": "TEST MODE \u00b7 DEMO MONEY \u00b7 GIFT CARDS NOT REDEEMABLE",
+  "balanceAfterDeposit": 50,
+  "packSize": "287x435 of 390x664",
+  "balanceAfterPack": 33.01,
+  "horizontalOverflow": false,
+  "keyboard": [
+    "Tab \u2192 Continue with Apple",
+    "Enter \u2192 signed in as Apple user",
+    "Enter on focused pack tile \u2192 page pack",
+    "Enter on Buy now \u2192 opener focused element: ostage",
+    "Enter on pack \u2192 result: Zaxby's",
+    "Escape \u2192 opener closed: true"
+  ],
+  "focusStyle": "Buttons use :focus-visible 2px outline (CSS rule present).",
+  "note": "Keyboard run set the demo balance to $100 in the console before Buy now, to skip the deposit sheet. Mobile run used the real Add funds flow."
+}

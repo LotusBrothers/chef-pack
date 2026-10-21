@@ -2,64 +2,64 @@
   "schema_version": 1,
   "scope": "integration",
   "readiness": "blocked",
-  "tested_commit": "648c2ed42a8fed3263501f9d74320789178b8103",
-  "base_commit": "7ed776df5038c33bbb03c3d6ae806c216ecc93e5",
-  "preview_url": "https://chef-pack-dev.vercel.app",
-  "summary": "Setup only: frontend is not integrated; this URL has the backend branch, not Justin's combined UI.",
+  "tested_commit": "c67f155c552bc87bbba910192703afc7cbfa8bc6",
+  "base_commit": "28515f4539c79dab41a21bbef8e0ca1c234d97d7",
+  "preview_url": "https://claude.ai/artifact/ExrxCuuKtcyzVLfw9NftgH",
+  "summary": "Design handoff, not integrated. The prototype now has a slab-pack style pack page, a full-screen rip plus slot-reel opening with tier-scaled reveals, and simulated accounts, wallet deposits and Apple Pay, all in TEST MODE in the browser. API/auth integration is blocked: no network access from the agent, no combined preview, Supabase client not approved. The preview URL is a design-only artifact, not the combined Vercel preview.",
   "cases": [
     {
       "id": "CATALOG",
-      "status": "not_run",
+      "status": "blocked",
       "evidence": [],
-      "notes": "Pending Justin's integration and combined-preview browser evaluation."
+      "notes": "UI still renders the 13 demo packs from browser data, not GET /api/packs. Blocked: agent cannot reach chef-pack-dev.vercel.app and there is no combined preview. Plan: render the 3 server packs and show the other themes as unavailable."
     },
     {
       "id": "SIGNIN",
-      "status": "not_run",
-      "evidence": [],
-      "notes": "Pending Justin's integration and combined-preview browser evaluation."
+      "status": "blocked",
+      "evidence": ["reports/frontend/evidence/mobile-01-welcome.webp", "reports/frontend/evidence/mobile-02-create-account.webp"],
+      "notes": "Sign-in and create-account screens exist but are simulated in localStorage (no passwords stored). Not connected to Supabase Auth: client library not approved, the Supabase host is not reachable from the agent, and preview redirect URLs aren't configured."
     },
     {
       "id": "OPEN",
-      "status": "not_run",
+      "status": "blocked",
       "evidence": [],
-      "notes": "Pending Justin's integration and combined-preview browser evaluation."
+      "notes": "Opening is drawn in the browser (demo mode, marked in code). Not calling POST /api/orders yet. The reveal is already written to play back a given tier and value."
     },
     {
       "id": "RETRY",
       "status": "not_run",
       "evidence": [],
-      "notes": "Pending Justin's integration and combined-preview browser evaluation."
+      "notes": "Idempotency-key persistence isn't implemented yet because there is no API call to retry."
     },
     {
       "id": "WALLET",
-      "status": "not_run",
+      "status": "blocked",
       "evidence": [],
-      "notes": "Pending Justin's integration and combined-preview browser evaluation."
+      "notes": "Wallet is local per test account, not GET /api/wallet. Demo cards are labeled not redeemable but are not server inventory."
     },
     {
       "id": "ISOLATION",
-      "status": "not_run",
+      "status": "blocked",
       "evidence": [],
-      "notes": "Pending Justin's integration and combined-preview browser evaluation."
+      "notes": "Server isolation is untested. Locally, a second test account saw none of the first account's cards or balance after sign out (observed in-session, not recorded as a file)."
     },
     {
       "id": "ERROR",
       "status": "not_run",
       "evidence": [],
-      "notes": "Pending Justin's integration and combined-preview browser evaluation."
+      "notes": "Offline, 401 and 503 handling not built; there are no API calls yet."
     },
     {
       "id": "MOCK-SAFETY",
-      "status": "not_run",
-      "evidence": [],
-      "notes": "Pending Justin's integration and combined-preview browser evaluation."
+      "status": "fail",
+      "evidence": ["reports/frontend/evidence/mobile-07-buy-panel.webp", "reports/frontend/evidence/mobile-10-reveal-upgrade.webp", "reports/frontend/evidence/run-log.json"],
+      "notes": "TEST MODE and NOT REDEEMABLE are visible on every screen and no real payment or provider calls are made (pass). But the browser demo invents tiers and upgrades, deducts a local balance, shows a $1.99 fee and a demo barcode, which this case forbids. These will be disabled in API mode, or kept only behind an explicit offline demo switch if Tyler agrees."
     },
     {
       "id": "VISUAL",
-      "status": "not_run",
-      "evidence": [],
-      "notes": "Pending Justin's integration and combined-preview browser evaluation."
+      "status": "pass",
+      "evidence": ["reports/frontend/evidence/run-log.json", "reports/frontend/evidence/mobile-01-welcome.webp", "reports/frontend/evidence/mobile-06-pack-showcase.webp", "reports/frontend/evidence/mobile-08-sealed-pack.webp", "reports/frontend/evidence/mobile-09-reel-spinning.webp", "reports/frontend/evidence/mobile-10-reveal-upgrade.webp", "reports/frontend/evidence/mobile-11-wallet.webp", "reports/frontend/evidence/desktop-01-welcome.webp", "reports/frontend/evidence/desktop-02-pack.webp", "reports/frontend/evidence/desktop-03-reveal.webp"],
+      "notes": "390px iPhone 13 and 1280px desktop: catalog → pack → reveal → wallet, no horizontal overflow, no console errors. Keyboard: Tab/Enter sign-in, open pack, buy, rip; Escape closes. Loading/error states for API calls do not exist yet, so they were not checked."
     }
   ]
 }
