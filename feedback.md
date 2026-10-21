@@ -2,7 +2,7 @@
 
 Readiness: BLOCKED. The frontend is connected to the mock API contract, but the golden journey has not run on a combined Vercel preview.
 Report scope: integration.
-Tested code commit: cd8f3445e1e21be5b806e31cad1d614dc607eed9 (frontend/justin).
+Tested code commit: 53b2bedf9621aaecc97c3727a07c1e05d0ffebaf (frontend/justin). The local suite was re-run on this commit; screenshots are from cd8f344, before the c67f155 merge.
 Main included: 28515f4539c79dab41a21bbef8e0ca1c234d97d7.
 Combined preview: none available (see blockers).
 Machine-readable report: reports/frontend/current.json. Evidence: reports/frontend/evidence/.
@@ -14,7 +14,8 @@ Machine-readable report: reports/frontend/current.json. Evidence: reports/fronte
 - **Reveal:** the reveal and reel play back the server pull (base tier only, because the server has no tier). No paid outcome is drawn in the browser.
 - **Wallet:** GET /api/wallet on sign-in, refresh and visit. The old localStorage play wallet and barcodes are deleted, never shown.
 - **Mock safety:** TEST MODE / NOT REDEEMABLE on every screen. API mode has no balance, fee, Swap Pass, payment picker, upgrade or barcode.
-- **Merged work:** includes the parallel UI work on this branch (tiered reveal, slot-machine reel).
+- **Merged work:** includes the parallel UI work on this branch (tiered reveal, slot-machine reel, plus the larger pack opening and Fast spin from c67f155).
+- **c67f155 accounts and payments not kept:** that commit's browser-only accounts, wallet balance, deposits and simulated Apple Pay / Google Pay checkout were dropped, keeping the server API as the source of truth. The handoff forbids a fictitious balance or payment in API mode, and real accounts are Supabase Auth. Its welcome gate was built on those simulated sign-ins, so the Supabase sign-in sheet remains.
 - **Line endings:** restored line-ending-only differences in Tyler-owned files to main's exact bytes, so the scope check passes. An earlier merge (386a19d) had introduced them.
 
 ## Checks run
