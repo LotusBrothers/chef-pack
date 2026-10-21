@@ -1,5 +1,13 @@
 # Chef Pack
 
+## Agent development handoff
+
+Justin's frontend agents: start with [FRONTEND-HANDOFF.md](docs/FRONTEND-HANDOFF.md), then
+[the golden acceptance journey](docs/ACCEPTANCE.md). Current handoff status is in
+[feedback.md](feedback.md); machine-readable evidence is in reports/frontend/current.json.
+Work on frontend/justin, synchronize main, and submit a PR for Tyler's review.
+The existing browser demo is not yet connected to the backend. Combined previews must deploy both UI and API.
+
 **Can't decide on dinner? Rip a pack.**
 
 Chef Pack is a pack-opening game for restaurant gift cards. You pick a pack, spin the reel, and flip a gift card that tells you where you're eating tonight. Every card is worth **at least the pack price**, and some packs upgrade to a Foil, Holo or Black Label card worth more.

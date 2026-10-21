@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "scope": "integration",
+  "readiness": "blocked",
+  "tested_commit": "648c2ed42a8fed3263501f9d74320789178b8103",
+  "base_commit": "7ed776df5038c33bbb03c3d6ae806c216ecc93e5",
+  "preview_url": "https://chef-pack-dev.vercel.app",
+  "summary": "Setup only: frontend is not integrated; this URL has the backend branch, not Justin's combined UI.",
+  "cases": [
+    {
+      "id": "CATALOG",
+      "status": "not_run",
+      "evidence": [],
+      "notes": "Pending Justin's integration and combined-preview browser evaluation."
+    },
+    {
+      "id": "SIGNIN",
+      "status": "not_run",
+      "evidence": [],
+      "notes": "Pending Justin's integration and combined-preview browser evaluation."
+    },
+    {
+      "id": "OPEN",
+      "status": "not_run",
+      "evidence": [],
+      "notes": "Pending Justin's integration and combined-preview browser evaluation."
+    },
+    {
+      "id": "RETRY",
+      "status": "not_run",
+      "evidence": [],
+      "notes": "Pending Justin's integration and combined-preview browser evaluation."
+    },
+    {
+      "id": "WALLET",
+      "status": "not_run",
+      "evidence": [],
+      "notes": "Pending Justin's integration and combined-preview browser evaluation."
+    },
+    {
+      "id": "ISOLATION",
+      "status": "not_run",
+      "evidence": [],
+      "notes": "Pending Justin's integration and combined-preview browser evaluation."
+    },
+    {
+      "id": "ERROR",
+      "status": "not_run",
+      "evidence": [],
+      "notes": "Pending Justin's integration and combined-preview browser evaluation."
+    },
+    {
+      "id": "MOCK-SAFETY",
+      "status": "not_run",
+      "evidence": [],
+      "notes": "Pending Justin's integration and combined-preview browser evaluation."
+    },
+    {
+      "id": "VISUAL",
+      "status": "not_run",
+      "evidence": [],
+      "notes": "Pending Justin's integration and combined-preview browser evaluation."
+    }
+  ]
+}
