@@ -17,7 +17,7 @@ Verification branch: backend/integration-verification. Justin's branch was prese
 - reports/frontend/current.json: per-case status.
 - reports/frontend/evidence/real-api-eval.json: ten real API checks pass.
 - reports/frontend/evidence/real-browser-eval.json: real UI observations and unrun cases.
-- reports/frontend/evidence/real-wallet-user-b.png: B has only its one nonredeemable test card after pending-order reload recovery.
+- reports/frontend/evidence/real-wallet-user-b.png: B empty-wallet isolation before its own test order; pending-order recovery is recorded in the browser report and confirmed by the database.
 - reports/frontend/evidence/justin-local-report.json: earlier local-harness evidence preserved; it is not real-preview proof.
 - Backend Node tests: 7/7 pass.
 
