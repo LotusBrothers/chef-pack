@@ -50,6 +50,7 @@
   button, input { font: inherit; color: inherit; }
   button { cursor: pointer; -webkit-user-select: none; user-select: none; }
   a { color: inherit; text-decoration: none; }
+  [hidden] { display: none !important; }
   :focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; border-radius: 10px; }
 
   /* ---------- Shell ---------- */
@@ -220,6 +221,119 @@
   .inpacks button { display: flex; justify-content: space-between; align-items: center; min-height: 52px; padding: 0 14px; border: 1px solid var(--line); border-radius: 12px; background: #fff; font-weight: 700; font-size: 15px; text-align: left; }
   .inpacks span { color: var(--muted); font-weight: 600; font-size: 14px; }
 
+  /* ---------- Foil pack: the sealed pack you rip open ---------- */
+  .foil { position: relative; width: 100%; aspect-ratio: .66; container-type: inline-size; filter: drop-shadow(0 14px 18px rgba(0,0,0,.3)); }
+  .foil .bag { position: absolute; inset: 0; overflow: hidden; color: #fff;
+    background: linear-gradient(100deg, #0b0b0b 0%, #2b2b2b 18%, #0e0e0e 34%, #232323 52%, #090909 70%, #303030 88%, #111 100%); }
+  .foil .bag::before { content: ""; position: absolute; inset: 0; background: linear-gradient(115deg, transparent 32%, rgba(255,255,255,.16) 47%, transparent 60%); }
+  .foil .crimp { position: absolute; left: 0; right: 0; height: 7%; background: repeating-linear-gradient(90deg, rgba(255,255,255,.16) 0 1.2cqi, rgba(0,0,0,.3) 1.2cqi 2.4cqi); }
+  .foil .crimp.t { top: 0; } .foil .crimp.b { bottom: 0; }
+  .foil .fmark { position: absolute; top: 20%; left: 0; right: 0; display: flex; justify-content: center; align-items: center; gap: 2cqi; font-size: 6cqi; font-weight: 800; letter-spacing: .2em; color: rgba(255,255,255,.78); }
+  .foil .fmark svg { width: 9cqi; height: 9cqi; }
+  .foil .fname { position: absolute; top: 34%; left: 7%; right: 7%; text-align: center; font-size: 15cqi; font-weight: 900; line-height: .95; letter-spacing: -.03em; text-wrap: balance; }
+  .foil .fband { position: absolute; left: -10%; right: -10%; top: 63%; height: 4.5cqi; background: var(--a); transform: rotate(-8deg); }
+  .foil .fval { position: absolute; bottom: 19%; left: 0; right: 0; text-align: center; font-size: 7cqi; font-weight: 900; letter-spacing: .02em; }
+  .foil .fsub { position: absolute; bottom: 12.5%; left: 0; right: 0; text-align: center; font-size: 4.6cqi; font-weight: 800; letter-spacing: .22em; color: rgba(255,255,255,.55); }
+
+  /* ---------- Home pack tiles ---------- */
+  .tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 12px; }
+  .hscroll .ptile { width: 100%; }
+  .ptile { background: none; border: 0; padding: 0; text-align: left; display: grid; gap: 8px; min-width: 0; }
+  .mini { position: relative; aspect-ratio: 1; border-radius: 16px; background: var(--surface); overflow: hidden; }
+  .hscroll .mini { aspect-ratio: 1.3; }
+  .mini .foil { position: absolute; left: 50%; top: 52%; width: 40%; transform: translate(-50%, -50%) rotate(-4deg); z-index: 2; }
+  .hscroll .mini .foil { width: 31%; }
+  .mini .gc { position: absolute; width: 54%; top: 34%; }
+  .hscroll .mini .gc { width: 42%; top: 30%; }
+  .mini .m1 { left: 2%; transform: rotate(-12deg); }
+  .mini .m2 { right: 2%; transform: rotate(10deg); }
+  .mini .mtag { position: absolute; left: 10px; top: 10px; z-index: 3; background: #fff; font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 99px; box-shadow: 0 1px 4px rgba(0,0,0,.12); }
+  .ptile b { display: block; font-size: 15px; font-weight: 800; }
+  .ptile small { display: block; color: var(--muted); font-size: 13px; margin-top: 1px; }
+  .ptile .row { display: flex; align-items: baseline; gap: 8px; margin-top: 2px; }
+  .ptile .row strong { font-size: 16px; font-weight: 900; font-variant-numeric: tabular-nums; }
+  .ptile .row em { font-style: normal; color: var(--green); font-size: 12px; font-weight: 700; }
+
+  /* ---------- Pack page: showcase + buy panel ---------- */
+  .show { position: relative; background: var(--surface); border-radius: 18px; padding: 16px 0 14px; overflow: hidden; }
+  .stage { position: relative; height: 210px; touch-action: pan-y; }
+  .stage .foil { position: absolute; left: 1%; top: 50%; width: 27%; transform: translateY(-50%) rotate(-7deg); z-index: 1; }
+  .slide { position: absolute; left: 50%; top: 50%; width: 60%; z-index: var(--z); opacity: var(--op); filter: brightness(var(--br));
+    transform: translate(-50%, -50%) translateX(calc(var(--o) * 52%)) scale(var(--sc)); transition: transform .35s cubic-bezier(.2,.8,.2,1), opacity .35s, filter .35s; }
+  .slide .gc { box-shadow: 0 12px 26px rgba(0,0,0,.25); }
+  .navb { position: absolute; top: 50%; z-index: 30; width: 38px; height: 38px; margin-top: -19px; border-radius: 50%; border: 0; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.14); display: grid; place-items: center; }
+  .navb svg { width: 18px; height: 18px; }
+  .navb.l { left: 10px; } .navb.r { right: 10px; }
+  .navb:disabled { opacity: .35; }
+  .rarline { display: flex; justify-content: center; gap: 6px; margin-top: 12px; }
+  .rarline span { font-size: 13px; font-weight: 800; padding: 4px 10px; border-radius: 8px; background: #fff; font-variant-numeric: tabular-nums; }
+  .rarline .rn { background: var(--rb); color: var(--rf); }
+  .dots { display: flex; justify-content: center; gap: 2px; margin-top: 8px; }
+  .dots button { width: 22px; height: 22px; border: 0; background: none; display: grid; place-items: center; padding: 0; }
+  .dots button::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #c9c9c9; }
+  .dots button[aria-current="true"]::before { background: var(--fg); }
+  .buy { margin-top: 14px; border: 1px solid var(--line); border-radius: 18px; padding: 18px; box-shadow: 0 6px 20px rgba(0,0,0,.05); }
+  .buy h1 { margin: 0; font-size: 28px; font-weight: 900; letter-spacing: -.01em; text-transform: uppercase; line-height: 1.05; }
+  .buy .per { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
+  .buy .big { font-size: 34px; font-weight: 900; letter-spacing: -.02em; margin-top: 10px; font-variant-numeric: tabular-nums; }
+  .buy .big small { font-size: 14px; font-weight: 700; color: var(--green); margin-left: 8px; letter-spacing: 0; }
+  .opt { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: center; margin-top: 14px; }
+  .opt b { font-size: 16px; font-weight: 800; }
+  .opt small { display: block; color: var(--muted); font-size: 14px; margin-top: 2px; }
+  .tog { width: 52px; height: 32px; border-radius: 99px; border: 0; background: var(--surface-2); position: relative; flex: none; }
+  .tog::after { content: ""; position: absolute; top: 3px; left: 3px; width: 26px; height: 26px; border-radius: 50%; background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,.2); transition: transform .2s; }
+  .tog[aria-pressed="true"] { background: var(--green); }
+  .tog[aria-pressed="true"]::after { transform: translateX(20px); }
+  .pay { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
+  .pm { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 10px; align-items: center; text-align: left; min-height: 60px; padding: 10px 12px; border-radius: 12px; border: 1.5px solid var(--line); background: #fff; }
+  .pm svg { width: 22px; height: 22px; grid-row: span 2; }
+  .pm b { font-size: 14px; font-weight: 800; line-height: 1.2; }
+  .pm small { font-size: 12px; color: var(--muted); grid-column: 2; }
+  .pm[aria-pressed="true"] { border: 2px solid var(--fg); padding: 9.5px 11.5px; }
+  .buynow { width: 100%; height: 52px; margin-top: 12px; border-radius: 12px; background: var(--green); font-size: 17px; }
+  .buy .fine { text-align: center; color: var(--muted); font-size: 12px; margin: 8px 0 0; }
+
+  /* ---------- Opening: rip the pack ---------- */
+  .opener { position: fixed; inset: 0; z-index: 60; color: #fff; background: radial-gradient(circle at 50% 32%, #2c2c2c, #050505 68%);
+    display: flex; flex-direction: column; align-items: center; overflow-y: auto; animation: fade .25s both;
+    padding: calc(var(--safe-t) + 24px) max(16px, var(--safe-r)) calc(var(--safe-b) + 20px) max(16px, var(--safe-l)); }
+  .opener .x { position: fixed; top: calc(var(--safe-t) + 14px); right: max(14px, var(--safe-r)); background: rgba(255,255,255,.14); color: #fff; }
+  .ostage { position: relative; width: 300px; height: 420px; flex: none; cursor: pointer; }
+  .fw { position: absolute; left: 50%; top: 70px; width: 176px; margin-left: -88px; transition: transform .5s cubic-bezier(.3,.7,.3,1), opacity .5s; }
+  .fw.lid { clip-path: inset(0 0 84% 0); z-index: 3; }
+  .fw.body { clip-path: inset(16% 0 0 0); z-index: 2; }
+  .ostage.ready .fw { animation: nudge 2.4s ease-in-out infinite; }
+  @keyframes nudge { 0%, 80%, 100% { transform: none; } 86% { transform: rotate(-2deg); } 93% { transform: rotate(2deg); } }
+  .ostage.shake .fw { animation: shake .3s linear; }
+  @keyframes shake { 25% { transform: translateX(-4px) rotate(-1.5deg); } 75% { transform: translateX(4px) rotate(1.5deg); } }
+  .ostage.torn .fw.lid { transform: translate(70px, -90px) rotate(24deg); opacity: 0; }
+  .ostage.dropped .fw.body { transform: translateY(160px); opacity: 0; }
+  .tearline { position: absolute; left: 50%; top: 113px; width: 186px; margin-left: -93px; z-index: 4; border-top: 2px dashed rgba(255,255,255,.55); transition: opacity .2s; }
+  .ostage.torn .tearline { opacity: 0; }
+  .card3 { position: absolute; left: 50%; top: 150px; width: 160px; margin-left: -80px; z-index: 1; perspective: 900px; transition: transform .6s cubic-bezier(.2,.8,.2,1); }
+  .ostage.rise .card3 { transform: translateY(-108px); }
+  .ostage.center .card3 { transform: translateY(-20px) scale(1.65); z-index: 5; }
+  .flip { position: relative; aspect-ratio: 1.586; transform-style: preserve-3d; transition: transform .7s cubic-bezier(.3,.7,.2,1); }
+  .ostage.flipped .flip { transform: rotateY(180deg); }
+  .face2 { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+  .face2.front { transform: rotateY(180deg); }
+  .cardback { position: absolute; inset: 0; border-radius: 5.5% / 8.7%; background: radial-gradient(circle, #262626, #0a0a0a 70%); box-shadow: inset 0 0 0 1px rgba(255,255,255,.12); display: grid; place-items: center; color: rgba(255,255,255,.8); }
+  .cardback svg { width: 22%; height: auto; aspect-ratio: 1; }
+  .ohint { margin: 4px 0 0; font-weight: 700; font-size: 15px; color: rgba(255,255,255,.72); min-height: 21px; text-align: center; }
+  .ores { width: 100%; max-width: 380px; display: grid; gap: 4px; animation: fade .3s both; margin-top: 6px; }
+  .ores .rp { justify-self: start; font-size: 13px; font-weight: 800; padding: 4px 10px; border-radius: 8px; background: var(--rb); color: var(--rf); }
+  .ores .eyebrow { color: rgba(255,255,255,.65); }
+  .ores h2 { margin: 0; font-size: 28px; font-weight: 900; letter-spacing: -.03em; line-height: 1.1; }
+  .ores .sub { color: rgba(255,255,255,.65); font-size: 14px; margin: 0; }
+  .ores .vline { margin-top: 10px; display: flex; align-items: baseline; justify-content: space-between; background: rgba(255,255,255,.08); border-radius: 14px; padding: 12px 14px; }
+  .ores .vline b { font-size: 26px; font-weight: 900; font-variant-numeric: tabular-nums; }
+  .ores .vline s { color: rgba(255,255,255,.5); margin-left: 6px; }
+  .ores .vline span { color: rgba(255,255,255,.65); font-size: 13px; font-weight: 600; }
+  .ores .sacts .btn.soft { background: rgba(255,255,255,.12); color: #fff; }
+  .ores .btn.light { background: #fff; color: var(--fg); }
+  .ores .linkbtn { color: #fff; }
+  .ores .linkbtn:disabled { color: rgba(255,255,255,.45); }
+
   /* ---------- Wallet ---------- */
   .pagehead h1 { margin: 4px 0 0; font-size: 30px; font-weight: 900; letter-spacing: -.03em; }
   .pagehead p { color: var(--muted); margin: 4px 0 0; font-size: 15px; }
@@ -250,6 +364,9 @@
     <symbol id="ic-home" viewBox="0 0 24 24"><path d="M4 11 12 4l8 7v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></symbol>
     <symbol id="ic-cards" viewBox="0 0 24 24"><rect x="3" y="7" width="15" height="11" rx="2" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M7 4h12a2 2 0 0 1 2 2v9" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
     <symbol id="ic-back" viewBox="0 0 24 24"><path d="M15 5 8 12l7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ic-left" viewBox="0 0 24 24"><path d="M15 5 8 12l7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ic-right" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ic-card" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 10h18" stroke="currentColor" stroke-width="2"/></symbol>
     <symbol id="ic-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
     <symbol id="hat-w" viewBox="0 0 32 32">
       <path fill="currentColor" d="M9.2 23.2v-6.1a6 6 0 0 1-.6-11.4 7.4 7.4 0 0 1 14.8 0 6 6 0 0 1-.6 11.4v6.1z"/>
@@ -358,7 +475,7 @@ function gc(s, cls = "", value = null) {
 }
 
 let S, busy = false;
-const fresh = () => ({ page: "home", packId: "quick", from: "home", cat: "all", q: "", wallet: [], balance: 250 });
+const fresh = () => ({ page: "home", packId: "quick", from: "home", cat: "all", q: "", wallet: [], balance: 250, slide: 0, pass: false, pm: "wallet" });
 function save() { try { localStorage.setItem("chefpack.app.v3", JSON.stringify({ wallet: S.wallet, balance: S.balance })); } catch (e) {} }
 function load() { try { const s = JSON.parse(localStorage.getItem("chefpack.app.v3")); return s && Array.isArray(s.wallet) ? { ...s, wallet: s.wallet.filter(w => R[w.id]) } : null; } catch (e) { return null; } }
 function drawTier() { let r = Math.random() * 100; for (let i = 0; i < ODDS.length; i++) if ((r -= ODDS[i]) < 0) return i; return 0; }
@@ -368,7 +485,7 @@ function go(page, extra = {}) { if (busy) return; Object.assign(S, { page }, ext
 function render(motion = false) {
   closeSheet();
   $("top").innerHTML = topBar();
-  $("bottom").innerHTML = S.page === "pack" ? orderBar() : tabBar();
+  $("bottom").innerHTML = S.page === "pack" ? "" : tabBar();
   const v = $("view");
   v.innerHTML = ({ home, pack, cards, wallet })[S.page]();
   v.scrollTop = 0; $("top").classList.remove("shadow");
@@ -396,32 +513,30 @@ function bindChrome() {
   document.querySelectorAll("[data-go]").forEach(b => b.onclick = () => go(b.dataset.go, { q: "" }));
   if ($("brand")) $("brand").onclick = () => go("home", { cat: "all", q: "" });
   if ($("back")) $("back").onclick = () => go(S.from || "home");
-  if ($("open")) $("open").onclick = spin;
   $("bal").onclick = () => { S.balance += 100; save(); $("balAmt").textContent = money(S.balance, true); };
   if ($("q")) $("q").oninput = e => { S.q = e.target.value; S.page === "home" ? renderPacks() : renderShelf(); };
 }
 
 /* ---------- Pieces ---------- */
-// The pack itself: one sealed black card with its name, restaurants, guaranteed value and price.
-const packFace = p => {
-  const stops = p.spots.slice(0, 5).map(accent);
-  const names = p.spots.slice(0, 4).map(x => x.n).join(" · ") + (p.spots.length > 4 ? ` · +${p.spots.length - 4} more` : "");
-  return `<div class="pk" style="--a:linear-gradient(90deg, ${stops.join(", ")})">
-    <span class="ptop"><span class="brandmark"><svg aria-hidden="true"><use href="#hat-w"/></svg>CHEF PACK</span>${p.free ? `<span class="ptag">Daily</span>` : p.tag ? `<span class="ptag">${esc(p.tag)}</span>` : ""}</span>
-    <span class="pname">${esc(p.name)}</span>
-    <span class="pbrands">${p.free ? `Any of ${p.spots.length} restaurants` : esc(names)}</span>
-    <span class="pbot"><span>${p.free ? "NO CARD<b>Just a pick</b>" : `GUARANTEED<b>${money(p.price)}+ card</b>`}</span><span class="pprice">${p.free ? "FREE" : money(p.price)}</span></span>
-    <span class="pacc"></span></div>`;
-};
-const packCard = p => `<button class="pack" type="button" data-pack="${p.id}">${packFace(p)}
-  <div class="pi"><div><b>${esc(p.name)}${p.tag ? ` <span class="tag">${esc(p.tag)}</span>` : ""}</b><small>${p.free ? "Free · a place to eat, no card" : `<span class="guar">${money(p.price)}+ gift card</span> · ${p.spots.length} restaurants`}</small></div><span class="price">${p.free ? "Free" : money(p.price)}</span></div></button>`;
-const openPack = id => go("pack", { packId: id, from: S.page });
+// Crimped top and bottom edge for the foil pack.
+const ZIG = (() => { const n = 18, d = 2.2, top = [], bot = []; for (let i = 0; i <= n; i++) { const x = (i / n * 100).toFixed(2); top.push(`${x}% ${i % 2 ? d : 0}%`); bot.unshift(`${x}% ${i % 2 ? 100 - d : 100}%`); } return `polygon(${top.concat(bot).join(",")})`; })();
+const RARITY = [["Base", "#ececec", "#191919"], ["Upgrade", "#e3f5ea", "#0a7a41"], ["Big hit", "#e5eeff", "#1d56c4"], ["Jackpot", "#fbefc4", "#8a5d00"]];
+const band = p => `linear-gradient(90deg, ${p.spots.slice(0, 5).map(accent).join(", ")})`;
+// The sealed pack: black foil, crimped edges, the pack name and its guarantee.
+const foil = p => `<div class="foil"><div class="bag" style="clip-path:${ZIG};--a:${band(p)}"><span class="crimp t"></span><span class="crimp b"></span>
+  <span class="fmark"><svg aria-hidden="true"><use href="#hat-w"/></svg>CHEF PACK</span><span class="fname">${esc(p.name)}</span><span class="fband"></span>
+  <span class="fval">${p.free ? "FREE PICK" : `${money(p.tiers[0])}+ CARD`}</span><span class="fsub">${p.free ? "NO CARD INSIDE" : "1 GIFT CARD"}</span></div></div>`;
+const tile = p => `<button class="ptile" type="button" data-pack="${p.id}">
+  <div class="mini">${p.free ? `<span class="mtag">Daily</span>` : p.tag ? `<span class="mtag">${esc(p.tag)}</span>` : ""}${gc(p.spots[0], "m1")}${gc(p.spots[1], "m2")}${foil(p)}</div>
+  <span><b>${esc(p.name)}</b><small>${p.free ? "A place to eat tonight" : `1 gift card · ${p.spots.length} restaurants`}</small>
+  <span class="row"><strong>${p.free ? "Free" : money(p.price)}</strong>${p.free ? "" : `<em>${money(p.tiers[0])}+ card</em>`}</span></span></button>`;
+const openPack = id => go("pack", { packId: id, from: S.page, slide: 0 });
 
 /* ---------- Pages ---------- */
 function home() {
   return `<div class="chips" role="group" aria-label="Categories">${CATS.map(([id, label]) => `<button class="chip" type="button" data-cat="${id}" aria-pressed="${S.cat === id}">${label}</button>`).join("")}</div>
     <section class="promo">
-      <div><h1>Can't decide on dinner?</h1><p>Open a pack and get a gift card to one of its restaurants, worth at least what you paid.</p><button class="btn white" id="pOpen" type="button">Open Quick Bite · $15</button></div>
+      <div><h1>Can't decide on dinner?</h1><p>Rip a pack and pull a gift card to one of its restaurants, worth at least what you paid.</p><button class="btn white" id="pOpen" type="button">Open Quick Bite · $15</button></div>
       <div class="fan" aria-hidden="true">${gc(R.chip)}${gc(R.og)}${gc(R.tbell)}</div>
     </section>
     <div id="packs"></div>`;
@@ -432,22 +547,58 @@ function renderPacks() {
   const browsing = S.cat === "all" && !q;
   $("packs").innerHTML = (browsing ? `
     <div class="sh"><h2>Popular packs</h2><small>${PACKS.length} packs</small></div>
-    <div class="hscroll">${["quick", "sitdown", "date", "pizza", "steak"].map(id => packCard(packOf(id))).join("")}</div>
+    <div class="hscroll">${["quick", "sitdown", "date", "pizza", "steak"].map(id => tile(packOf(id))).join("")}</div>
     <div class="sh"><h2>All packs</h2></div>` : `<div class="sh"><h2>${q ? `Results for "${esc(S.q.trim())}"` : CATS.find(c => c[0] === S.cat)[1]}</h2><small>${list.length} pack${list.length === 1 ? "" : "s"}</small></div>`)
-    + (list.length ? `<div class="packs">${list.map(packCard).join("")}</div>` : `<div class="none">No packs match. Try another restaurant or category.</div>`)
+    + (list.length ? `<div class="tiles">${list.map(tile).join("")}</div>` : `<div class="none">No packs match. Try another restaurant or category.</div>`)
     + `<p class="foot">Demo: play credit only, no real charges or gift cards.<br>Restaurant names belong to their owners; no affiliation implied.</p>`;
   $("packs").querySelectorAll("[data-pack]").forEach(b => b.onclick = () => openPack(b.dataset.pack));
 }
 
+// What the showcase cycles through: each card value with its odds, or for the free pick a few restaurants.
+function slides(p) {
+  if (p.free) return p.spots.slice(0, 5).map(s => ({ s, value: null, label: "Could land on", odds: s.c }));
+  return p.tiers.map((v, i) => ({ s: p.spots[(i * 3) % p.spots.length], value: v, label: RARITY[i][0], odds: `${ODDS[i]}%`, r: i }));
+}
 function pack() {
-  const p = packOf(S.packId);
-  return `${packFace(p)}
-    <div class="stitle"><h1 class="sr">${esc(p.name)}</h1>
-      <div class="meta">${p.free ? `<span><b>Free</b></span><span>${p.spots.length} restaurants</span>`
-        : `<span class="guar">${money(p.price)}+ gift card, guaranteed</span><span><b>${p.spots.length}</b> restaurants</span><span><b>${upOdds()}%</b> upgrade chance</span>`}</div></div>
-    ${p.free ? "" : `<div class="values">${p.tiers.map((v, i) => `<div><b>${money(v)} gift card</b><span>${i ? `${ODDS[i]}% chance` : "Guaranteed"}</span></div>`).join("")}</div>`}
-    <div class="sh"><h2>Restaurants in this pack</h2><small>Equal chance</small></div>
+  const p = packOf(S.packId), sl = slides(p), cur = Math.min(S.slide, sl.length - 1);
+  const total = p.price + FEE + (S.pass ? SWAP : 0);
+  return `<section class="show" aria-label="Possible pulls">
+      <div class="stage" id="stage">${foil(p)}
+        ${sl.map((x, i) => `<div class="slide" data-i="${i}">${gc(x.s, "", x.value)}</div>`).join("")}
+        <button class="navb l" id="prev" type="button" aria-label="Previous">${icon("left")}</button><button class="navb r" id="next" type="button" aria-label="Next">${icon("right")}</button>
+      </div>
+      <div class="rarline" id="rarline"></div>
+      <div class="dots" id="dots">${sl.map((_, i) => `<button type="button" data-dot="${i}" aria-label="Show pull ${i + 1}"></button>`).join("")}</div>
+    </section>
+    <section class="buy">
+      <h1>${esc(p.name)}</h1>
+      <p class="per">${p.free ? `Free · once a day · ${p.spots.length} restaurants` : `1 gift card / pack · ${p.spots.length} restaurants`}</p>
+      ${p.free ? "" : `<div class="big">${money(p.price)}<small>${money(p.tiers[0])}+ guaranteed</small></div>
+      <div class="opt"><div><b>Add a Swap Pass?</b><small>Don't like the restaurant? Swap it once after you open, for ${money(SWAP)} more.</small></div><button class="tog" id="pass" type="button" aria-pressed="${S.pass}" aria-label="Add a Swap Pass"></button></div>
+      <div class="pay" role="group" aria-label="Payment">
+        <button class="pm" type="button" data-pm="wallet" aria-pressed="${S.pm === "wallet"}">${icon("wallet")}<b>Chef Pack Wallet</b><small>${money(S.balance, true)}</small></button>
+        <button class="pm" type="button" data-pm="card" aria-pressed="${S.pm === "card"}">${icon("card")}<b>Other payment</b><small>Card, Apple Pay</small></button>
+      </div>`}
+      <button class="btn buynow" id="open" type="button">${p.free ? "Open free pick" : `Buy now · ${money(total, true)}`}</button>
+      <p class="fine">${p.free ? "Free picks suggest a place. Packs come with a gift card." : `${money(p.price)} pack + ${money(FEE, true)} fee${S.pass ? ` + ${money(SWAP)} Swap Pass` : ""} · Demo: charged to play credit`}</p>
+    </section>
+    ${p.free ? "" : `<div class="sh"><h2>Odds</h2><small>Per pack</small></div>
+    <div class="values">${p.tiers.map((v, i) => `<div><b>${RARITY[i][0]} · ${money(v)} card</b><span>${i ? `${ODDS[i]}%` : "88% · guaranteed floor"}</span></div>`).join("")}</div>`}
+    <div class="sh"><h2>Restaurants inside</h2><small>Equal chance</small></div>
     <div class="shelf">${p.spots.map(s => `<div class="item">${gc(s)}<span>${esc(s.n)}</span><small>${esc(s.c)} · 1 in ${p.spots.length}</small></div>`).join("")}</div>`;
+}
+function setSlide(i) {
+  const p = packOf(S.packId), sl = slides(p);
+  S.slide = Math.max(0, Math.min(sl.length - 1, i));
+  document.querySelectorAll("#stage .slide").forEach(el => {
+    const o = +el.dataset.i - S.slide, a = Math.abs(o);
+    el.style.setProperty("--o", o); el.style.setProperty("--sc", a ? .8 : 1); el.style.setProperty("--z", 20 - a);
+    el.style.setProperty("--op", a > 1 ? 0 : 1); el.style.setProperty("--br", a ? .7 : 1);
+  });
+  const x = sl[S.slide], rr = RARITY[x.r ?? 0];
+  $("rarline").innerHTML = p.free ? `<span>${esc(x.s.n)}</span>` : `<span class="rn" style="--rb:${rr[1]};--rf:${rr[2]}">${x.label}</span><span>${x.odds}</span>`;
+  document.querySelectorAll("#dots [data-dot]").forEach(d => d.setAttribute("aria-current", +d.dataset.dot === S.slide));
+  $("prev").disabled = S.slide === 0; $("next").disabled = S.slide === sl.length - 1;
 }
 
 function cards() {
@@ -467,28 +618,45 @@ function wallet() {
       : `<div class="empty"><b>No gift cards yet</b><p>Open a pack and your card lands here, ready to use.</p><button class="btn" id="toHome" type="button" style="margin-top:8px">Browse packs</button></div>`}`;
 }
 
-/* ---------- Open a pack ---------- */
-function spin() {
+/* ---------- Open a pack: rip it like a sports pack ---------- */
+function openFlow() {
   if (busy) return;
-  const p = packOf(S.packId), cost = p.price + FEE;
+  const p = packOf(S.packId), cost = p.price + FEE + (S.pass ? SWAP : 0);
   if (!p.free && S.balance < cost) { $("open").textContent = "Add credit: tap your balance"; return; }
   busy = true;
   if (!p.free) { S.balance -= cost; $("balAmt").textContent = money(S.balance, true); }
   const s = rand(p.spots), t = p.free ? 0 : drawTier();
-  const others = p.spots.filter(x => x !== s);
-  const m = sheet(`<div class="slot" id="slot">${gc(rand(others))}</div><p class="status" id="status">${p.free ? "Picking a restaurant…" : "Opening your pack…"}</p><div id="res"></div>`, "Opening pack", false);
-  // A short shuffle through the pack's cards that slows down, then settles on the pick.
-  const delays = matchMedia("(prefers-reduced-motion: reduce)").matches ? [] : [60, 60, 70, 80, 95, 115, 140, 175, 220];
-  let k = 0;
-  const step = () => {
-    if (k < delays.length) { $("slot").innerHTML = gc(rand(others)); setTimeout(step, delays[k++]); return; }
-    $("slot").innerHTML = gc(s, "settle", p.free ? null : p.tiers[t]);
-    busy = false;
-    const res = { p, s, t, value: p.free ? 0 : p.tiers[t], free: !!p.free, swapped: false };
-    if (!p.free) { res.code = code(); S.wallet.unshift({ id: s.id, value: res.value, t, code: res.code }); save(); }
-    showResult(res, m);
+  const res = { p, s, t, value: p.free ? null : p.tiers[t], free: !!p.free, swapped: false, pass: !p.free && S.pass };
+  if (!p.free) { res.code = code(); S.wallet.unshift({ id: s.id, value: res.value, t, code: res.code }); save(); }
+  closeSheet();
+  const o = document.createElement("div");
+  o.className = "opener"; o.setAttribute("role", "dialog"); o.setAttribute("aria-modal", "true"); o.setAttribute("aria-label", "Open your pack");
+  o.innerHTML = `<button class="x" type="button" aria-label="Close" hidden>${icon("close")}</button>
+    <div class="ostage ready" id="ostage" role="button" tabindex="0" aria-label="Tear the pack open">
+      <div class="card3"><div class="flip"><div class="face2 back"><div class="cardback"><svg aria-hidden="true"><use href="#hat-w"/></svg></div></div><div class="face2 front" id="front">${gc(s, "", res.value)}</div></div></div>
+      <div class="fw body">${foil(p)}</div><div class="fw lid">${foil(p)}</div><span class="tearline"></span>
+    </div>
+    <p class="ohint" id="ohint">Tap or swipe to tear it open</p><div class="ores" id="ores"></div>`;
+  document.body.appendChild(o);
+  const st = o.querySelector("#ostage");
+  o.querySelector(".x").onclick = () => { o.remove(); if (S.page === "pack") render(); };
+  let done = false, x0 = null;
+  const rip = () => {
+    if (done) return; done = true;
+    st.classList.remove("ready"); st.setAttribute("aria-label", "Pack opened"); o.querySelector("#ohint").textContent = "";
+    const fast = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const at = (ms, fn) => setTimeout(fn, fast ? 0 : ms);
+    st.classList.add("shake");
+    at(300, () => { st.classList.remove("shake"); st.classList.add("torn"); });
+    at(650, () => st.classList.add("rise"));
+    at(1250, () => st.classList.add("dropped", "center", "flipped"));
+    at(2000, () => { busy = false; o.querySelector(".x").hidden = false; showResult(res, o); });
   };
-  step();
+  st.addEventListener("click", rip);
+  st.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); rip(); } });
+  st.addEventListener("pointerdown", e => { x0 = e.clientX; });
+  st.addEventListener("pointermove", e => { if (x0 !== null && Math.abs(e.clientX - x0) > 40) { x0 = null; rip(); } });
+  st.focus({ preventScroll: true });
 }
 
 /* ---------- Sheets ---------- */
@@ -503,31 +671,30 @@ function sheet(html, label, closable = true) {
   m.querySelector(".x")?.addEventListener("click", closeSheet);
   return m;
 }
-function showResult(r, m) {
-  const { p, s } = r, up = r.t > 0;
+function showResult(r, o) {
+  const { p, s } = r, up = r.t > 0, rr = RARITY[r.t];
   const paid = r.free ? PACKS.find(q => q.spots.includes(s)) : null;
-  if (!m.querySelector(".x")) {
-    m.querySelector(".sheet").insertAdjacentHTML("afterbegin", `<button class="x" type="button" aria-label="Close">${icon("close")}</button>`);
-    m.querySelector(".x").onclick = closeSheet;
-  }
-  $("status").textContent = "";
-  $("res").innerHTML = `<div class="result">
-    ${up ? `<span class="upg">Upgraded to ${money(r.value)}</span>` : ""}
+  const swapLabel = r.swapped ? "Swap used" : r.pass ? "Use your Swap Pass: swap restaurant" : `Not feeling it? Swap restaurant for ${money(SWAP)}`;
+  o.querySelector("#ores").innerHTML = `
+    ${r.free ? "" : `<span class="rp" style="--rb:${rr[1]};--rf:${rr[2]}">${rr[0]}${up ? ` · ${ODDS[r.t]}%` : ""}</span>`}
     <p class="eyebrow">${r.free ? "How about tonight at" : r.swapped ? "Swapped, same value" : "Tonight you're eating at"}</p>
     <h2>${esc(s.n)}</h2><p class="sub">${esc(s.c)} · ${CITY}</p>
-    ${r.free ? "" : `<div class="valuebox"><span><b>${money(r.value)}</b>${up ? `<s>${money(p.price)}</s>` : ""}</span><span>Gift card · in your wallet</span></div>`}
+    ${r.free ? "" : `<div class="vline"><span><b>${money(r.value)}</b>${up ? `<s>${money(p.price)}</s>` : ""}</span><span>Gift card · in your wallet</span></div>`}
     <div class="sacts">${r.free
-      ? `<button class="btn" id="sPaid" type="button" style="grid-column:1/-1">Get a card · ${esc(paid.name)} ${money(paid.price)}</button><button class="btn soft" id="sAgain" type="button">Pick again</button><a class="btn soft" href="${maps(s.n)}" target="_blank" rel="noopener">Directions</a>`
-      : `<a class="btn" href="${maps(s.n)}" target="_blank" rel="noopener">Directions</a><button class="btn soft" id="sCard" type="button">Show card</button>`}</div>
-    ${r.free ? "" : `<button class="linkbtn" id="sSwap" type="button" ${r.swapped || p.spots.length < 2 ? "disabled" : ""}>${r.swapped ? "Swap used" : `Not feeling it? Swap restaurant for ${money(SWAP)}`}</button>`}
-  </div>`;
-  const q = id => m.querySelector("#" + id);
-  if (q("sCard")) q("sCard").onclick = () => showCard(0);
-  if (q("sPaid")) q("sPaid").onclick = () => go("pack", { packId: paid.id, from: "home" });
-  if (q("sAgain")) q("sAgain").onclick = () => spin();
+      ? `<button class="btn light" id="sPaid" type="button" style="grid-column:1/-1">Get a card · ${esc(paid.name)} ${money(paid.price)}</button><button class="btn soft" id="sAgain" type="button">Pick again</button><a class="btn soft" href="${maps(s.n)}" target="_blank" rel="noopener">Directions</a>`
+      : `<a class="btn light" href="${maps(s.n)}" target="_blank" rel="noopener">Directions</a><button class="btn soft" id="sCard" type="button">Show card</button><button class="btn soft" id="sMore" type="button" style="grid-column:1/-1">Open another</button>`}</div>
+    ${r.free ? "" : `<button class="linkbtn" id="sSwap" type="button" ${r.swapped || p.spots.length < 2 ? "disabled" : ""}>${swapLabel}</button>`}`;
+  const q = id => o.querySelector("#" + id);
+  const close = () => { o.remove(); };
+  if (q("sCard")) q("sCard").onclick = () => { close(); showCard(0); };
+  if (q("sMore")) q("sMore").onclick = () => { close(); render(); };
+  if (q("sPaid")) q("sPaid").onclick = () => { close(); go("pack", { packId: paid.id, from: "home", slide: 0 }); };
+  if (q("sAgain")) q("sAgain").onclick = () => { close(); openFlow(); };
   if (q("sSwap") && !q("sSwap").disabled) q("sSwap").onclick = () => {
+    if (!r.pass) { if (S.balance < SWAP) { q("sSwap").textContent = "Add credit to swap"; return; } S.balance -= SWAP; $("balAmt").textContent = money(S.balance, true); }
     r.s = rand(p.spots.filter(x => x !== s)); r.swapped = true; S.wallet[0].id = r.s.id; save();
-    $("slot").innerHTML = gc(r.s, "settle", r.value); showResult(r, m);
+    const st = o.querySelector("#ostage"); st.classList.remove("flipped");
+    setTimeout(() => { o.querySelector("#front").innerHTML = gc(r.s, "", r.value); st.classList.add("flipped"); showResult(r, o); }, 380);
   };
 }
 function showCard(i) {
@@ -557,6 +724,17 @@ const bind = {
     $("view").querySelectorAll("[data-cat]").forEach(b => b.onclick = () => { S.cat = S.cat === b.dataset.cat ? "all" : b.dataset.cat; $("view").querySelectorAll("[data-cat]").forEach(c => c.setAttribute("aria-pressed", c.dataset.cat === S.cat)); renderPacks(); });
     renderPacks();
   },
+  pack() {
+    setSlide(S.slide);
+    $("prev").onclick = () => setSlide(S.slide - 1); $("next").onclick = () => setSlide(S.slide + 1);
+    document.querySelectorAll("#dots [data-dot]").forEach(d => d.onclick = () => setSlide(+d.dataset.dot));
+    let x0 = null; const st = $("stage");
+    st.addEventListener("touchstart", e => { x0 = e.touches[0].clientX; }, { passive: true });
+    st.addEventListener("touchend", e => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 40) setSlide(S.slide + (dx < 0 ? 1 : -1)); x0 = null; });
+    if ($("pass")) $("pass").onclick = () => { S.pass = !S.pass; const y = $("view").scrollTop; render(); $("view").scrollTop = y; };
+    document.querySelectorAll("[data-pm]").forEach(b => b.onclick = () => { S.pm = b.dataset.pm; document.querySelectorAll("[data-pm]").forEach(c => c.setAttribute("aria-pressed", c.dataset.pm === S.pm)); });
+    $("open").onclick = openFlow;
+  },
   cards() { renderShelf(); },
   wallet() {
     if ($("toHome")) $("toHome").onclick = () => go("home");
@@ -570,7 +748,7 @@ function start(data) {
   if (!({ home: 1, pack: 1, cards: 1, wallet: 1 })[S.page]) S.page = "home";
   busy = false;
   $("view").addEventListener("scroll", () => $("top").classList.toggle("shadow", $("view").scrollTop > 4), { passive: true });
-  addEventListener("keydown", e => { if (e.key === "Escape" && !busy) closeSheet(); });
+  addEventListener("keydown", e => { if (e.key === "Escape" && !busy) { closeSheet(); document.querySelector(".opener")?.remove(); } });
   render();
 }
 window.claude?.hot?.snapshot?.(() => ({ S }));
