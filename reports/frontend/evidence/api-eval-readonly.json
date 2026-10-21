@@ -1,0 +1,16 @@
+{
+  "scope": "api_only",
+  "base": "https://chef-pack-dev.vercel.app",
+  "write_tests": false,
+  "results": [
+    {
+      "id": "HEALTH",
+      "status": "pass"
+    },
+    {
+      "id": "CATALOG",
+      "status": "pass"
+    }
+  ],
+  "browser_verification": "not_run"
+}

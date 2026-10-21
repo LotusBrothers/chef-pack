@@ -2,64 +2,89 @@
   "schema_version": 1,
   "scope": "integration",
   "readiness": "blocked",
-  "tested_commit": "648c2ed42a8fed3263501f9d74320789178b8103",
-  "base_commit": "7ed776df5038c33bbb03c3d6ae806c216ecc93e5",
-  "preview_url": "https://chef-pack-dev.vercel.app",
-  "summary": "Setup only: frontend is not integrated; this URL has the backend branch, not Justin's combined UI.",
+  "tested_commit": "cd8f3445e1e21be5b806e31cad1d614dc607eed9",
+  "base_commit": "28515f4539c79dab41a21bbef8e0ca1c234d97d7",
+  "preview_url": null,
+  "summary": "Frontend is connected to the mock API contract (sign-in, server catalog, idempotent test orders, server wallet) but the golden journey has NOT run on a combined Vercel preview. Blocked on: no Supabase publishable key available to the frontend, no combined preview (Justin's Vercel account cannot see the chef-pack project and the repo has no Vercel Git integration), and auth redirect URLs. All cases were exercised only on a local same-origin harness: real /api/packs from chef-pack-dev.vercel.app, with auth, orders and wallet replaced by a local contract stand-in (tests/frontend/contract-harness.mjs). Local results are recorded in notes and do not count as passes.",
   "cases": [
     {
       "id": "CATALOG",
-      "status": "not_run",
-      "evidence": [],
-      "notes": "Pending Justin's integration and combined-preview browser evaluation."
+      "status": "blocked",
+      "evidence": [
+        "reports/frontend/evidence/local-02-home-catalog-mobile.jpg",
+        "reports/frontend/evidence/local-08-demo-theme-disabled-mobile.jpg",
+        "reports/frontend/evidence/api-eval-readonly.json"
+      ],
+      "notes": "Blocked: no combined preview. Local, same origin, proxied to the real deployed /api/packs: the page rendered the three server packs (Quick Bite $15, Sit-Down $40, Treat Yourself $100), and the home section showed '3 live'. Demo themes show 'Demo only' with a disabled 'Not for sale yet' button. Catalog 503 showed 'Couldn't load packs' plus Try again, and the retry recovered. node scripts/eval-api.mjs (read-only) passed HEALTH and CATALOG."
     },
     {
       "id": "SIGNIN",
-      "status": "not_run",
+      "status": "blocked",
       "evidence": [],
-      "notes": "Pending Justin's integration and combined-preview browser evaluation."
+      "notes": "Blocked: the frontend has no Supabase publishable key (AUTH_KEY is empty and /api/config does not exist), so real signup/login cannot reach chef-pack-dev auth. Email confirmation and redirect URLs are also untested. Local harness only (not Supabase): signup, password login, logout, silent token refresh after access-token expiry, and 'Your session expired. Sign in again.' after refresh failure all behaved as designed. Auth uses Supabase Auth REST over fetch (/auth/v1/signup, token?grant_type=password|refresh_token, user, logout) to avoid adding an unapproved dependency."
     },
     {
       "id": "OPEN",
-      "status": "not_run",
-      "evidence": [],
-      "notes": "Pending Justin's integration and combined-preview browser evaluation."
+      "status": "blocked",
+      "evidence": [
+        "reports/frontend/evidence/local-03-reveal-mobile.jpg",
+        "reports/frontend/evidence/local-order-requests.json"
+      ],
+      "notes": "Blocked: no combined preview or auth. Local harness on tested_commit: one click (including a double click) sent exactly one POST /api/orders. The harness created one order and the reveal rendered the server pull ('Demo restaurant — not redeemable', $15, order 4aded718). The reel plays the base tier because the server sends no tier."
     },
     {
       "id": "RETRY",
-      "status": "not_run",
-      "evidence": [],
-      "notes": "Pending Justin's integration and combined-preview browser evaluation."
+      "status": "blocked",
+      "evidence": [
+        "reports/frontend/evidence/local-06-order-timeout-retry-mobile.jpg",
+        "reports/frontend/evidence/local-07-pending-after-reload-mobile.jpg",
+        "reports/frontend/evidence/local-order-requests.json"
+      ],
+      "notes": "Blocked on the real backend. Local harness on tested_commit: a 15 s timeout showed 'Not confirmed yet' with no card. 'Retry same order' hit a 503 and kept the pending attempt. After a reload the app prompted 'Unfinished order Sit-Down', and Finish opening reused the same Idempotency-Key 3 times in total, creating 1 order. The pending attempt then cleared. A dropped response (committed, socket closed) was resent by the browser with the same key: one order. Across the whole session, 13 POSTs used 7 keys and created 7 orders."
     },
     {
       "id": "WALLET",
-      "status": "not_run",
-      "evidence": [],
-      "notes": "Pending Justin's integration and combined-preview browser evaluation."
+      "status": "blocked",
+      "evidence": [
+        "reports/frontend/evidence/local-04-wallet-user-a-mobile.jpg",
+        "reports/frontend/evidence/local-09-wallet-desktop.jpg"
+      ],
+      "notes": "Blocked on the real backend. Locally the wallet comes only from GET /api/wallet. Reload, logout and login restored the same server items (3, then 5, then 7 cards matching harness orders). The old localStorage play-money wallet (chefpack.app.v3) is deleted on load and never shown. A wallet 503 showed an error with Try again."
     },
     {
       "id": "ISOLATION",
-      "status": "not_run",
-      "evidence": [],
-      "notes": "Pending Justin's integration and combined-preview browser evaluation."
+      "status": "blocked",
+      "evidence": [
+        "reports/frontend/evidence/local-05-wallet-user-b-isolation-mobile.jpg"
+      ],
+      "notes": "Blocked: real per-user isolation depends on Supabase RLS and two real test accounts. Locally, logout cleared the user, the cards and the session. User B then saw 0 of user A's 7 cards, and A's pending attempt was never replayed for B (pending attempts are keyed by user id)."
     },
     {
       "id": "ERROR",
-      "status": "not_run",
-      "evidence": [],
-      "notes": "Pending Justin's integration and combined-preview browser evaluation."
+      "status": "blocked",
+      "evidence": [
+        "reports/frontend/evidence/local-06-order-timeout-retry-mobile.jpg"
+      ],
+      "notes": "Blocked on the real backend. Local: order timeout and 503 showed errors and a same-key retry, never success. A rejected session led to a sign-in prompt. Catalog and wallet 503 showed retry states. No new-key retry ever happened automatically. NOT RUN: real offline mode (the pane cannot toggle the network; only a lost connection and a timeout were simulated) and a real 400 from the server (the harness 400 path was not triggered through the UI)."
     },
     {
       "id": "MOCK-SAFETY",
-      "status": "not_run",
-      "evidence": [],
-      "notes": "Pending Justin's integration and combined-preview browser evaluation."
+      "status": "blocked",
+      "evidence": [
+        "reports/frontend/evidence/local-02-home-catalog-mobile.jpg",
+        "reports/frontend/evidence/local-03-reveal-mobile.jpg"
+      ],
+      "notes": "Not verified on a preview. Locally: the TEST MODE / NOT REDEEMABLE bar shows on every page, the reveal shows 'TEST MODE · NOT REDEEMABLE', and wallet rows say NOT REDEEMABLE. There is no balance, service fee, payment choice, Swap Pass, upgrade, barcode or code in API mode. The only network calls are same-origin /api/* and Supabase Auth; no payment or gift-card provider is called."
     },
     {
       "id": "VISUAL",
       "status": "not_run",
-      "evidence": [],
-      "notes": "Pending Justin's integration and combined-preview browser evaluation."
+      "evidence": [
+        "reports/frontend/evidence/local-01-home-loading-mobile.jpg",
+        "reports/frontend/evidence/local-02-home-catalog-mobile.jpg",
+        "reports/frontend/evidence/local-09-wallet-desktop.jpg"
+      ],
+      "notes": "Partial, local only. Took 390px mobile screenshots of loading, catalog, pack, reveal, wallet, empty and error states, plus a desktop wallet. A scripted check found no unlabeled buttons. NOT RUN: a manual keyboard and focus walkthrough, and any preview screenshots. The browser pane was hidden for part of the run, which pauses animation, so one reel replay could not be observed."
     }
   ]
 }
