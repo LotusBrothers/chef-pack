@@ -392,6 +392,23 @@
   .oreveal.bannered .tbanner { opacity: 1; transform: none; }
   .oreveal .bigcard .gc { box-shadow: 0 18px 40px rgba(0,0,0,.5); }
 
+  /* ---------- Opener: the pack takes most of the screen ---------- */
+  .opener .topbtns { position: fixed; top: calc(var(--safe-t) + 14px); left: 50%; transform: translateX(-50%); z-index: 3; }
+  .fastbtn { height: 36px; padding: 0 14px; border-radius: 99px; border: 0; background: rgba(255,255,255,.14); color: #fff; font-weight: 800; font-size: 13px; }
+  .fastbtn[aria-pressed="true"] { background: #ffc83d; color: #191919; }
+  .ostage { width: 300px; height: 404px; transform-origin: top center; transform: scale(var(--k, 1)); margin-bottom: calc((var(--k, 1) - 1) * 404px); }
+  .fw { top: 20px; width: 240px; margin-left: -120px; }
+  .tearline { top: 78px; width: 252px; margin-left: -126px; }
+  .spill { top: 78px; }
+  .otitle { margin-top: 44px; }
+  .rt { width: 150px; }
+  .oreel { height: 220px; }
+  .bigcard { width: min(82vw, 320px); }
+  .oreveal { width: min(92vw, 360px); height: 330px; }
+  .oreveal .rays, .oreveal .spark, .oreveal .spill { top: 165px; }
+  .opener .otest { margin-top: 44px; }
+  .opener .otest + .otitle { margin-top: 6px; }
+
   /* ---------- Wallet ---------- */
   .pagehead h1 { margin: 4px 0 0; font-size: 30px; font-weight: 900; letter-spacing: -.03em; }
   .pagehead p { color: var(--muted); margin: 4px 0 0; font-size: 15px; }
@@ -631,7 +648,7 @@ function setPending(a) { const all = pendingAll(); all[a.user_id] = a; try { loc
 function clearPending(a) { const all = pendingAll(); if (all[a.user_id]?.key === a.key) { delete all[a.user_id]; try { localStorage.setItem(PENDING_KEY, JSON.stringify(all)); } catch (e) {} } }
 
 let S, busy = false;
-const fresh = () => ({ page: "home", packId: "quick-bite", from: "home", cat: "all", q: "", slide: 3, muted: false,
+const fresh = () => ({ page: "home", packId: "quick-bite", from: "home", cat: "all", q: "", slide: 3, muted: false, fastSpin: false,
   catalog: null, catErr: "", user: null, pulls: [], wstate: "signedout", werr: "", note: "" });
 const packOf = id => [...(S?.catalog || []), ...DEMO, ...PACKS, FREE].find(p => p.id === id);
 
@@ -1017,7 +1034,7 @@ function reveal(p, res) {
   closeSheet();
   const o = document.createElement("div");
   o.className = "opener"; o.setAttribute("role", "dialog"); o.setAttribute("aria-modal", "true"); o.setAttribute("aria-label", "Open your pack");
-  o.innerHTML = `<button class="mute" id="mute" type="button" aria-label="${S.muted ? "Turn sound on" : "Mute sound"}">${icon(S.muted ? "muted" : "sound")}</button><button class="x" type="button" aria-label="Close" hidden>${icon("close")}</button>
+  o.innerHTML = `<button class="mute" id="mute" type="button" aria-label="${S.muted ? "Turn sound on" : "Mute sound"}">${icon(S.muted ? "muted" : "sound")}</button><span class="topbtns"><button class="fastbtn" id="fastSpin" type="button" aria-pressed="${S.fastSpin}">Fast spin</button></span><button class="x" type="button" aria-label="Close" hidden>${icon("close")}</button>
     ${res.api ? `<p class="otest">TEST MODE · NOT REDEEMABLE</p>` : ""}<p class="otitle">${esc(p.name)}</p>
     <div class="ostage ready" id="ostage" role="button" tabindex="0" aria-label="Rip the pack open">
       <span class="spill" aria-hidden="true"></span>
@@ -1032,6 +1049,10 @@ function reveal(p, res) {
     <p class="ohint" id="ohint">Tap or swipe to rip it open</p><div class="ores" id="ores"></div>`;
   document.body.appendChild(o);
   const st = o.querySelector("#ostage"), reel = o.querySelector("#oreel"), strip = o.querySelector("#ostrip"), rv = o.querySelector("#oreveal");
+  // The sealed pack fills most of the screen: scale its 300×404 stage to the viewport.
+  const fit = () => st.style.setProperty("--k", Math.max(.8, Math.min(innerWidth * .92 / 300, (innerHeight - 170) / 404, 2.2)).toFixed(3));
+  fit(); addEventListener("resize", fit);
+  o.querySelector("#fastSpin").onclick = e => { e.stopPropagation(); S.fastSpin = !S.fastSpin; e.currentTarget.setAttribute("aria-pressed", S.fastSpin); };
   o.querySelector(".x").onclick = () => { o.remove(); if (S.page === "pack") render(); };
   o.querySelector("#mute").onclick = e => { e.stopPropagation(); S.muted = !S.muted; e.currentTarget.innerHTML = icon(S.muted ? "muted" : "sound"); e.currentTarget.setAttribute("aria-label", S.muted ? "Turn sound on" : "Mute sound"); };
   const fast = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -1048,7 +1069,7 @@ function reveal(p, res) {
     reel.hidden = false; o.querySelector("#ohint").textContent = "";
     const pitch = strip.firstElementChild.getBoundingClientRect().width + 10, view = reel.clientWidth;
     const target = WIN * pitch + (pitch - 10) / 2 - view / 2 + (Math.random() - .5) * pitch * .6;
-    const over = Math.min(26, pitch * .2), D = fast ? 1 : 5600, SETTLE = fast ? 1 : 420;
+    const over = Math.min(26, pitch * .2), D = fast ? 1 : S.fastSpin ? 1900 : 5600, SETTLE = fast ? 1 : S.fastSpin ? 240 : 420;
     let t0 = null, lastIdx = -1, lastTick = 0;
     const place = x => { strip.style.transform = `translate(${-x}px, -50%)`; };
     const frame = now => {
