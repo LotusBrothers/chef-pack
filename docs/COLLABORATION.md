@@ -35,6 +35,9 @@ Branches isolate commits; they do not enforce file permissions. Scope CI plus re
 ## Current scope and future backend
 
 UI: index.html, prototype/, assets/, frontend/, tests/frontend/.
+Handoff artifacts: feedback.md and reports/frontend/. Every frontend PR updates them under docs/FRONTEND-HANDOFF.md.
+The trusted Frontend scope CI job also validates the report. It rejects blocked, stale or incomplete reports;
+it cannot prove the truth of screenshots or manual test claims. Tyler reviews that evidence.
 Tyler owns all remaining paths and updates the explicit allowlist when the frontend moves. In particular, data/tiers.json is legacy odds data and stays under technical review.
 
 Current prototype needs no package installation/build. Browser-check the changed UI. The repository has no backend or API integration tests yet; introduce those alongside backend work rather than implying this branch setup verifies them.
