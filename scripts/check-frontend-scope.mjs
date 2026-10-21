@@ -6,7 +6,7 @@ const git = (...args) => execFileSync('git', args, { encoding: 'utf8' });
 const mergeBase = git('merge-base', base, head).trim();
 // Disable rename detection so moving backend files into UI paths cannot hide deletion.
 const paths = git('diff', '--no-renames', '--name-only', '-z', mergeBase, head).split('\0').filter(Boolean);
-const allowed = p => p === 'index.html' || ['prototype/', 'assets/', 'frontend/', 'tests/frontend/'].some(prefix => p.startsWith(prefix));
+const allowed = p => ['index.html', 'feedback.md'].includes(p) || ['prototype/', 'assets/', 'frontend/', 'tests/frontend/', 'reports/frontend/'].some(prefix => p.startsWith(prefix));
 const blocked = paths.filter(p => !allowed(p));
 if (blocked.length) {
   console.error('Frontend scope includes files owned by Tyler:\n' + blocked.map(p => JSON.stringify(p)).join('\n'));

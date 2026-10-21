@@ -16,10 +16,10 @@ Verification:
 - Rolled-back database tests verified idempotency, server pricing, cross-user read isolation, conflicting-key rejection, and anonymous execution denial.
 - Supabase security advisors returned no lints after the mock RPC migration.
 - Node API/health tests pass; CI runs them for backend pushes and PRs.
-- Vercel deployment reached READY. Its catalog request currently returns database_credentials_rejected (upstream HTTP 401). Direct queries using this project's current publishable key succeed. Correct the runtime key in Vercel, then redeploy and repeat the catalog check. The connected Vercel account cannot read or update environment settings (403).
+- Vercel deployment reached READY. Its /api/packs and /api/health now return 200; catalog contains the three Supabase packs. The runtime credential mismatch is resolved. The connected Vercel account still cannot read or update environment settings (403).
 
 Connection and implementation work remaining:
-- Verify Vercel catalog access after the runtime key correction.
+- Integrate Justin's UI using docs/FRONTEND-HANDOFF.md and evaluate with docs/ACCEPTANCE.md.
 - Confirm Git linkage for automatic deploys; manual Git-source deployments work.
 - Complete browser signup/login integration and end-to-end tests using actual sessions.
 - Stripe access is unavailable. Add an isolated sandbox and implement Checkout plus signed, idempotent payment webhooks separately.

@@ -10,7 +10,7 @@ Tyler (@ctbedford) is the technical maintainer. Justin develops UI on `frontend/
 
 ## Start and synchronize
 
-1. Read root AGENTS.md and docs/COLLABORATION.md. Verify origin is this repository, inspect the current branch, status, and remote refs. Never overwrite dirty work or another developer's checkout.
+1. Read root AGENTS.md, docs/COLLABORATION.md, docs/FRONTEND-HANDOFF.md, docs/ACCEPTANCE.md, and feedback.md. Verify origin is this repository, inspect the current branch, status, and remote refs. Never overwrite dirty work or another developer's checkout.
 2. Fetch origin. In a clean checkout, switch to frontend/justin tracking origin/frontend/justin. If absent, create it from origin/main and publish only when pushing is authorized. Use an isolated worktree if this checkout contains backend work.
 3. Fast-forward from origin/frontend/justin, then merge origin/main into the frontend branch. Do this before starting a task, before every handoff/push, and again when Tyler requests an update. Use ordinary merges to preserve shared history; never force push, reset shared history, or rebase the shared branch.
 4. If merging conflicts, resolve only clearly understood UI conflicts. Stop the merge and report affected files to Tyler for backend, contract, dependency, or infrastructure conflicts. Never choose ours/theirs globally or delete backend changes to make UI work. Preserve existing local work; abort only a merge you started in a clean checkout.
@@ -18,7 +18,7 @@ Tyler (@ctbedford) is the technical maintainer. Justin develops UI on `frontend/
 
 ## Scope
 
-Current UI paths: index.html, prototype/, assets/, frontend/, tests/frontend/.
+Current UI paths: index.html, prototype/, assets/, frontend/, tests/frontend/. Handoff artifacts also allowed: feedback.md and reports/frontend/.
 Everything outside these paths needs Tyler's explicit scope approval and a separately reviewed change. In particular, do not edit data/, docs/PRODUCT.md, API schemas, backend/server/api/supabase/database code, migrations, .github/, skill files, dependencies, lockfiles, or environment settings as part of a frontend task. If a future frontend framework adds paths, Tyler updates the scope check and this skill first.
 
 Use approved backend responses. Put temporary UI mocks in frontend code, label them as demo-only, and keep real credentials, production records, balances, payment decisions, odds, and gift-card fulfillment out of the browser. If an API is missing, describe the required request/response for Tyler rather than silently changing the contract.
@@ -31,3 +31,6 @@ Use approved backend responses. Put temporary UI mocks in frontend code, label t
 - Push only frontend/justin (or a Tyler-approved frontend/<topic> branch) when the user has authorized publishing. Never push main, merge a PR, enable auto-merge, trigger production deployment, or edit protections on Justin's behalf.
 - Open/update a PR to main when requested; include UI changes, screenshots where useful, tests, origin/main SHA included, and backend dependencies. Tyler reviews and merges. Later main changes require another synchronization and passing checks.
 - Report branch, commit, PR link, checks, and unresolved integration needs. Do not claim branch protections or skill installation on Justin's computer were verified unless actually checked.
+- Follow docs/ACCEPTANCE.md. Commit tested code before creating the report commit. Update feedback.md and reports/frontend/current.json with current main SHA, tested code SHA, combined preview, per-case evidence, and precise blockers/owners. Run node scripts/check-frontend-report.mjs origin/main HEAD after committing reports. Keep a blocked integration PR in draft.
+- For an integration handoff, the golden browser journey must pass on the combined preview. The API script alone cannot establish a browser pass. Use visual scope only for changes that do not alter API/session/order/wallet behavior and explain unrun integration cases.
+- Communication is the PR description plus checked-in feedback. Include the report and evidence links in the PR and final response. Do not send external messages or merge the PR; Tyler decides integration.
