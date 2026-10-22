@@ -451,6 +451,15 @@
   .cloche-study .serving-plate,.cloche-study.is-revealed .serving-plate {width:min(90vw,340px);height:80px;bottom:8px;}
   .cloche-study .rip-touch {display:none;}
 
+
+  .serving-canvas {position:absolute;inset:0;width:100%;height:100%;z-index:5;touch-action:pan-y;outline:none;}
+  .serving-canvas:focus-visible {outline:1px solid #e3bd83;outline-offset:2px;border-radius:18px;}
+  .has-3d .rip-scene>.serving-plate,.has-3d .rip-scene>.serving-steam,.has-3d .rip-scene>.card-ground-shadow,.has-3d .rip-scene>.rip-halo,.has-3d .rip-scene>.rip-floor,.has-3d .rip-card-shell,.has-3d .rip-shards {visibility:hidden;pointer-events:none;}
+  .has-3d .rip-pack,.has-3d.game-entry:not(.is-revealed) .rip-pack {inset:0;width:100%;height:100%;aspect-ratio:auto;z-index:6;opacity:1!important;transform:none!important;}
+  .has-3d .rip-pack>* {visibility:hidden;}
+  .has-3d .rip-pack:focus-visible {outline:none;}
+  .has-3d .rip-pack:focus-visible::after {content:"Press Enter to lift";position:absolute;bottom:0;left:50%;transform:translateX(-50%);font-size:10px;color:#ddbf93;}
+
   /* ---------- Wallet ---------- */
   .pagehead { padding-top: 6px; }
   .pagehead h1 { margin: 0; font: 700 32px/1.1 var(--display); letter-spacing: -.035em; }
@@ -1025,12 +1034,12 @@ function stopContact() { for (const source of contactSources) { try { source.sto
 function sfx(kind, tier = 0, dur = 1) {
   if (S.muted) return; const a = audio(); if (!a) return; const now = a.currentTime;
   try {
-    if (kind === "impact") {
+    if (["impact", "plate", "cover"].includes(kind)) {
       // Original rendered confirmation cue; no realtime synthesis.
-      const buffer = rewardBuffers.get(selectedReward);
+      const buffer = rewardBuffers.get(kind === "plate" ? "quiet-tick" : kind === "cover" ? "warm-confirm" : selectedReward);
       if (!buffer || a.state !== "running") return;
       const source = a.createBufferSource(), gain = a.createGain();
-      source.buffer = buffer; gain.gain.value = .8;
+      source.buffer = buffer; gain.gain.value = kind === "plate" ? .42 : kind === "cover" ? .28 : .8;
       source.connect(gain).connect(a.destination); contactSources.add(source);
       source.onended = () => { contactSources.delete(source); source.disconnect(); gain.disconnect(); };
       source.start(now); return true;
@@ -1215,7 +1224,20 @@ function reveal(p, res) {
     o.querySelectorAll("[data-study]").forEach(button => button.onclick = () => { if (phase === "opening") return; selectedCard = button.dataset.study; dispose(); previewOpening(p, res.landing); });
   } else prepareContact();
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  let phase = "ready", pointer = null;
+  let phase = "ready", pointer = null, stage3d = null;
+  const sceneReady = res.preview ? import("./scene3d.mjs").then(module => module.createServingScene(q(".rip-scene"), {
+    brand: CARD_STUDIES.find(b => b.id === selectedCard), value: money(res.value || 15), reduced,
+    contact(kind) {
+      if (phase === "closed") return;
+      const played = sfx(kind === "confirm" ? "impact" : kind);
+      o.dataset[kind + "Contacts"] = String(+(o.dataset[kind + "Contacts"] || 0) + 1);
+      o.dataset[kind + "Playback"] = played ? "started" : "silent";
+      if (kind === "confirm") { buzz(10); q(".reward-status").textContent = played ? "Played: " + REWARD_SOUNDS.find(s => s.id === selectedReward).name + " · choose another to compare" : "Sound unavailable or muted"; }
+    }
+  })).then(stage => {
+    if (phase === "closed") { stage.dispose(); return null; }
+    stage3d = stage; o.classList.add("has-3d"); o.dataset.renderer = "webgl"; return stage;
+  }).catch(error => { o.dataset.renderer = "css-fallback"; o.dataset.rendererError = error.message; console.warn("3D scene fallback:", error.message); return null; }) : Promise.resolve(null);
   const animations = new Set();
   function animate(el, frames, options) {
     if (!el.animate) { Object.assign(el.style, frames[frames.length - 1]); return Promise.resolve(); }
@@ -1225,7 +1247,7 @@ function reveal(p, res) {
   function cancelAnimations() { for (const a of animations) a.cancel(); animations.clear(); }
   function dispose() {
     if (phase === "closed") return;
-    phase = "closed"; cancelAnimations(); cancelAnimationFrame(tiltFrame); stopContact(); busy = false;
+    phase = "closed"; stage3d?.dispose(); cancelAnimations(); cancelAnimationFrame(tiltFrame); stopContact(); busy = false;
     document.removeEventListener("keydown", onKey, true);
     document.removeEventListener("visibilitychange", onVisibility);
     o.remove(); if (app) app.inert = wasInert;
@@ -1236,7 +1258,7 @@ function reveal(p, res) {
   o.closeOpening = dispose;
   function finish() {
     if (phase === "closed" || phase === "revealed") return;
-    phase = "revealed"; cancelAnimations(); busy = false;
+    phase = "revealed"; stage3d?.finish(); cancelAnimations(); busy = false;
     pack.hidden = true;
     if (q(".serving-plate")) q(".serving-plate").style.opacity = "1";
     card.style.opacity = "1"; card.style.transform = "none";
@@ -1245,6 +1267,7 @@ function reveal(p, res) {
     q("#ripTitle").textContent = res.landing ? "Freshly revealed." : res.preview ? "The reveal, reimagined." : res.free ? "Dinner, decided." : "Your card is here.";
     o.classList.add("is-revealed"); tilt.tabIndex = 0; tilt.setAttribute("aria-label", "Inspect card: drag to tilt or use arrow keys");
     if (res.preview) { o.querySelectorAll("[data-reward]").forEach(b => b.disabled = !rewardBuffers.has(b.dataset.reward)); o.querySelectorAll("[data-study]").forEach(b => b.disabled = false); }
+    if (res.preview && q(".reward-status").textContent.startsWith("Playing:")) q(".reward-status").textContent = "Animation skipped · select a sound to replay";
     showResult(res, o); q("#ores").hidden = false;
     if (!reduced) animate(q("#ores"), [{ opacity: 0, transform: "translateY(10px)" }, { opacity: 1, transform: "none" }], { duration: 220, easing: "ease-out" });
     q("#ores button")?.focus({ preventScroll: true });
@@ -1256,6 +1279,7 @@ function reveal(p, res) {
     if (res.preview) { o.querySelectorAll("[data-reward], [data-study]").forEach(b => b.disabled = true); q(".reward-status").textContent = "Playing: " + REWARD_SOUNDS.find(s => s.id === selectedReward).name; }
     audio(); prepareContact();
     if (reduced) { const played = sfx("impact"); if (res.preview) q(".reward-status").textContent = played ? "Played: " + REWARD_SOUNDS.find(s => s.id === selectedReward).name + " · reduced motion" : "Sound unavailable or muted"; finish(); return; }
+    if (stage3d) { await stage3d.reveal(); if (phase === "opening") finish(); return; }
     if (res.preview) {
       const lid = q(".rip-body");
       turn.style.transform = "rotateY(180deg)";
@@ -1342,23 +1366,32 @@ function reveal(p, res) {
     }
   }
   for (const event of ["pointerup", "pointercancel", "lostpointercapture"]) pack.addEventListener(event, releaseSeal);
-  async function serve() {
-    if (!res.preview || reduced) { if (q(".serving-plate")) q(".serving-plate").style.opacity = "1"; return; }
-    phase = "arriving"; pack.disabled = true;
-    o.querySelectorAll("[data-reward], [data-study]").forEach(b => b.disabled = true);
-    q(".reward-status").textContent = "Your covered plate is arriving…";
-    q(".rip-hint").textContent = "Something good is being served.";
-    pack.style.opacity = "0";
-    await animate(q(".serving-plate"), [{ opacity: 0, transform: "translateY(-150px) scale(.9)" }, { opacity: 1, transform: "translateY(5px) scale(1.04)", offset: .75 }, { opacity: 1, transform: "none" }], { duration: 430, easing: "cubic-bezier(.2,.7,.25,1)" });
-    if (phase !== "arriving") return;
-    await animate(pack, [{ opacity: 0, transform: "translateY(-190px) rotate(5deg)" }, { opacity: 1, offset: .2 }, { opacity: 1, transform: "translateY(6px) rotate(-1deg)", offset: .75 }, { opacity: 1, transform: "none" }], { duration: 470, easing: "cubic-bezier(.2,.7,.25,1)" });
-    if (phase !== "arriving") return;
+  function readyToOpen() {
+    if (phase === "closed") return;
     phase = "ready"; pack.disabled = false; pack.style.opacity = "1";
     pack.focus({ preventScroll: true });
     q(".rip-hint").textContent = "Tap the silver cover to reveal";
     o.querySelectorAll("[data-reward]").forEach(b => b.disabled = !rewardBuffers.has(b.dataset.reward));
     o.querySelectorAll("[data-study]").forEach(b => b.disabled = false);
     q(".reward-status").textContent = "Selected: " + REWARD_SOUNDS.find(s => s.id === selectedReward).name;
+  }
+  async function serve() {
+    if (!res.preview) return;
+    phase = "arriving"; pack.disabled = true;
+    o.querySelectorAll("[data-reward], [data-study]").forEach(b => b.disabled = true);
+    q(".reward-status").textContent = "Your covered plate is arriving…";
+    q(".rip-hint").textContent = "Something good is being served.";
+    const stage = await sceneReady;
+    if (phase === "closed") return;
+    if (stage) { await stage.serve(); readyToOpen(); return; }
+    if (reduced) { q(".serving-plate").style.opacity = "1"; readyToOpen(); return; }
+    pack.style.opacity = "0";
+    await animate(q(".serving-plate"), [{ opacity: 0, transform: "translateY(-150px) scale(.9)" }, { opacity: 1, transform: "translateY(5px) scale(1.04)", offset: .75 }, { opacity: 1, transform: "none" }], { duration: 430, easing: "cubic-bezier(.2,.7,.25,1)" });
+    if (phase !== "arriving") return;
+    sfx("plate");
+    await animate(pack, [{ opacity: 0, transform: "translateY(-190px) rotate(5deg)" }, { opacity: 1, offset: .2 }, { opacity: 1, transform: "translateY(6px) rotate(-1deg)", offset: .75 }, { opacity: 1, transform: "none" }], { duration: 470, easing: "cubic-bezier(.2,.7,.25,1)" });
+    if (phase !== "arriving") return;
+    sfx("cover"); readyToOpen();
   }
   const arrival = serve();
   o.startOpening = async () => { await arrival; return rip(); };
