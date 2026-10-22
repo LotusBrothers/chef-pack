@@ -438,6 +438,7 @@
 
 
   .victory-cascade { position:fixed; inset:0; z-index:10000; pointer-events:none; overflow:hidden; perspective:850px; contain:layout paint; }
+  .restaurant-preview-grid [data-restaurant-preview="olive-garden"] img {background:#fff;padding:7px;border-radius:9px;}
   .experience-grid {display:grid;grid-template-columns:minmax(0,1fr);gap:16px;}
   .experience-tile { background:#181615; border:1px solid #40372e; border-radius:24px; overflow:hidden; color:#f6e9d5; min-width:0; flex:1; }
   .experience-tile>button { width:100%; border:0; color:inherit; background:radial-gradient(ellipse at 50% 65%,#70503255,transparent 70%); padding:18px 12px 14px; }
@@ -1054,7 +1055,7 @@ async function loadRestaurantDirectory() {
     if (!Array.isArray(rows) || rows.some(r=>typeof r.name !== "string" || r.name.length > 100 || (r.card_art !== null && !/^[a-z0-9-]+\.(png|svg)$/.test(r.card_art)) || !/^#[0-9a-f]{6}$/i.test(r.color) || !/^[a-z0-9-]+$/.test(r.id) || !["quick-bite","sit-down","treat-yourself"].includes(r.tier_id))) throw new Fail(502,"bad_restaurant_directory");
     restaurantDirectory = rows;
     const existing = new Map(CARD_STUDIES.map(b=>[b.id,b]));
-    CARD_STUDIES.splice(0,CARD_STUDIES.length,...rows.map(r=>({...existing.get(r.id),id:r.id,name:r.name,tier:r.tier_id,art:r.card_art,bg:r.color,ink:"#ffffff",orbit:existing.get(r.id)?.orbit || "#24201c",accent:existing.get(r.id)?.accent || "#e7c88e"})));
+    CARD_STUDIES.splice(0,CARD_STUDIES.length,...rows.map(r=>({...existing.get(r.id),id:r.id,name:r.name,tier:r.tier_id,art:r.card_art,bg:r.color,ink:"#ffffff",orbit:existing.get(r.id)?.orbit || (r.id === "olive-garden" ? "#ffffff" : "#24201c"),accent:existing.get(r.id)?.accent || "#e7c88e"})));
     directoryError = "";
   } catch(error) { directoryError = "Restaurant directory unavailable. Existing local artwork previews remain available."; }
   if (S.page === "browse") renderPacks();

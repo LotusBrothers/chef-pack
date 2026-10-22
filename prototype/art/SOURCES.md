@@ -1,5 +1,16 @@
 # Brand study
 
+## Complete nine-brand directory
+
+The four remaining logos were retrieved directly from their official restaurant websites:
+
+- Chili's: https://green.chilis.com/assets/chilis-logo.svg — linked by https://www.chilis.com/; stored as chilis.svg.
+- Olive Garden: https://media.olivegarden.com/images/OG_Redesign_Assets/OG_Logo.svg — linked by https://www.olivegarden.com/; stored as olive-garden.svg.
+- Ruth's Chris Steak House: https://media.ruthschris.com/images/assets/logo.png — linked by https://www.ruthschris.com/; stored as ruths-chris.png.
+- The Capital Grille: https://media.thecapitalgrille.com/images/site/responsive/logo.png — linked by https://www.thecapitalgrille.com/; stored as capital-grille.png. This clean, higher-resolution logo is used instead of the decorative desktop banner variant.
+
+Original assets are retained without modifying the marks. All nine directory brands now have local logo artwork. These identify labeled non-redeemable sample designs; they do not establish affiliation or provider inventory.
+
 - Little Caesars: logo from its official franchise site, https://franchise.littlecaesars.com/wp-content/themes/brandjo/img/logo-main.png. Stored as little-caesars.png for the labeled, non-redeemable design sample.
 
 Burger King logo: https://commons.wikimedia.org/wiki/File:Burger_King_2020.svg
