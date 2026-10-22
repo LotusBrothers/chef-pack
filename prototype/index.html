@@ -985,9 +985,9 @@ async function takeRedirect() {
 /* ---------- Sound and haptics (only after the viewer taps; muted by the speaker button) ---------- */
 const TIER_COLOR = ["#ffffff", "#2fd27a", "#4f8dff", "#ffc83d"];
 const REWARD_SOUNDS = [
-  { id: "bright-unlock", name: "Bright unlock" }, { id: "coin-cascade", name: "Coin cascade" },
-  { id: "level-up", name: "Level up" }, { id: "warm-glow", name: "Warm glow" },
-  { id: "arcade-win", name: "Arcade win" }, { id: "grand-reveal", name: "Grand reveal" }
+  { id: "soft-confirm", name: "Soft confirm" }, { id: "clear-confirm", name: "Clear confirm" },
+  { id: "warm-confirm", name: "Warm confirm" }, { id: "glass-confirm", name: "Glass confirm" },
+  { id: "gentle-confirm", name: "Gentle confirm" }, { id: "quiet-tick", name: "Quiet tick" }
 ];
 const CARD_STUDIES = [
   { id: "mcdonalds", name: "McDonald’s", bg: "#c92724", ink: "#fff3d0", orbit: "#bb201e", accent: "#ffce25" },
@@ -995,7 +995,7 @@ const CARD_STUDIES = [
   { id: "taco-bell", name: "Taco Bell", bg: "#682dd0", ink: "#ffffff", orbit: "#ffffff", accent: "#d6b7ff" },
   { id: "slim-chickens", name: "Slim Chickens", bg: "#b21f32", ink: "#ffffff", orbit: "#ffffff", accent: "#f0d5b4" }
 ];
-let selectedReward = "bright-unlock", selectedCard = "mcdonalds";
+let selectedReward = "soft-confirm", selectedCard = "mcdonalds";
 let AC = null;
 const rewardBuffers = new Map(), rewardLoads = new Map(), contactSources = new Set();
 function audio(resume = true) {
@@ -1016,7 +1016,7 @@ function prepareContact(id = selectedReward) {
   rewardLoads.set(id, pending); return pending;
 }
 function comparisonControls() {
-  return '<section class="reward-compare" aria-label="Reward sound comparison"><p>Tap a sound. The opening plays automatically.</p><div class="reward-grid">' + REWARD_SOUNDS.map((sound,i) => '<button type="button" data-reward="' + sound.id + '" disabled aria-pressed="' + (sound.id === selectedReward) + '"><span>' + (i+1) + '</span>' + sound.name + '</button>').join('') + '</div><small class="reward-status" role="status">Loading reward sounds…</small></section>';
+  return '<section class="reward-compare" aria-label="Confirmation sound comparison"><p>Tap a sound. The opening plays automatically.</p><div class="reward-grid">' + REWARD_SOUNDS.map((sound,i) => '<button type="button" data-reward="' + sound.id + '" disabled aria-pressed="' + (sound.id === selectedReward) + '"><span>' + (i+1) + '</span>' + sound.name + '</button>').join('') + '</div><small class="reward-status" role="status">Loading confirmation sounds…</small></section>';
 }
 function brandControls() {
   return '<div class="brand-choices" role="group" aria-label="Choose card artwork">' + CARD_STUDIES.map(brand => '<button type="button" data-study="' + brand.id + '" aria-pressed="' + (brand.id === selectedCard) + '">' + brand.name + '</button>').join('') + '</div>';
@@ -1026,7 +1026,7 @@ function sfx(kind, tier = 0, dur = 1) {
   if (S.muted) return; const a = audio(); if (!a) return; const now = a.currentTime;
   try {
     if (kind === "impact") {
-      // Pre-rendered CC0 reward mix; no golf sample or realtime synthesis.
+      // Original rendered confirmation cue; no realtime synthesis.
       const buffer = rewardBuffers.get(selectedReward);
       if (!buffer || a.state !== "running") return;
       const source = a.createBufferSource(), gain = a.createGain();

@@ -27,3 +27,9 @@ The golf sample above is historical and no longer referenced by playback. All si
 - Grand reveal: confirmation_001 and confirmation_002 over impactBell_heavy_001 from Kenney Impact Sounds (https://kenney.nl/assets/impact-sounds), also CC0.
 
 All mixes are rendered offline to mono 32kHz PCM WAV, boundary fades, peak capped at 0.70 (-3.1dBFS), RMS target 0.13 where headroom allows. Browser decoding is cached per file; one source plays at the reveal. The six mixes total approximately 179KB. They are audition candidates, not a claim of subjective quality.
+
+## Active restrained confirmation study
+
+The six *-confirm / quiet-tick files are original offline-rendered Chef Pack audition candidates. Sine-based damped resonances with a rounded1.6ms attack, fast-decaying upper partials, at most two overlapping tones, and160–290ms total duration. Target RMS0.085 with peak capped0.48; mono32kHz PCM. No sampled Apple sound or SND asset was copied. Prior game mixes and golf are historical files and no longer referenced.
+
+Research: Apple Explore immersive sound design (https://developer.apple.com/videos/play/wwdc2023/10271/) recommends subtle cues fitting visuals and transition timing; SND01 designer explains sine-based, small-speaker-focused cues at https://snd.dev/. Exact frequencies/durations are audition hypotheses rather than a universal prescription.
