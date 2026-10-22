@@ -94,11 +94,17 @@ export async function createServingScene(host, { brand, value, reduced = false, 
     for(let i=0;i<4;i++){ const d=dt/4; yawV+=(100*(yawTarget-yaw)-19*yawV)*d; yaw+=yawV*d; pitchV+=(100*(pitchTarget-pitch)-19*pitchV)*d; pitch+=pitchV*d; }
     if(animation){ const t=(now-animation.start)/1000;
       if(animation.kind==='serve'){
-        const settle = (t,delay,height) => t<delay ? height : height*(1-spring(t-delay,15,.74));
+        const settle = (t,delay,height) => {
+          const elapsed=t-delay, hit=Math.sqrt(2*height/18);
+          if(elapsed<0)return height;
+          if(elapsed<hit)return height-9*elapsed*elapsed;
+          const after=elapsed-hit;
+          return .028*Math.abs(Math.sin(after*24))*Math.exp(-11*after);
+        };
         plateRoot.position.y=settle(t,0,.85); lidRoot.position.y=settle(t,.2,1.2);
         lidRoot.rotation.z=.035*Math.exp(-5*Math.max(0,t-.2))*Math.sin(Math.max(0,t-.2)*17);
-        if(t>=.29&&!animation.plate){animation.plate=true;contact('plate');}
-        if(t>=.49&&!animation.lid){animation.lid=true;contact('cover');}
+        if(t>=Math.sqrt(2*.85/18)&&!animation.plate){animation.plate=true;contact('plate');}
+        if(t>=.2+Math.sqrt(2*1.2/18)&&!animation.lid){animation.lid=true;contact('cover');}
       }else{
         const lift=ease(t/.76); zoom=1-.14*ease((t-.45)/.8); lidRoot.position.set(-.8*lift,1.9*lift,-.35*lift); lidRoot.rotation.set(.1*lift,0,-.28*lift); lidRoot.visible=t<.96;
         const rise=clamp(spring(t-.36,10.5,.79),0,1.035);
