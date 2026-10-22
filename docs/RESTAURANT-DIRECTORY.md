@@ -18,6 +18,6 @@ The additive migration is applied to `chef-pack-dev`. Its filename is aligned wi
 
 ## Guest welcome coin
 
-The user proposed a guest coin arrival instead of a restaurant card on first visit. Whether it is demo currency or actual redeemable restaurant credit is still an open product decision. This migration adds no guest balances, grants, randomness, paid chances, redemption or cash value. Do not use browser state as proof of funds or award inventory. The frontend can connect this directory independently of that decision.
+The user proposed a guest coin arrival instead of a restaurant card on first visit and clarified that its eventual value should redeem for gift cards rather than cash. Whether purchased credits guarantee a gift-card value or fund chance-based rewards remains unanswered. This migration adds no guest balances, grants, randomness, paid chances, redemption or cash value. Do not use browser state as proof of funds or award inventory. A welcome grant needs server confirmation and an actual funding/fulfillment integration before it can be represented as spendable.
 
 The existing frontend integration PR still needs its registered-account golden journey before merge. This additive metadata backend change is separate from that branch.
