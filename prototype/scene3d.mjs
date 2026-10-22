@@ -22,7 +22,7 @@ async function cardTexture(brand, value) {
   c.fillStyle = brand.ink; c.font = 'bold 15px system-ui'; c.fillText('CHEF PACK', 32, 47);
   c.textAlign = 'right'; c.fillText('DESIGN SAMPLE', 480, 47); c.textAlign = 'center';
   c.fillStyle = brand.orbit; c.beginPath(); c.arc(256, 247, 139, 0, Math.PI * 2); c.fill();
-  const image = new Image(); image.src = new URL('./art/' + brand.id + '.svg', import.meta.url).href;
+  const image = new Image(); image.src = new URL('./art/' + (brand.art || brand.id + '.svg'), import.meta.url).href;
   try {
     await image.decode(); const k = Math.min(220 / image.naturalWidth, 220 / image.naturalHeight);
     c.drawImage(image, 256 - image.naturalWidth * k / 2, 247 - image.naturalHeight * k / 2, image.naturalWidth * k, image.naturalHeight * k);
@@ -40,7 +40,7 @@ async function cardTexture(brand, value) {
 export async function createServingScene(host, { brand, value, reduced = false, contact = () => {} }) {
   const renderer = new T.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'low-power' });
   renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.5));
-  renderer.setClearColor(0x000000, 0); renderer.toneMapping = T.ACESFilmicToneMapping; renderer.toneMappingExposure = .9;
+  renderer.setClearColor(0x000000, 0); renderer.toneMapping = T.ACESFilmicToneMapping; renderer.toneMappingExposure = .75;
   renderer.shadowMap.enabled = true; renderer.shadowMap.type = T.PCFSoftShadowMap;
   const canvas = renderer.domElement; canvas.className = 'serving-canvas';
   canvas.setAttribute('role', 'img'); canvas.setAttribute('aria-label', 'Three dimensional covered plate. After revealing, drag to inspect the restaurant card.');
@@ -49,15 +49,15 @@ export async function createServingScene(host, { brand, value, reduced = false, 
   const cameraHome = new T.Vector3(2.35, 2.8, 5.1), cameraTarget = new T.Vector3(0, .65, 0);
   camera.position.copy(cameraHome); camera.lookAt(cameraTarget);
   const pmrem = new T.PMREMGenerator(renderer), room = new RoomEnvironment();
-  const environment = pmrem.fromScene(room, .04); scene.environment = environment.texture;
+  const environment = pmrem.fromScene(room, .04); scene.environment = environment.texture; scene.environmentIntensity = .55;
   room.dispose(); pmrem.dispose();
-  scene.add(new T.AmbientLight(0xffffff, .3));
-  const key = new T.DirectionalLight(0xfff0d7, 1.6); key.position.set(-3, 6, 4); key.castShadow = true;
+  scene.add(new T.AmbientLight(0xffffff, .12));
+  const key = new T.DirectionalLight(0xfff4e6, 1.1); key.position.set(-3, 6, 4); key.castShadow = true;
   key.shadow.mapSize.set(512, 512); Object.assign(key.shadow.camera, { left: -2.5, right: 2.5, top: 3, bottom: -2, near: .1, far: 16 });
   key.shadow.bias = -.0005; key.shadow.normalBias = .02; scene.add(key);
-  const fill = new T.DirectionalLight(0xc6deff, 1); fill.position.set(4, 2, -3); scene.add(fill);
-  const metal = new T.MeshStandardMaterial({ color: 0xb7c2ca, metalness: 1, roughness: .16, envMapIntensity: 1.4 });
-  const porcelain = new T.MeshStandardMaterial({ color: 0xfffcf4, roughness: .22, metalness: .02 });
+  const fill = new T.DirectionalLight(0xdce8ff, .35); fill.position.set(4, 2, -3); scene.add(fill);
+  const metal = new T.MeshStandardMaterial({ color: 0xd3d8dc, metalness: 1, roughness: .23, envMapIntensity: 1.1 });
+  const porcelain = new T.MeshStandardMaterial({ color: 0xf0ede6, roughness: .35, metalness: 0 });
   const plateRoot = new T.Group(), lidRoot = new T.Group(); scene.add(plateRoot, lidRoot);
   const platePoints = [[.001,.055],[.5,.055],[.95,.06],[1.12,.075],[1.22,.13],[1.38,.18],[1.57,.17],[1.62,.145],[1.58,.115],[1.35,.105],[1.12,.035],[.3,.018],[.001,.018]].map(p => new T.Vector2(...p));
   const dish = new T.Mesh(new T.LatheGeometry(platePoints.reverse(), 64), porcelain); dish.castShadow = true; dish.receiveShadow = true; plateRoot.add(dish);
@@ -73,7 +73,8 @@ export async function createServingScene(host, { brand, value, reduced = false, 
   shape.moveTo(-w/2+r,0); shape.lineTo(w/2-r,0); shape.quadraticCurveTo(w/2,0,w/2,r); shape.lineTo(w/2,h-r); shape.quadraticCurveTo(w/2,h,w/2-r,h); shape.lineTo(-w/2+r,h); shape.quadraticCurveTo(-w/2,h,-w/2,h-r); shape.lineTo(-w/2,r); shape.quadraticCurveTo(-w/2,0,-w/2+r,0);
   const edge = new T.MeshStandardMaterial({ color: brand.accent, metalness: .35, roughness: .35 });
   const thickness = new T.Mesh(new T.ExtrudeGeometry(shape, { depth: .022, bevelEnabled: false, curveSegments: 5 }), edge); thickness.position.z = -.011; thickness.castShadow = true; card.add(thickness);
-  const front = new T.Mesh(new T.PlaneGeometry(w,h), new T.MeshStandardMaterial({ map: texture, roughness: .28, metalness: .08, transparent: true, alphaTest: .5 })); front.position.set(0,h/2,.013); card.add(front);
+  // Preserve printed brand colors independently of the reflective serving ware.
+  const front = new T.Mesh(new T.PlaneGeometry(w,h), new T.MeshBasicMaterial({ map: texture, toneMapped: false, transparent: true, alphaTest: .5 })); front.position.set(0,h/2,.013); card.add(front);
   const back = new T.Mesh(new T.PlaneGeometry(w,h), new T.MeshStandardMaterial({ color: 0x262323, roughness: .35, metalness: .2 })); back.position.set(0,h/2,-.013); back.rotation.y = Math.PI; card.add(back);
   const steamCanvas = document.createElement('canvas'); steamCanvas.width = 64; steamCanvas.height = 128;
   const sc = steamCanvas.getContext('2d'), grad = sc.createRadialGradient(32,64,0,32,64,60); grad.addColorStop(0,'#ffffff70'); grad.addColorStop(1,'#ffffff00'); sc.fillStyle = grad; sc.fillRect(0,0,64,128);

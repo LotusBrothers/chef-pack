@@ -1,5 +1,7 @@
 # Brand study
 
+- Little Caesars: logo from its official franchise site, https://franchise.littlecaesars.com/wp-content/themes/brandjo/img/logo-main.png. Stored as little-caesars.png for the labeled, non-redeemable design sample.
+
 Burger King logo: https://commons.wikimedia.org/wiki/File:Burger_King_2020.svg
 Original: https://upload.wikimedia.org/wikipedia/commons/c/cc/Burger_King_2020.svg
 The source identifies this text logo as public domain; trademark rights remain with

@@ -1002,7 +1002,8 @@ const CARD_STUDIES = [
   { id: "mcdonalds", name: "McDonald’s", bg: "#c92724", ink: "#fff3d0", orbit: "#bb201e", accent: "#ffce25" },
   { id: "subway", name: "Subway", bg: "#087b40", ink: "#fff3c4", orbit: "#fff9e9", accent: "#ffcb21" },
   { id: "taco-bell", name: "Taco Bell", bg: "#682dd0", ink: "#ffffff", orbit: "#ffffff", accent: "#d6b7ff" },
-  { id: "slim-chickens", name: "Slim Chickens", bg: "#b21f32", ink: "#ffffff", orbit: "#ffffff", accent: "#f0d5b4" }
+  { id: "slim-chickens", name: "Slim Chickens", bg: "#b21f32", ink: "#ffffff", orbit: "#ffffff", accent: "#f0d5b4" },
+  { id: "little-caesars", name: "Little Caesars", art: "little-caesars.png", bg: "#f36c21", ink: "#ffffff", orbit: "#29221d", accent: "#ffcf70" }
 ];
 let selectedReward = "soft-confirm", selectedCard = "mcdonalds";
 let AC = null;
@@ -1153,7 +1154,7 @@ function servingPlate() {
 function revealFace(res) {
   if (res.preview) {
     const brand = CARD_STUDIES.find(b => b.id === selectedCard);
-    return '<div class="collect-card branded branded-' + brand.id + '" style="--brand-bg:' + brand.bg + ';--brand-ink:' + brand.ink + ';--brand-orbit:' + brand.orbit + ';--brand-accent:' + brand.accent + '"><div class="collect-top"><span>CHEF PACK</span><span>DESIGN SAMPLE</span></div><div class="brand-orbit"><img src="./art/' + brand.id + '.svg" alt="' + brand.name + '" width="114" height="124"></div><div class="collect-name">' + brand.name + '</div><div class="collect-value">' + money(res.value || 15) + '<small>ILLUSTRATIVE VALUE</small></div><div class="collect-bottom"><span>BRAND STUDY</span><span>NOT REDEEMABLE</span></div></div>';
+    return '<div class="collect-card branded branded-' + brand.id + '" style="--brand-bg:' + brand.bg + ';--brand-ink:' + brand.ink + ';--brand-orbit:' + brand.orbit + ';--brand-accent:' + brand.accent + '"><div class="collect-top"><span>CHEF PACK</span><span>DESIGN SAMPLE</span></div><div class="brand-orbit"><img src="./art/' + (brand.art || brand.id + '.svg') + '" alt="' + brand.name + '" width="114" height="124"></div><div class="collect-name">' + brand.name + '</div><div class="collect-value">' + money(res.value || 15) + '<small>ILLUSTRATIVE VALUE</small></div><div class="collect-bottom"><span>BRAND STUDY</span><span>NOT REDEEMABLE</span></div></div>';
   }
   return '<div class="collect-card"><div class="collect-top"><span>CHEF PACK</span><span>TEST EDITION</span></div><div class="collect-monogram"><svg aria-hidden="true"><use href="#hat"/></svg></div><div class="collect-name">' + esc(res.s.n) + '</div><div class="collect-value">' + (res.value !== null ? money(res.value) : '') + '<small>DEMO CARD</small></div><div class="collect-bottom"><span>TEST MODE</span><span>NOT REDEEMABLE</span></div></div>';
 }
