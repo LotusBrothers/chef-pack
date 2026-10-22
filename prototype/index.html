@@ -583,6 +583,22 @@
 .sim-thumb{width:132px;aspect-ratio:.72;margin:14px auto 0;border-radius:14px;background:linear-gradient(140deg,#ffffff25,transparent),var(--card-color);border:3px solid var(--card-accent);display:grid;place-items:center;align-content:center;gap:10px;color:var(--card-ink);box-shadow:0 14px 28px #0003}
 .sim-thumb img{width:70%;height:64px;object-fit:contain}.sim-thumb b{font:700 22px/1 var(--display);letter-spacing:-.03em}
 .sim-sheet h2{margin-top:2px}
+.sim-card-host{display:flex;justify-content:center;margin:14px 0 6px}
+.sim-hint{margin:6px 0 16px;font-size:12px;color:#9a9c95}
+.mystery-face,.mystery-odds{position:absolute;inset:0;container-type:inline-size;border-radius:inherit;border:2px solid #ccb985;box-shadow:inset 0 0 0 7px #1b1d1d,inset 0 0 0 8px #ccb98555;
+  background:repeating-linear-gradient(118deg,transparent 0 46px,#cbb57d10 46px 47px),linear-gradient(150deg,#ffffff12,transparent 45%),radial-gradient(ellipse at 50% 45%,#2a2c2b,#141616 72%);color:#efe2bd}
+.mystery-face{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.mf-top{position:absolute;top:7%;left:0;right:0;display:flex;justify-content:center;align-items:center;gap:2cqw;font-size:4.2cqw;font-weight:700;letter-spacing:.24em;color:#dfcc99}
+.mf-top svg{width:5.5cqw;height:5.5cqw}
+.mf-ring{width:54cqw;height:54cqw;border-radius:50%;border:.7cqw solid #cbb57d77;display:grid;place-items:center;font:300 34cqw/1 var(--display);color:#dcc584;box-shadow:inset 0 0 8cqw #cbb57d14}
+.mf-name{margin-top:9cqw;font:700 9.5cqw/1 var(--display);letter-spacing:-.03em;color:#f5ead0}
+.mf-price{margin-top:3cqw;font-size:3.6cqw;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#a99a72}
+.mystery-odds{display:flex;flex-direction:column;padding:20cqw 9cqw 8cqw;text-align:left}
+.mystery-odds ul{list-style:none;margin:0;padding:0;display:grid}
+.mystery-odds li{display:grid;grid-template-columns:1fr auto 14cqw;align-items:baseline;gap:3cqw;padding:3.6cqw 0;border-bottom:1px solid #ffffff14;font-variant-numeric:tabular-nums}
+.mystery-odds li b{font-size:5.6cqw;font-weight:600}.mystery-odds li span{font:700 6cqw/1 var(--display);color:#ecd296}.mystery-odds li small{font-size:4cqw;color:#a7a08f;text-align:right}
+.mystery-odds p{margin:auto 0 0;font-size:4cqw;line-height:1.45;color:#cfc4ab}
+.mystery-odds .mf-fine{margin-top:3cqw;font-size:3.2cqw;letter-spacing:.14em;text-transform:uppercase;color:#8d877d}
 @media(max-height:720px){.sim-game{padding-top:14px}.sim-stage{height:235px}.sim-game h1{margin-bottom:18px;font-size:24px}.sim-disclaimer{margin-bottom:20px}}
 </style>
 
@@ -801,7 +817,7 @@ const packOf = id => [...(S?.catalog || []), ...DEMO, ...PACKS, FREE].find(p => 
 /* ---------- Router ---------- */
 function go(page, extra = {}) { if (busy) return; Object.assign(S, { page }, extra); render(true); if (page === "wallet") loadWallet(); }
 function render(motion = false) {
-  idleScene?.dispose(); idleScene = null;
+  idleScene?.dispose(); idleScene = null; disposeHomeCard();
   $("app").classList.toggle("playing", S.page === "home");
   closeSheet();
   chrome();
@@ -863,22 +879,38 @@ const openPack = id => go("pack", { packId: id, from: S.page, slide: 3 });
 /* ---------- Pages ---------- */
 function starterPack() { return { id: "starter-preview", name: "Starter Pack", guest: true, price: 15, tiers: [15], spots: [R.bk] }; }
 function home() {
-  return `<section class="sim-game"><span class="sim-tag"><i></i>Free play</span><button class="sim-stage" id="simStage" type="button" tabindex="-1" aria-label="Open pack for ${COST} free credits" ${game.balance < COST ? 'disabled' : ''}><span class="sim-aura"></span><span class="sim-mystery"><b>CHEF PACK</b><strong>?</strong></span><span class="sim-plate"></span></button><h1>Mystery pack</h1><button class="btn sim-play" id="simPlay" type="button" ${game.balance < COST ? 'disabled' : ''}>Open pack <span>${COST} credits</span></button><p class="sim-disclaimer">Demo credits · no cash value</p><section class="sim-history"><h2>Recent pulls <small>${gameSaved ? 'Saved here' : 'Session only'}</small></h2>${game.history.length ? game.history.map(simHistoryRow).join('') : '<div class="sim-empty">Your first pack is ready.</div>'}</section><p class="foot">Free play. Credits have no cash value. Redeeming keeps the card in your collection; it is not a real gift card.</p><button class="sim-refill" id="simBackend" type="button">Developer tools</button></section>`;
+  return `<section class="sim-game"><span class="sim-tag"><i></i>Free play</span><div class="sim-card-host" id="simCardHost"></div><p class="sim-hint" id="simHint">${game.balance < COST ? 'Not enough credits · tap your balance to refill' : 'Tap the pack to open it · drag to see what’s inside'}</p><button class="btn sim-play" id="simPlay" type="button" ${game.balance < COST ? 'disabled' : ''}>Open pack <span>${COST} credits</span></button><p class="sim-disclaimer">Demo credits · no cash value</p><section class="sim-history"><h2>Recent pulls <small>${gameSaved ? 'Saved here' : 'Session only'}</small></h2>${game.history.length ? game.history.map(simHistoryRow).join('') : '<div class="sim-empty">Your first pack is ready.</div>'}</section><p class="foot">Free play. Credits have no cash value. Redeeming keeps the card in your collection; it is not a real gift card.</p><button class="sim-refill" id="simBackend" type="button">Developer tools</button></section>`;
 }
 function simulationBalance() {
   const m = sheet(`<div class="sim-balance-sheet"><p class="eyebrow">DEMO BALANCE</p><h2>Your credits</h2><strong>${game.balance} <small>credits</small></strong><p>Use ${COST} credits to open a pack. Need more? Top up to 100 for free.</p><button class="btn" id="simRefill" type="button">Add free credits</button><p>Credits have no cash value and cannot be bought, transferred or redeemed.</p></div>`, 'Demo balance');
   m.querySelector('#simRefill').onclick = () => { game = {...game,balance:Math.max(100,game.balance)}; persistGame(); render(); };
 }
-async function mountMysteryStage() {
-  const host = $("simStage"); if (!host) return;
-  try {
-    const module = await import('./scene3d.mjs');
-    if (!host.isConnected) return;
-    const stage = await module.createServingScene(host,{brand:{id:'mystery',name:'Chef Pack',mystery:true,bg:'#1b1d1d',accent:'#cbb57d',ink:'#eddbac',orbit:'#252826',art:null},value:'?',reduced:matchMedia('(prefers-reduced-motion: reduce)').matches});
-    if (!host.isConnected || document.querySelector('.opener')) {stage.dispose();return;}
-    idleScene = stage; stage.finish(); host.classList.add('has-idle3d');
-    const canvas = host.querySelector('canvas');canvas.tabIndex=-1;canvas.setAttribute('aria-hidden','true');
-  } catch { /* The CSS sealed card remains the no-WebGL fallback. */ }
+/* Home: the sealed mystery pack as a big React Bits flip card. Tap opens it; drag flips to the odds. */
+let homeCard = null;
+function fitHomeCard() {
+  if (!homeCard) return;
+  const view = $("view"), w0 = Math.min(view.clientWidth, 480) - 32;
+  const h = Math.max(300, Math.min(view.clientHeight - 170, w0 / .75));
+  homeCard.setSize(Math.round(h * .75), Math.round(h));
+}
+function disposeHomeCard() { homeCard?.destroy(); homeCard = null; removeEventListener("resize", fitHomeCard); }
+function mountHomeCard() {
+  const host = $("simCardHost"); if (!host) return;
+  const front = `<div class="mystery-face"><span class="mf-top"><svg aria-hidden="true"><use href="#hat-w"/></svg>CHEF PACK</span><span class="mf-ring">?</span><span class="mf-name">Mystery pack</span><span class="mf-price">${COST} credits · 1 restaurant card</span></div>`;
+  const back = `<div class="mystery-odds"><span class="mf-top"><svg aria-hidden="true"><use href="#hat-w"/></svg>WHAT’S INSIDE</span><ul>${TIERS.map(t => `<li><b>${esc(t.name)}</b><span>${t.credits} CR</span><small>${t.chance}%</small></li>`).join("")}</ul><p>Every card is worth at least the ${COST}-credit pack. Redeem it, or sell it back for ${Math.round(SELL_BACK * 100)}% in play credits.</p><small class="mf-fine">Free play · no cash value</small></div>`;
+  homeCard = createFlipCard({ front, back, flipOnClick: false, draggable: true, tilt: true, tiltMax: 12, glare: true, glareOpacity: .22, hoverScale: 1.03,
+    perspective: 1100, stiffness: 170, damping: 20, radius: 22, background: "#1b1d1d", color: "#f1e5c4", shadow: true, shadowColor: "#000000", shadowOpacity: .45,
+    ariaLabel: "Mystery pack. Press Enter to flip it and see the odds.",
+    onFlipChange: flipped => { const h = $("simHint"); if (h && game.balance >= COST) h.textContent = flipped ? "Drag back to the pack · tap to open it" : "Tap the pack to open it · drag to see what’s inside"; } });
+  // A tap (not a drag) opens the pack.
+  let down = null;
+  homeCard.el.addEventListener("pointerdown", e => { down = { x: e.clientX, y: e.clientY }; });
+  homeCard.el.addEventListener("click", e => {
+    if (e.detail === 0 || !down) return;
+    const moved = Math.hypot(e.clientX - down.x, e.clientY - down.y); down = null;
+    if (moved < 8 && game.balance >= COST) playSimulation();
+  });
+  host.append(homeCard.el); fitHomeCard(); addEventListener("resize", fitHomeCard);
 }
 
 function simulationRules() {
@@ -940,7 +972,7 @@ function playSimulation() {
   if (busy || document.querySelector('.opener')) return;
   const next = playRound(game, SIM_BRANDS);
   if (!next) return;
-  game = next; persistGame(); const round = game.history[0]; idleScene?.dispose(); idleScene = null;
+  game = next; persistGame(); const round = game.history[0]; idleScene?.dispose(); idleScene = null; disposeHomeCard();
   const p = {id:'free-simulation',name:'Mystery pack',price:0};
   const o = reveal(p, {p,sim:true,brand:{...round.brand,simulation:true,tierName:round.tier.name},round,s:{n:round.brand.name},value:round.tier.credits});
   o?.startOpening();
@@ -1891,8 +1923,7 @@ const bind = {
   home() {
     $("simPlay").onclick = playSimulation;
     $("simRules").onclick = simulationRules;
-    $("simStage").onclick = playSimulation;
-    mountMysteryStage();
+    mountHomeCard();
     $("simBackend").onclick = () => go("browse");
     $("view").querySelectorAll("[data-decide]").forEach(b => b.onclick = () => simDecisionSheet(+b.dataset.decide));
   },
