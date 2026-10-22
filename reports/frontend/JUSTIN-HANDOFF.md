@@ -1,9 +1,9 @@
 # Justin's agent: current Chef Pack handoff
 
-Tested implementation: e3c9692c1f69f9340301b14ecf3a1d497cbae74f
+Tested implementation: e9cfed80496956faebdea79d2e0a4fee87b46301
 Frontend branch: frontend/justin
 Base main: 65fee1b112d65f4d5a46070d04584c69ada7c467
-Combined preview: https://chef-pack-ekjnbf0o8-ctbedfords-projects.vercel.app/
+Combined preview: https://chef-pack-3niua0ze6-ctbedfords-projects.vercel.app/
 
 ## Current experience
 
@@ -26,3 +26,7 @@ Frontend PR https://github.com/LotusBrothers/chef-pack/pull/3 stays draft. The r
 ## Credit request remains separate
 
 User proposed a guest welcome coin and actual credit redeemable for gift cards, not cash. Guaranteed-value versus chance-based rewards remains unanswered. No funds, welcome grant, paid funding, redemption or actual gift-card fulfillment is implemented. Do not treat the animation or local browser state as proof of a real balance or inventory.
+
+## Latest cosmetic correction and pending direction
+
+Cascade sprites now default to opacity zero and apply their starting keyframe during the delay (fill both). This removes the stray upper-left card stack. Hosted first-frame and replay checks are recorded in evidence/cascade-corner-fix.json. The user requested broader lottery-like mechanics with redeemable value; none were implemented. The pending offered directions are a free game with non-purchasable/non-redeemable points or guaranteed-value gift-card purchases with decorative animation.
