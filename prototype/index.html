@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0d0d0f">
+<meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -600,6 +600,63 @@
 .mystery-odds p{margin:auto 0 0;font-size:4cqw;line-height:1.45;color:#cfc4ab}
 .mystery-odds .mf-fine{margin-top:3cqw;font-size:3.2cqw;letter-spacing:.14em;text-transform:uppercase;color:#8d877d}
 @media(max-height:720px){.sim-game{padding-top:14px}.sim-stage{height:235px}.sim-game h1{margin-bottom:18px;font-size:24px}.sim-disclaimer{margin-bottom:20px}}
+
+/* ---------- Light theme for Play and the reveal (Oct 22): white, black type, gold as a small accent ----------
+   Matches the rest of the app's tokens. Kept last so it wins over the earlier dark rules. */
+.app.playing{background:var(--bg);color:var(--fg)}
+.playing .top{background:var(--bg);border-bottom:1px solid var(--line)}
+.playing .brand{color:var(--fg)}.playing .brand svg{filter:none}
+.playing .bal{background:var(--surface);color:var(--fg);border:0}.playing .bal small{color:var(--muted)}
+.playing .bottom,.playing .tabbar{background:rgba(255,255,255,.94);border-color:rgba(0,0,0,.08)}
+.playing .tabbar button{color:#9a9aa0}.playing .tabbar button[aria-current=page]{color:var(--fg)}
+.sim-game{background:radial-gradient(ellipse 80% 45% at 50% 32%,#fbf6ea,transparent 70%)}
+.sim-tag{color:var(--muted)}.sim-tag i{background:var(--gold)}
+.sim-hint{color:var(--muted)}
+.sim-play.btn{background:var(--fg);color:#fff;border:0;box-shadow:0 10px 24px rgba(0,0,0,.14)}
+.sim-play.btn:hover{background:#262628}.sim-play span{border-left-color:rgba(255,255,255,.28);color:rgba(255,255,255,.78)}
+.sim-play.btn:disabled{background:var(--surface-2);color:var(--muted);box-shadow:none}
+.sim-disclaimer{color:var(--muted)}
+.sim-history{border-top-color:var(--line)}.sim-history h2{color:var(--fg)}.sim-history h2 small{color:var(--muted)}
+.sim-history article{border-bottom-color:var(--line)}.sim-history img{background:#fff;box-shadow:inset 0 0 0 1px var(--line)}
+.sim-history article small{color:var(--muted)}.sim-history article strong{color:#8a6420}
+.sim-empty{border:0;background:var(--surface);color:var(--muted)}
+.sim-refill,.sim-header-rules{color:var(--muted)}.sim-game .foot{color:var(--faint)}
+.sim-game button:focus-visible,.playing button:focus-visible,.flip-card:focus-visible{outline-color:var(--fg)}
+.sim-decide{background:var(--fg);color:#fff}.sim-kept{color:var(--ok)!important}
+
+/* Pearl card: the sealed pack and every card back */
+.mystery-face,.mystery-odds,.fc-back{border:1.5px solid #d6bd85;box-shadow:inset 0 0 0 6px #fbf8f1,inset 0 0 0 7px #d6bd8566;color:var(--fg);
+  background:repeating-linear-gradient(118deg,transparent 0 46px,#b48a3a0b 46px 47px),radial-gradient(120% 80% at 20% 0%,#ffffff,transparent 60%),linear-gradient(160deg,#fdfcf8,#f3eee3 60%,#ece4d2)}
+.mf-top,.fc-back-mark{color:#8a6a2c}
+.mf-ring{border-color:#c9a65c88;color:#b0883c;box-shadow:inset 0 0 8cqw #d6bd8522,0 0 0 2.4cqw #ffffff99}
+.mf-name{color:#1a1814}.mf-price{color:#8f8573}
+.mystery-odds li{border-bottom-color:#00000012}.mystery-odds li span{color:#8a6420}.mystery-odds li small{color:#8f8573}
+.mystery-odds p{color:#4a463e}.mystery-odds .mf-fine{color:#9b9282}
+.fc-back h3{color:#1a1814}.fc-back p{color:#6e675b}.fc-back-value{border-top-color:#00000014}
+.fc-back-value b{color:#8a6420}.fc-back-value span,.fc-back small{color:#8f8573}
+
+/* The reveal: a bright tabletop instead of a dark room */
+.opener.rip-opener,.game-entry.rip-opener{background:radial-gradient(ellipse 90% 60% at 50% 40%,#ffffff 0%,#f7f5f0 55%,#efece5 100%)!important;color:var(--fg)}
+.rip-controls button{background:#fff;color:var(--fg);border-color:var(--line);box-shadow:var(--shadow-1)}
+.rip-controls button:focus-visible{outline-color:var(--fg)}
+.rip-kicker{color:#8a6a2c}.rip-heading .rip-caption,.rip-hint,.fc-hint{color:var(--muted)}
+.rip-halo{background:radial-gradient(ellipse,#e9d4a333,#e9d4a311 34%,transparent 68%)}
+.rip-opener .ores .eyebrow,.rip-opener .ores .sub{color:var(--muted)}
+.rip-opener .ores .rp{background:#f4ead4!important;color:#7a5a1c!important}
+.rip-opener .ores .vline{background:var(--surface);border-color:transparent}.rip-opener .ores .vline>span:last-child{color:var(--muted)}
+.rip-opener .ores .btn.light{background:var(--fg);color:#fff}
+.rip-opener .ores .btn.soft{background:#fff;color:var(--fg);box-shadow:inset 0 0 0 1px var(--line)}
+.rip-opener .sim-choice{background:#fff;border-color:var(--line);color:var(--fg);box-shadow:var(--shadow-1)}.rip-opener .sim-choice small{color:var(--muted)}
+.rip-opener .sim-choice.redeem{background:var(--fg);border-color:var(--fg);color:#fff}.rip-opener .sim-choice.redeem small{color:rgba(255,255,255,.65)}
+.rip-opener .sim-confirm{background:#fbf6ea;border-color:#ead9b3}
+.rip-opener .sim-fine{color:var(--muted)!important}.rip-opener .sim-done p{color:var(--muted)}
+.brand-choices button,.reward-grid button{background:#fff;color:var(--fg-2);border-color:var(--line)}
+.brand-choices button[aria-pressed="true"]{background:var(--fg);border-color:var(--fg);color:#fff}
+.reward-grid button[aria-pressed="true"]{background:#fbf6ea;border-color:#d6bd85}
+.reward-compare>p,.reward-status{color:var(--muted)}
+.guest-note{color:#8a6a2c}.guest-note small{color:var(--muted)}
+.game-entry .rip-heading .rip-caption{color:var(--muted)}.game-entry .rip-hint{color:var(--fg)}
+.audition,.rip-audition{color:var(--fg-2)}
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -899,7 +956,7 @@ function mountHomeCard() {
   const front = `<div class="mystery-face"><span class="mf-top"><svg aria-hidden="true"><use href="#hat-w"/></svg>CHEF PACK</span><span class="mf-ring">?</span><span class="mf-name">Mystery pack</span><span class="mf-price">${COST} credits · 1 restaurant card</span></div>`;
   const back = `<div class="mystery-odds"><span class="mf-top"><svg aria-hidden="true"><use href="#hat-w"/></svg>WHAT’S INSIDE</span><ul>${TIERS.map(t => `<li><b>${esc(t.name)}</b><span>${t.credits} CR</span><small>${t.chance}%</small></li>`).join("")}</ul><p>Every card is worth at least the ${COST}-credit pack. Redeem it, or sell it back for ${Math.round(SELL_BACK * 100)}% in play credits.</p><small class="mf-fine">Free play · no cash value</small></div>`;
   homeCard = createFlipCard({ front, back, flipOnClick: false, draggable: true, tilt: true, tiltMax: 12, glare: true, glareOpacity: .22, hoverScale: 1.03,
-    perspective: 1100, stiffness: 170, damping: 20, radius: 22, background: "#1b1d1d", color: "#f1e5c4", shadow: true, shadowColor: "#000000", shadowOpacity: .45,
+    perspective: 1100, stiffness: 170, damping: 20, radius: 22, background: "#f7f4ee", color: "#1a1814", shadow: true, shadowColor: "#3a2c12", shadowOpacity: .22,
     ariaLabel: "Mystery pack. Press Enter to flip it and see the odds.",
     onFlipChange: flipped => { const h = $("simHint"); if (h && game.balance >= COST) h.textContent = flipped ? "Drag back to the pack · tap to open it" : "Tap the pack to open it · drag to see what’s inside"; } });
   // A tap (not a drag) opens the pack.
@@ -1646,7 +1703,7 @@ function reveal(p, res) {
       axis: "y", flipOnClick: true, draggable: true, dragDistance: 0,
       tilt: true, tiltMax: 12, glare: true, glareOpacity: .22, hoverScale: 1.03,
       perspective: 1100, stiffness: 170, damping: 20, width: 300, height: 400, radius: 22,
-      background: "#27272a", color: "#f5f5f5", shadow: true, shadowColor: "#000000", shadowOpacity: .45,
+      background: "#f7f4ee", color: "#1a1814", shadow: true, shadowColor: "#3a2c12", shadowOpacity: .28,
       ariaLabel: "Your card. Press Enter, tap, or drag sideways to flip it over.",
       onFlipChange: flipped => { o.dataset.cardSide = flipped ? "back" : "front"; const hint = q(".fc-hint"); if (hint) hint.textContent = flipped ? "Tap or drag to see the front" : "Tap or drag to flip the card"; }
     });
