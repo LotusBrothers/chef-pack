@@ -700,23 +700,41 @@
 
 /* ---------- Swipe to open ---------- */
 .swipe{position:relative;height:62px;border-radius:99px;overflow:hidden;user-select:none;-webkit-user-select:none;
-  background:linear-gradient(180deg,#1db866,#0f8f4a);box-shadow:0 10px 26px rgba(15,143,74,.28),inset 0 1px 0 rgba(255,255,255,.28)}
+  background:linear-gradient(180deg,#0c8243,#086f37);box-shadow:0 10px 24px rgba(8,111,55,.26),inset 0 1px 0 rgba(255,255,255,.2)}
 .swipe-fill{position:absolute;left:0;top:0;bottom:0;width:72px;border-radius:inherit;background:linear-gradient(90deg,rgba(255,255,255,.08),rgba(255,255,255,.22));transition:width .35s var(--ease)}
 .swipe-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:8px;padding-left:46px;color:#fff;font-size:16.5px;font-weight:650;letter-spacing:-.01em;pointer-events:none;transition:opacity .35s var(--ease)}
 .swipe-label small{font-size:13.5px;font-weight:500;color:rgba(255,255,255,.78)}
-.swipe-label>span{background:linear-gradient(90deg,#fff 0 40%,#c9ffe0 50%,#fff 60% 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:swipeShine 2.6s linear infinite}
+.swipe-label>span{background:linear-gradient(90deg,#fff 0 40%,#bff5d6 50%,#fff 60% 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:swipeShine 2.6s linear infinite}
 @keyframes swipeShine{from{background-position:100% 0}to{background-position:-150% 0}}
-.swipe-knob{position:absolute;left:5px;top:5px;width:52px;height:52px;border-radius:50%;border:0;padding:0;background:#fff;color:#0f8f4a;display:grid;place-items:center;
+.swipe-knob{position:absolute;left:5px;top:5px;width:52px;height:52px;border-radius:50%;border:0;padding:0;background:#fff;color:#0a7a3e;display:grid;place-items:center;
   box-shadow:0 3px 10px rgba(0,0,0,.2);cursor:grab;touch-action:none;transition:transform .35s var(--ease)}
 .swipe-knob svg{width:24px;height:24px}
 .swipe.dragging .swipe-knob,.swipe.dragging .swipe-fill,.swipe.dragging .swipe-label{transition:none}.swipe.dragging .swipe-knob{cursor:grabbing}
 .swipe.opened .swipe-knob,.swipe.opened .swipe-fill{transition:transform .2s ease-out,width .2s ease-out}
 .swipe.nudge .swipe-knob{animation:swipeNudge .7s var(--ease)}
 @keyframes swipeNudge{35%{transform:translateX(34px)}65%{transform:translateX(-3px)}100%{transform:none}}
-.swipe-knob:focus-visible{outline:3px solid #fff;outline-offset:-6px;box-shadow:0 0 0 3px #0f8f4a,0 3px 10px rgba(0,0,0,.2)}
+.swipe-knob:focus-visible{outline:3px solid #fff;outline-offset:-6px;box-shadow:0 0 0 3px #0a7a3e,0 3px 10px rgba(0,0,0,.2)}
 .swipe[data-disabled]{background:var(--surface-2);box-shadow:none}.swipe[data-disabled] .swipe-label>span{animation:none;background:none;color:var(--muted)}
 .swipe[data-disabled] .swipe-label small{color:var(--faint)}.swipe[data-disabled] .swipe-knob{color:var(--faint);cursor:default;box-shadow:none}.swipe[data-disabled] .swipe-fill{display:none}
 @media (prefers-reduced-motion: reduce){.swipe-label>span{animation:none;background:none;color:#fff}}
+
+/* ---------- Mystery pack: restaurants orbit the question mark ---------- */
+.mystery-face{display:block}
+.mystery-face .mf-ring{position:absolute;left:50%;top:57cqw;width:42cqw;height:42cqw;transform:translate(-50%,-50%);font-size:27cqw}
+.mf-orbit{position:absolute;left:50%;top:57cqw;width:0;height:0;animation:orbSpin 42s linear infinite}
+.orb-slot{position:absolute;left:0;top:0;transform:rotate(var(--a)) translateY(-32cqw)}
+.orb-badge{position:absolute;left:-5.8cqw;top:-5.8cqw;width:11.6cqw;height:11.6cqw;transform:rotate(calc(var(--a) * -1));animation:orbCounter 42s linear infinite}
+.orb-dot{display:grid;place-items:center;width:100%;height:100%;border-radius:50%;background:var(--o);box-shadow:0 0 0 .5cqw #ffffff22,0 1.2cqw 2.4cqw rgba(0,0,0,.45);opacity:.88;transform:scale(.86);transition:transform .5s var(--ease),opacity .5s,box-shadow .5s}
+.orb-dot img{width:70%;height:70%;object-fit:contain}.orb-dot b{font-size:4cqw;color:#fff}
+.orb-dot.on{opacity:1;transform:scale(1.32);box-shadow:0 0 0 .7cqw #e9edf2,0 0 5cqw #ffffff55,0 1.6cqw 3cqw rgba(0,0,0,.5)}
+@keyframes orbSpin{to{transform:rotate(360deg)}}
+@keyframes orbCounter{from{transform:rotate(calc(var(--a) * -1))}to{transform:rotate(calc(var(--a) * -1 - 360deg))}}
+.mystery-face .mf-name{position:absolute;left:0;right:0;top:99cqw;margin:0;text-align:center}
+.mf-could{position:absolute;left:0;right:0;top:110.5cqw;text-align:center;font-size:4.4cqw;color:#a9aeb5;white-space:nowrap}
+.mf-could b{color:#f5f6f7;font-weight:600}
+.mystery-face .mf-price{position:absolute;left:0;right:0;top:118.5cqw;margin:0;text-align:center;font-size:3.2cqw}
+.mystery-odds .mf-brands{margin:5cqw 0 0;font-size:3.6cqw;line-height:1.5;color:#9aa0a8}
+@media (prefers-reduced-motion: reduce){.mf-orbit,.orb-badge{animation:none}.orb-dot{opacity:1;transform:none}}
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -1107,14 +1125,17 @@ function bindSwipe() {
   knob.addEventListener("lostpointercapture", e => end(e, true));
   knob.addEventListener("click", e => { if (e.detail === 0 && !knob.disabled) playSimulation(); });
 }
-function disposeHomeCard() { homeCard?.destroy(); homeCard = null; removeEventListener("resize", fitHomeCard); }
+let homeSpot = 0;
+function disposeHomeCard() { homeCard?.destroy(); homeCard = null; clearInterval(homeSpot); homeSpot = 0; removeEventListener("resize", fitHomeCard); }
 function mountHomeCard() {
   const host = $("simCardHost"); if (!host) return;
-  const front = `<div class="mystery-face"><span class="mf-top"><svg aria-hidden="true"><use href="#hat-w"/></svg>CHEF PACK</span><span class="mf-ring">?</span><span class="mf-name">Mystery pack</span><span class="mf-price">${COST} credits · 1 restaurant card</span></div>`;
-  const back = `<div class="mystery-odds"><span class="mf-top"><svg aria-hidden="true"><use href="#hat-w"/></svg>WHAT’S INSIDE</span><ul>${TIERS.map(t => `<li><b>${esc(t.name)}</b><span>${t.credits} CR</span><small>${t.chance}%</small></li>`).join("")}</ul><p>Every card is worth at least the ${COST}-credit pack. Redeem it, or sell it back for ${Math.round(SELL_BACK * 100)}% in play credits.</p><small class="mf-fine">Free play · no cash value</small></div>`;
+  const brands = SIM_BRANDS, step = 360 / brands.length;
+  const orbit = brands.map((b, i) => `<span class="orb-slot" style="--a:${(i * step + step / 2).toFixed(1)}deg"><span class="orb-badge"><span class="orb-dot" data-orb="${i}" style="--o:${isDark(b.orbit) ? "#f1f2f4" : b.orbit}">${b.art !== null ? `<img src="./art/${esc(b.art || b.id + ".svg")}" alt="">` : `<b>${esc(b.name.slice(0, 2))}</b>`}</span></span></span>`).join("");
+  const front = `<div class="mystery-face"><span class="mf-top"><svg aria-hidden="true"><use href="#hat-w"/></svg>CHEF PACK</span><span class="mf-orbit" aria-hidden="true">${orbit}</span><span class="mf-ring">?</span><span class="mf-name">Mystery pack</span><span class="mf-could" id="mfCould">${brands.length} restaurants inside</span><span class="mf-price">${COST} credits · 1 restaurant card</span></div>`;
+  const back = `<div class="mystery-odds"><span class="mf-top"><svg aria-hidden="true"><use href="#hat-w"/></svg>WHAT’S INSIDE</span><ul>${TIERS.map(t => `<li><b>${esc(t.name)}</b><span>${t.credits} CR</span><small>${t.chance}%</small></li>`).join("")}</ul><p class="mf-brands">${SIM_BRANDS.map(b => esc(b.name)).join(" · ")}</p><p>Every card is worth at least the ${COST}-credit pack. Redeem it, or sell it back for ${Math.round(SELL_BACK * 100)}% in play credits.</p><small class="mf-fine">Free play · no cash value</small></div>`;
   homeCard = createFlipCard({ front, back, flipOnClick: false, draggable: true, tilt: true, tiltMax: 12, glare: true, glareOpacity: .22, hoverScale: 1.03,
     perspective: 1100, stiffness: 170, damping: 20, radius: 22, background: "#151618", color: "#eef0f2", shadow: true, shadowColor: "#000000", shadowOpacity: .3,
-    ariaLabel: "Mystery pack. Press Enter to flip it and see the odds.",
+    ariaLabel: `Mystery pack with one card from ${brands.length} restaurants: ${brands.map(b => b.name).join(", ")}. Press Enter to flip it and see the odds.`,
     onFlipChange: flipped => { const h = $("simHint"); if (h && game.balance >= COST) h.textContent = flipped ? "Drag back to the pack · swipe below to open" : "Drag the card to see what’s inside"; } });
   // A tap (not a drag) opens the pack.
   let down = null;
@@ -1125,6 +1146,12 @@ function mountHomeCard() {
     if (moved < 8) nudgeSwipe();
   });
   host.append(homeCard.el); fitHomeCard(); addEventListener("resize", fitHomeCard);
+  // Spotlight one restaurant at a time and name it under the pack.
+  if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    let k = 0; const dots = homeCard.el.querySelectorAll("[data-orb]"), could = homeCard.el.querySelector("#mfCould");
+    const show = () => { dots.forEach((d, i) => d.classList.toggle("on", i === k)); could.innerHTML = `Could be <b>${esc(brands[k].name)}</b>`; k = (k + 1) % brands.length; };
+    show(); homeSpot = setInterval(show, 1500);
+  }
 }
 
 function simulationRules() {
