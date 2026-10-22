@@ -282,135 +282,60 @@
   .tog[aria-pressed="true"] { background: var(--ok); }
   .tog[aria-pressed="true"]::after { transform: translateX(20px); }
 
-  /* ---------- Opening: rip the pack ---------- */
-  .opener { position: fixed; inset: 0; z-index: 60; color: #fff; background: radial-gradient(circle at 50% 32%, #2c2c2c, #050505 68%);
-    display: flex; flex-direction: column; align-items: center; overflow-y: auto; animation: fade .25s both;
-    padding: calc(var(--safe-t) + 24px) max(16px, var(--safe-r)) calc(var(--safe-b) + 20px) max(16px, var(--safe-l)); }
-  .opener .x { position: fixed; top: calc(var(--safe-t) + 14px); right: max(14px, var(--safe-r)); background: rgba(255,255,255,.14); color: #fff; }
-  .ostage { position: relative; width: 300px; height: 420px; flex: none; cursor: pointer; }
-  .fw { position: absolute; left: 50%; top: 70px; width: 176px; margin-left: -88px; transition: transform .5s cubic-bezier(.3,.7,.3,1), opacity .5s; }
-  .fw.lid { clip-path: inset(0 0 84% 0); z-index: 3; }
-  .fw.body { clip-path: inset(16% 0 0 0); z-index: 2; }
-  .ostage.ready .fw { animation: nudge 2.4s ease-in-out infinite; }
-  @keyframes nudge { 0%, 80%, 100% { transform: none; } 86% { transform: rotate(-2deg); } 93% { transform: rotate(2deg); } }
-  .ostage.shake .fw { animation: shake .3s linear; }
-  @keyframes shake { 25% { transform: translateX(-4px) rotate(-1.5deg); } 75% { transform: translateX(4px) rotate(1.5deg); } }
-  .ostage.torn .fw.lid { transform: translate(70px, -90px) rotate(24deg); opacity: 0; }
-  .ostage.dropped .fw.body { transform: translateY(160px); opacity: 0; }
-  .tearline { position: absolute; left: 50%; top: 113px; width: 186px; margin-left: -93px; z-index: 4; border-top: 2px dashed rgba(255,255,255,.55); transition: opacity .2s; }
-  .ostage.torn .tearline { opacity: 0; }
-  .card3 { position: absolute; left: 50%; top: 150px; width: 160px; margin-left: -80px; z-index: 1; perspective: 900px; transition: transform .6s cubic-bezier(.2,.8,.2,1); }
-  .ostage.rise .card3 { transform: translateY(-108px); }
-  .ostage.center .card3 { transform: translateY(-20px) scale(1.65); z-index: 5; }
-  .flip { position: relative; aspect-ratio: 1.586; transform-style: preserve-3d; transition: transform .7s cubic-bezier(.3,.7,.2,1); }
-  .ostage.flipped .flip { transform: rotateY(180deg); }
-  .face2 { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
-  .face2.front { transform: rotateY(180deg); }
-  .cardback { position: absolute; inset: 0; border-radius: 5.5% / 8.7%; background: radial-gradient(circle, #262626, #0a0a0a 70%); box-shadow: inset 0 0 0 1px rgba(255,255,255,.12); display: grid; place-items: center; color: rgba(255,255,255,.8); }
-  .cardback svg { width: 22%; height: auto; aspect-ratio: 1; }
-  .ohint { margin: 4px 0 0; font-weight: 700; font-size: 15px; color: rgba(255,255,255,.72); min-height: 21px; text-align: center; }
-  .ores { width: 100%; max-width: 380px; display: grid; gap: 4px; animation: fade .3s both; margin-top: 6px; }
-  .ores .rp { justify-self: start; font-size: 13px; font-weight: 800; padding: 4px 10px; border-radius: 8px; background: var(--rb); color: var(--rf); }
-  .ores .eyebrow { color: rgba(255,255,255,.65); }
-  .ores h2 { margin: 0; font-size: 28px; font-weight: 900; letter-spacing: -.03em; line-height: 1.1; }
-  .ores .sub { color: rgba(255,255,255,.65); font-size: 14px; margin: 0; }
-  .ores .vline { margin-top: 10px; display: flex; align-items: baseline; justify-content: space-between; background: rgba(255,255,255,.08); border-radius: 14px; padding: 12px 14px; }
-  .ores .vline b { font-size: 26px; font-weight: 900; font-variant-numeric: tabular-nums; }
-  .ores .vline s { color: rgba(255,255,255,.5); margin-left: 6px; }
-  .ores .vline span { color: rgba(255,255,255,.65); font-size: 13px; font-weight: 600; }
-  .ores .sacts .btn.soft { background: rgba(255,255,255,.12); color: #fff; }
-  .ores .btn.light { background: #fff; color: var(--fg); }
-  .ores .linkbtn { color: #fff; }
-  .ores .linkbtn:disabled { color: rgba(255,255,255,.45); }
-
-  /* ---------- Hype: the reveal scales with the tier ---------- */
-  .ostage { --tc: #ffffff; }
-  .spill { position: absolute; left: 50%; top: 113px; width: 260px; height: 260px; margin: -130px 0 0 -130px; border-radius: 50%; z-index: 0; pointer-events: none;
-    background: radial-gradient(circle, var(--tc) 0%, color-mix(in srgb, var(--tc) 35%, transparent) 30%, transparent 66%); opacity: 0; transform: scale(.3); transition: opacity .5s, transform .8s cubic-bezier(.2,.8,.2,1); }
-  .ostage.spilling .spill { opacity: .9; transform: scale(1); }
-  .ostage.center .spill { opacity: .55; transform: translateY(68px) scale(1.5); }
-  .rays { position: absolute; left: 50%; top: 181px; width: 560px; height: 560px; margin: -280px 0 0 -280px; z-index: 0; pointer-events: none; opacity: 0; transition: opacity .7s;
-    background: repeating-conic-gradient(from 0deg, color-mix(in srgb, var(--tc) 60%, transparent) 0 5deg, transparent 5deg 16deg);
-    -webkit-mask: radial-gradient(circle, #000 12%, transparent 62%); mask: radial-gradient(circle, #000 12%, transparent 62%); animation: turn 16s linear infinite; }
-  .ostage.raying .rays { opacity: .75; }
-  @keyframes turn { to { transform: rotate(360deg); } }
-  .ostage.tease .fw .foil { filter: drop-shadow(0 0 10px var(--tc)) drop-shadow(0 14px 18px rgba(0,0,0,.3)); }
-  .ostage.tease2 .fw .foil { filter: drop-shadow(0 0 22px var(--tc)) drop-shadow(0 0 6px var(--tc)); }
-  .ostage.shake2 .fw { animation: shake2 .42s linear; }
-  @keyframes shake2 { 20% { transform: translateX(-7px) rotate(-3deg); } 40% { transform: translateX(6px) rotate(2.5deg); } 60% { transform: translateX(-6px) rotate(-2deg); } 80% { transform: translateX(5px) rotate(2deg); } }
-  .card3 { transition: transform var(--rise, .6s) cubic-bezier(.2,.8,.2,1); }
-  .ostage.hit.flipped .front .gc { animation: glow 1.8s ease-in-out .3s infinite; }
-  @keyframes glow { 0%, 100% { box-shadow: 0 0 0 1px rgba(255,255,255,.15), 0 0 26px color-mix(in srgb, var(--tc) 60%, transparent); } 50% { box-shadow: 0 0 0 1px rgba(255,255,255,.25), 0 0 60px 6px var(--tc); } }
-  .tbanner { position: absolute; left: 0; right: 0; top: 6px; z-index: 6; text-align: center; font-size: 32px; font-weight: 900; letter-spacing: .14em; color: var(--tc);
-    text-shadow: 0 0 22px var(--tc), 0 0 2px #000; opacity: 0; transform: scale(.5); transition: opacity .35s, transform .5s cubic-bezier(.2,1.5,.4,1); }
-  .ostage.bannered .tbanner { opacity: 1; transform: none; }
-  .tbanner small { display: block; font-size: 13px; letter-spacing: .2em; color: rgba(255,255,255,.75); text-shadow: none; margin-top: 2px; }
-  .spark { position: absolute; left: 50%; top: 181px; width: 5px; height: 5px; border-radius: 50%; background: var(--tc); box-shadow: 0 0 8px var(--tc); z-index: 4; pointer-events: none;
-    animation: burst var(--t) cubic-bezier(.15,.7,.3,1) forwards; }
-  @keyframes burst { from { transform: translate(-50%, -50%); opacity: 1; } to { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(.3); opacity: 0; } }
-  .mute { position: fixed; top: calc(var(--safe-t) + 14px); left: max(14px, var(--safe-l)); width: 36px; height: 36px; border-radius: 50%; border: 0; background: rgba(255,255,255,.14); color: #fff; display: grid; place-items: center; z-index: 3; }
-  .mute svg { width: 18px; height: 18px; }
-
-  /* ---------- Slot reel: the spin between the rip and the reveal ---------- */
-  .otitle { margin: 2px 0 0; font-size: 12px; font-weight: 800; letter-spacing: .22em; color: rgba(255,255,255,.55); text-transform: uppercase; }
-  .ostage { height: 360px; }
-  .ostage.gone { display: none; }
-  .oreel { position: relative; width: 100vw; max-width: 600px; height: 200px; margin-top: max(70px, 18vh); flex: none; overflow: hidden; animation: fade .35s both;
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 16%, #000 84%, transparent); mask-image: linear-gradient(90deg, transparent, #000 16%, #000 84%, transparent); }
-  .omark { position: absolute; left: 50%; top: 4px; bottom: 4px; width: 3px; margin-left: -1.5px; border-radius: 2px; background: #ffc83d; box-shadow: 0 0 16px #ffc83d; z-index: 3; }
-  .omark::before, .omark::after { content: ""; position: absolute; left: 50%; margin-left: -8px; border: 8px solid transparent; }
-  .omark::before { top: -4px; border-top-color: #ffc83d; }
-  .omark::after { bottom: -4px; border-bottom-color: #ffc83d; }
-  .ostrip { position: absolute; top: 50%; left: 0; display: flex; gap: 10px; will-change: transform; transform: translate(0, -50%); }
-  .rt { flex: none; width: 132px; padding: 8px 8px 10px; border-radius: 14px; --c: #ffffff;
-    background: radial-gradient(120% 70% at 50% 105%, color-mix(in srgb, var(--c) 42%, transparent), transparent 70%), #151515;
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,.08); transition: transform .35s cubic-bezier(.2,1.3,.4,1), opacity .35s, box-shadow .35s; }
-  .rt .tl { display: block; margin-top: 8px; text-align: center; font-size: 10px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--c); }
-  .oreel.landed .rt { opacity: .3; }
-  .oreel.landed .rt.won { opacity: 1; transform: scale(1.12); box-shadow: inset 0 0 0 2px var(--c), 0 0 34px var(--c); }
-  .oreveal { position: relative; width: 300px; height: 300px; flex: none; display: grid; place-items: center; margin-top: 18px; --tc: #fff; }
-  .oreveal .rays, .oreveal .spark { top: 150px; }
-  .oreveal .spill { top: 150px; opacity: .5; transform: scale(1.3); }
-  .oreveal .tbanner { top: 0; }
-  .bigcard { position: relative; z-index: 2; width: 250px; }
-  .bigcard.popped { animation: bigpop .55s cubic-bezier(.2,1.4,.4,1) both; }
-  @keyframes bigpop { from { transform: scale(.55); opacity: 0; } }
-  .oreveal.hit .bigcard .gc { animation: glow 1.8s ease-in-out .3s infinite; }
-  .oreveal.raying .rays { opacity: .75; }
-  .oreveal.bannered .tbanner { opacity: 1; transform: none; }
-  .oreveal .bigcard .gc { box-shadow: 0 18px 40px rgba(0,0,0,.5); }
-
-  /* ---------- Opener: the pack takes most of the screen ---------- */
-  .opener .topbtns { position: fixed; top: calc(var(--safe-t) + 14px); left: 50%; transform: translateX(-50%); z-index: 3; }
-  .fastbtn { height: 36px; padding: 0 14px; border-radius: 99px; border: 0; background: rgba(255,255,255,.14); color: #fff; font-weight: 800; font-size: 13px; }
-  .fastbtn[aria-pressed="true"] { background: #ffc83d; color: #191919; }
-  .ostage { width: 300px; height: 404px; transform-origin: top center; transform: scale(var(--k, 1)); margin-bottom: calc((var(--k, 1) - 1) * 404px); }
-  .fw { top: 20px; width: 240px; margin-left: -120px; }
-  .tearline { top: 78px; width: 252px; margin-left: -126px; }
-  .spill { top: 78px; }
-  .otitle { margin-top: 44px; }
-  .rt { width: 150px; }
-  .oreel { height: 220px; }
-  .bigcard { width: min(82vw, 320px); }
-  .oreveal { width: min(92vw, 360px); height: 330px; }
-  .oreveal .rays, .oreveal .spark, .oreveal .spill { top: 165px; }
-  .opener .otest { margin-top: 44px; }
-  .opener .otest + .otitle { margin-top: 6px; }
-
-  /* ---------- Opener refinements: calmer chrome around the hype ---------- */
-  .opener { background: radial-gradient(90% 60% at 50% 34%, #222225 0%, #0b0b0c 62%, #050506 100%); }
-  .opener .x, .mute, .fastbtn { background: rgba(255,255,255,.1); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
-  .fastbtn { font-weight: 600; font-size: 13px; }
-  .fastbtn[aria-pressed="true"] { background: var(--gold); color: #141414; }
-  .otitle { font-weight: 600; letter-spacing: .18em; color: rgba(255,255,255,.5); }
-  .ohint { font-weight: 500; color: rgba(255,255,255,.6); }
-  .omark { background: var(--gold); box-shadow: 0 0 16px rgba(217,178,95,.8); }
-  .omark::before { border-top-color: var(--gold); } .omark::after { border-bottom-color: var(--gold); }
-  .ores h2 { font: 700 28px/1.1 var(--display); letter-spacing: -.035em; }
-  .ores .rp { font-weight: 600; border-radius: 99px; }
-  .ores .vline { border-radius: 16px; padding: 14px 16px; background: rgba(255,255,255,.07); }
-  .ores .vline b { font: 700 26px/1 var(--display); letter-spacing: -.02em; }
-  .ores .sacts .btn { min-height: 52px; }
+  /* ---------- Physical pack reveal: native transforms, no render loop ---------- */
+  .motion-preview { display: inline-flex; gap: 8px; align-items: center; padding: 10px 0; margin-top: 10px; border: 0; background: none; color: var(--fg); font: 600 13px var(--display); text-decoration: underline; text-underline-offset: 4px; }
+  .motion-preview small { color: var(--muted); font-size: 11px; font-weight: 400; text-decoration: none; }
+  .opener.rip-opener { position: fixed; inset: 0; z-index: 60; display: flex; flex-direction: column; align-items: center; overflow: auto; color: #faf6eb; background: radial-gradient(ellipse at 50% 42%, #292722 0%, #111112 43%, #080809 82%); padding: max(22px, var(--safe-t)) 20px max(24px, var(--safe-b)); isolation: isolate; }
+  .rip-controls { width: 100%; max-width: 520px; display: flex; justify-content: space-between; align-items: center; gap: 10px; z-index: 8; flex: none; }
+  .rip-controls button { min-height: 44px; color: #f6f2e9; border: 1px solid #ffffff19; background: #ffffff0a; border-radius: 99px; font: 500 12px var(--display); padding: 0 15px; }
+  .rip-controls .rip-sound, .rip-controls .rip-close { width: 44px; padding: 0; display: grid; place-items: center; }
+  .rip-controls svg { width: 18px; height: 18px; }
+  .rip-controls button:focus-visible, .rip-pack:focus-visible { outline: 2px solid #e4c889; outline-offset: 6px; }
+  .rip-heading { text-align: center; margin-top: clamp(20px, 5vh, 48px); z-index: 5; flex: none; }
+  .rip-kicker { margin: 0 0 9px; font-size: 9px; font-weight: 600; letter-spacing: .19em; color: #ceb98a; text-transform: uppercase; }
+  .rip-heading h2 { font: 600 clamp(24px, 6vw, 34px)/1.15 var(--display); letter-spacing: -.04em; margin: 0; }
+  .rip-heading .rip-caption { margin: 8px 0 0; color: #8f8b83; font-size: 11px; }
+  .rip-scene { position: relative; width: min(100%, 440px); height: clamp(280px, 46vh, 430px); min-height: 280px; flex: none; margin-top: 12px; display: grid; place-items: center; perspective: 1000px; }
+  .rip-halo { position: absolute; inset: 4% -8%; background: radial-gradient(ellipse, #d8b46538, #b9965c10 34%, transparent 68%); opacity: 0; pointer-events: none; }
+  .rip-floor { position: absolute; bottom: 4%; width: 58%; height: 14px; border-radius: 50%; background: radial-gradient(ellipse, #0009, transparent 72%); pointer-events: none; }
+  .rip-pack { position: absolute; z-index: 3; width: clamp(170px, 48vw, 240px); aspect-ratio: .66; background: none; border: none; padding: 0; cursor: pointer; touch-action: pan-y; color: inherit; -webkit-tap-highlight-color: transparent; }
+  .rip-wrap { position: absolute; inset: 0; pointer-events: none; }
+  .rip-wrap .foil { filter: none; }
+  .rip-body { clip-path: polygon(0 15%, 8% 14%, 16% 15.5%, 24% 14%, 32% 15%, 40% 14%, 48% 15.5%, 56% 14%, 64% 15%, 72% 14%, 80% 15.5%, 88% 14%, 100% 15%, 100% 100%, 0 100%); }
+  .rip-cap { clip-path: polygon(0 0, 100% 0, 100% 15%, 88% 14%, 80% 15.5%, 72% 14%, 64% 15%, 56% 14%, 48% 15.5%, 40% 14%, 32% 15%, 24% 14%, 16% 15.5%, 8% 14%, 0 15%); transform-origin: 10% 14%; }
+  .rip-seam { position: absolute; top: 14.5%; left: 4%; right: 4%; height: 1px; background: linear-gradient(90deg, transparent, #f8df9bc0, transparent); opacity: .65; }
+  .rip-touch { position: absolute; top: 14.5%; right: -12px; transform: translateY(-50%); display: grid; place-items: center; width: 29px; height: 29px; border: 1px solid #e3c98e70; border-radius: 50%; color: #e9d5a7; background: #22201c; font-size: 16px; }
+  .rip-card-shell { width: min(78vw, 320px); position: absolute; z-index: 2; opacity: 0; transform: translate3d(0, 65px, 0) rotate(-7deg) scale(.78); }
+  .rip-card-turn { position: relative; width: 100%; aspect-ratio: 1.586; transform-style: preserve-3d; }
+  .rip-card-face { position: absolute; inset: 0; border-radius: 17px; backface-visibility: hidden; -webkit-backface-visibility: hidden; overflow: hidden; }
+  .rip-card-back { background: linear-gradient(145deg, #29292a, #0f1011 66%); border: 1px solid #d6bc813d; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 18px 28px #0005; }
+  .rip-card-back svg { width: 34px; height: 34px; color: #e5cf9d; }
+  .rip-card-back b { font-size: 15px; letter-spacing: .12em; font-weight: 600; }
+  .rip-card-back small { margin-top: 16px; font-size: 8px; color: #a99a7a; letter-spacing: .24em; }
+  .rip-card-front { transform: rotateY(180deg); background: #121314; box-shadow: 0 18px 28px #0005; }
+  .rip-card-front .gc { height: 100%; border-radius: 17px; }
+  .rip-card-front .gc::after { opacity: .12; }
+  .rip-gleam { position: absolute; inset: -40% -40%; pointer-events: none; background: linear-gradient(112deg, transparent 34%, #ffe7ae0a 42%, #fff7d852 49%, #d6b8661a 55%, transparent 65%); transform: translateX(-115%); }
+  .rip-edge { position: absolute; inset: 0; pointer-events: none; border: 1px solid #e3cc8b66; border-radius: inherit; }
+  .rip-shards { position: absolute; z-index: 4; width: 1px; height: 1px; top: 30%; left: 50%; pointer-events: none; }
+  .rip-shards i { position: absolute; width: 3px; height: 11px; background: #cbb47e; opacity: 0; }
+  .rip-hint { min-height: 20px; font-size: 12px; font-weight: 400; color: #aaa397; text-align: center; margin: 10px 0 0; z-index: 6; }
+  .rip-hint span { display: inline-block; width: 4px; height: 4px; background: #d7bc82; border-radius: 50%; vertical-align: 2px; margin: 0 8px; }
+  .rip-opener .ores { width: 100%; max-width: 360px; display: grid; gap: 5px; margin-top: 4px; padding-bottom: 14px; }
+  .rip-opener .ores h2 { font: 600 25px/1.2 var(--display); letter-spacing: -.035em; margin: 3px 0; }
+  .rip-opener .ores .rp { justify-self: start; font-size: 9px; letter-spacing: .1em; padding: 5px 8px; border-radius: 99px; }
+  .rip-opener .ores .eyebrow, .rip-opener .ores .sub { color: #99948c; font-size: 12px; margin: 2px 0; }
+  .rip-opener .ores .vline { display: flex; justify-content: space-between; align-items: center; background: #ffffff08; border: 1px solid #ffffff0c; border-radius: 13px; margin-top: 10px; padding: 12px 14px; }
+  .rip-opener .ores .vline b { font-size: 24px; font-weight: 600; }
+  .rip-opener .ores .vline>span:last-child { font-size: 11px; color: #a39b8b; }
+  .rip-opener .ores .btn.light { background: #e6ce97; color: #191710; }
+  .rip-opener .ores .btn.soft { background: #ffffff0b; color: #e1dbcf; }
+  .rip-opener .ores .sacts { margin-top: 10px; }
+  .rip-opener .ores .btn { min-height: 48px; font-size: 12px; }
+  .rip-opener .ores[hidden], .rip-opener [hidden] { display: none !important; }
+  .rip-opener.is-revealed .rip-scene { height: clamp(220px, 32vh, 300px); min-height: 220px; margin-top: 0; }
+  .rip-opener.is-revealed .rip-heading { margin-top: 18px; }
+  @media (max-height: 680px) { .rip-heading { margin-top: 12px; } .rip-scene { height: 290px; min-height: 260px; } .rip-pack { width: 170px; } .rip-opener.is-revealed .rip-scene { height: 200px; min-height: 180px; } }
 
   /* ---------- Wallet ---------- */
   .pagehead { padding-top: 6px; }
@@ -780,6 +705,7 @@ function pack() {
       <h1>${esc(p.name)}</h1>
       <p class="per">${p.free ? `A free suggestion from ${p.spots.length} restaurants. No card inside.` : p.api ? "One restaurant gift card per pack, picked for you." : esc(p.blurb) + ` · ${p.spots.length} restaurants`}</p>
       ${p.api ? `<div class="big">${money(p.price)}<small>per pack</small></div>` : ""}
+      ${p.api ? `<button class="motion-preview" id="previewOpening" type="button">Preview opening <small>No order placed</small></button>` : ""}
       ${p.demo ? `<p class="note"><b>Coming soon.</b> This theme isn't available yet. The odds and restaurants below are a preview.</p>` : ""}
     </section>
     ${p.api ? `<div class="sh"><h2>What's inside</h2></div>
@@ -945,7 +871,27 @@ function audio() { try { AC = AC || new (window.AudioContext || window.webkitAud
 function sfx(kind, tier = 0, dur = 1) {
   if (S.muted) return; const a = audio(); if (!a) return; const now = a.currentTime;
   try {
-    if (kind === "rip") {
+    if (kind === "impact") {
+      // A bounded contact sound: crisp transient, warm body, short clean resonance.
+      const bus = a.createGain(); bus.gain.value = .62; bus.connect(a.destination);
+      const length = Math.floor(a.sampleRate * .055), buffer = a.createBuffer(1, length, a.sampleRate), samples = buffer.getChannelData(0);
+      for (let i = 0; i < length; i++) samples[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / length, 4);
+      const noise = a.createBufferSource(), high = a.createBiquadFilter(), low = a.createBiquadFilter(), click = a.createGain();
+      noise.buffer = buffer; high.type = "highpass"; high.frequency.value = 1100; low.type = "lowpass"; low.frequency.value = 6400;
+      click.gain.setValueAtTime(.0001, now); click.gain.linearRampToValueAtTime(.4, now + .0015); click.gain.exponentialRampToValueAtTime(.0001, now + .052);
+      noise.connect(high).connect(low).connect(click).connect(bus); noise.start(now); noise.stop(now + .06);
+      const body = a.createOscillator(), thump = a.createGain(); body.type = "sine";
+      body.frequency.setValueAtTime(230, now); body.frequency.exponentialRampToValueAtTime(90, now + .095);
+      thump.gain.setValueAtTime(.0001, now); thump.gain.linearRampToValueAtTime(.34, now + .003); thump.gain.exponentialRampToValueAtTime(.0001, now + .14);
+      body.connect(thump).connect(bus); body.start(now); body.stop(now + .15);
+      const contact = a.createOscillator(), snap = a.createGain(); contact.type = "triangle";
+      contact.frequency.setValueAtTime(2100, now); contact.frequency.exponentialRampToValueAtTime(850, now + .028);
+      snap.gain.setValueAtTime(.0001, now); snap.gain.linearRampToValueAtTime(.14, now + .001); snap.gain.exponentialRampToValueAtTime(.0001, now + .045);
+      contact.connect(snap).connect(bus); contact.start(now); contact.stop(now + .05);
+      [1046.5, 1568].forEach((hz, i) => { const ring = a.createOscillator(), gain = a.createGain(); ring.type = "sine"; ring.frequency.value = hz;
+        gain.gain.setValueAtTime(.0001, now + .012); gain.gain.linearRampToValueAtTime(i ? .025 : .045, now + .018); gain.gain.exponentialRampToValueAtTime(.0001, now + .22);
+        ring.connect(gain).connect(bus); ring.start(now + .012); ring.stop(now + .24); });
+    } else if (kind === "rip") {
       const len = Math.floor(a.sampleRate * .28), buf = a.createBuffer(1, len, a.sampleRate), d = buf.getChannelData(0);
       for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2);
       const src = a.createBufferSource(), bp = a.createBiquadFilter(), g = a.createGain();
@@ -1045,95 +991,111 @@ function pendingSheet(a) {
   m.querySelector("#pLater").onclick = closeSheet;
 }
 
-/* ---------- Reveal: rip it like a sports pack. The result is already decided (server or free pick). ---------- */
+/* ---------- Physical reveal: presentation only; result supplied by caller ---------- */
+function previewOpening(p) {
+  if (busy) return;
+  reveal(p, { p, s: TEST_SPOT, t: 0, value: p.price || null, preview: true });
+}
 function reveal(p, res) {
   if (busy) return;
   busy = true;
-  // Server pulls carry no tier yet, so they always land on the base tile. Only the free pick is decided here, and it has no card.
-  const s = res.s, tier = res.t || 0, tname = ["Base", "Upgrade", "Big hit", "Jackpot"][tier];
   closeSheet();
+  const previousFocus = document.activeElement, app = $("app"), wasInert = app?.inert;
+  if (app) app.inert = true;
   const o = document.createElement("div");
-  o.className = "opener"; o.setAttribute("role", "dialog"); o.setAttribute("aria-modal", "true"); o.setAttribute("aria-label", "Open your pack");
-  o.innerHTML = `<button class="mute" id="mute" type="button" aria-label="${S.muted ? "Turn sound on" : "Mute sound"}">${icon(S.muted ? "muted" : "sound")}</button><span class="topbtns"><button class="fastbtn" id="fastSpin" type="button" aria-pressed="${S.fastSpin}">Fast spin</button></span><button class="x" type="button" aria-label="Close" hidden>${icon("close")}</button>
-    ${res.api ? `<p class="otest">TEST MODE · NOT REDEEMABLE</p>` : ""}<p class="otitle">${esc(p.name)}</p>
-    <div class="ostage ready" id="ostage" role="button" tabindex="0" aria-label="Rip the pack open">
-      <span class="spill" aria-hidden="true"></span>
-      <div class="fw body">${foil(p)}</div><div class="fw lid">${foil(p)}</div><span class="tearline"></span>
-    </div>
-    <div class="oreel" id="oreel" hidden aria-hidden="true"><span class="omark"></span><div class="ostrip" id="ostrip"></div></div>
-    <div class="oreveal" id="oreveal" hidden style="--tc:${TIER_COLOR[tier]}">
-      <span class="rays" aria-hidden="true"></span><span class="spill" aria-hidden="true"></span>
-      ${tier ? `<div class="tbanner" aria-live="polite">${tname.toUpperCase()}<small>${ODDS[tier]}% PULL</small></div>` : ""}
-      <div class="bigcard" id="bigcard">${gc(s, "", tier ? p.price : res.value)}</div>
-    </div>
-    <p class="ohint" id="ohint">Tap or swipe to rip it open</p><div class="ores" id="ores"></div>`;
+  o.className = "opener rip-opener";
+  o.setAttribute("role", "dialog"); o.setAttribute("aria-modal", "true"); o.setAttribute("aria-labelledby", "ripTitle");
+  const note = res.preview ? "MOTION PREVIEW · NO ORDER" : res.api ? "TEST MODE · NOT REDEEMABLE" : "FREE PICK · NO CARD";
+  o.innerHTML = `<div class="rip-controls"><button class="rip-sound" type="button" aria-label="${S.muted ? "Turn sound on" : "Mute sound"}">${icon(S.muted ? "muted" : "sound")}</button><button class="rip-skip" type="button">Skip animation</button><button class="rip-close" type="button" aria-label="Close opening">${icon("close")}</button></div>
+    <header class="rip-heading"><p class="rip-kicker">${note}</p><h2 id="ripTitle">A little anticipation.</h2><p class="rip-caption">${esc(p.name)}${res.preview ? " · preview only" : ""}</p></header>
+    <div class="rip-scene"><span class="rip-halo" aria-hidden="true"></span><span class="rip-floor" aria-hidden="true"></span>
+      <div class="rip-card-shell" aria-hidden="true"><div class="rip-card-turn"><div class="rip-card-face rip-card-back"><svg aria-hidden="true"><use href="#hat"/></svg><b>CHEF PACK</b><small>GOOD THINGS INSIDE</small></div><div class="rip-card-face rip-card-front">${gc(res.s, "", res.value)}<span class="rip-gleam"></span><span class="rip-edge"></span></div></div></div>
+      <button class="rip-pack" type="button" aria-label="Tear open ${esc(p.name)}"><span class="rip-wrap rip-body">${foil(p)}</span><span class="rip-wrap rip-cap">${foil(p)}</span><span class="rip-seam" aria-hidden="true"></span><span class="rip-touch" aria-hidden="true">↗</span></button>
+      <div class="rip-shards" aria-hidden="true">${Array.from({ length: 6 }, () => "<i></i>").join("")}</div>
+    </div><p class="rip-hint" role="status">Tap the pack<span></span>or swipe across the seam</p><div class="ores" id="ores" hidden></div>`;
   document.body.appendChild(o);
-  const st = o.querySelector("#ostage"), reel = o.querySelector("#oreel"), strip = o.querySelector("#ostrip"), rv = o.querySelector("#oreveal");
-  // The sealed pack fills most of the screen: scale its 300×404 stage to the viewport.
-  const fit = () => st.style.setProperty("--k", Math.max(.8, Math.min(innerWidth * .92 / 300, (innerHeight - 170) / 404, 2.2)).toFixed(3));
-  fit(); addEventListener("resize", fit);
-  o.querySelector("#fastSpin").onclick = e => { e.stopPropagation(); S.fastSpin = !S.fastSpin; e.currentTarget.setAttribute("aria-pressed", S.fastSpin); };
-  o.querySelector(".x").onclick = () => { o.remove(); if (S.page === "pack") render(); };
-  o.querySelector("#mute").onclick = e => { e.stopPropagation(); S.muted = !S.muted; e.currentTarget.innerHTML = icon(S.muted ? "muted" : "sound"); e.currentTarget.setAttribute("aria-label", S.muted ? "Turn sound on" : "Mute sound"); };
-  const fast = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const at = (ms, fn) => setTimeout(fn, fast ? 0 : ms);
-
-  // Reel: filler over-shows upgrades so Jackpots fly past; sometimes one sits right next to the stop.
-  const WIN = 46, N = WIN + 7;
-  const filler = () => { if (p.free || p.api) return 0; const r = Math.random(); return r < .55 ? 0 : r < .8 ? 1 : r < .93 ? 2 : 3; };
-  const items = Array.from({ length: N }, (_, i) => i === WIN ? { s, t: tier } : { s: rand(p.spots), t: filler() });
-  if (!p.free && !p.api && tier < 3 && Math.random() < .6) items[WIN + (Math.random() < .5 ? 1 : -1)].t = 3;
-  strip.innerHTML = items.map((it, i) => `<div class="rt ${i === WIN ? "win" : ""}" style="--c:${TIER_COLOR[it.t]}">${gc(it.s, "", p.free ? null : p.tiers[it.t])}<span class="tl">${p.free ? esc(it.s.c) : ["Base", "Upgrade", "Big hit", "Jackpot"][it.t]}</span></div>`).join("");
-
-  const spin = () => {
-    reel.hidden = false; o.querySelector("#ohint").textContent = "";
-    const pitch = strip.firstElementChild.getBoundingClientRect().width + 10, view = reel.clientWidth;
-    const target = WIN * pitch + (pitch - 10) / 2 - view / 2 + (Math.random() - .5) * pitch * .6;
-    const over = Math.min(26, pitch * .2), D = fast ? 1 : S.fastSpin ? 1900 : 5600, SETTLE = fast ? 1 : S.fastSpin ? 240 : 420;
-    let t0 = null, lastIdx = -1, lastTick = 0;
-    const place = x => { strip.style.transform = `translate(${-x}px, -50%)`; };
-    const frame = now => {
-      t0 = t0 ?? now; const e = now - t0;
-      let x;
-      if (e < D) { const k = e / D; x = (target + over) * (1 - Math.pow(1 - k, 4)); }
-      else { const k = Math.min(1, (e - D) / SETTLE); x = target + over * (1 - (1 - Math.pow(1 - k, 3))); }
-      place(x);
-      const idx = Math.floor((x + view / 2) / pitch);
-      if (idx !== lastIdx) { lastIdx = idx; if (now - lastTick > 38) { lastTick = now; sfx("tick"); buzz(4); } }
-      if (e < D + SETTLE) requestAnimationFrame(frame); else land();
-    };
-    requestAnimationFrame(frame);
-  };
-  const land = () => {
-    reel.classList.add("landed"); buzz(tier ? [30, 40, 60] : 20);
-    at(tier ? 900 : 600, () => {
-      reel.hidden = true; rv.hidden = false;
-      rv.querySelector("#bigcard").classList.add("popped");
-      sfx("chime", tier);
-      if (tier) rv.classList.add("hit", "bannered");
-      if (tier >= 2) { rv.classList.add("raying"); sparks(rv, tier === 3 ? 40 : 20); }
-      at(450, () => {
-        busy = false; o.querySelector(".x").hidden = false; showResult(res, o);
-        if (tier) countUp([o.querySelector(".ores .vline b"), o.querySelector("#bigcard .gbot b")], p.price, res.value, 900 + tier * 250);
-      });
-    });
-  };
-  let done = false, x0 = null;
-  const rip = () => {
-    if (done) return; done = true;
+  const q = sel => o.querySelector(sel), pack = q(".rip-pack"), card = q(".rip-card-shell"), turn = q(".rip-card-turn"), halo = q(".rip-halo");
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let phase = "ready", pointer = null;
+  const animations = new Set();
+  function animate(el, frames, options) {
+    if (!el.animate) { Object.assign(el.style, frames[frames.length - 1]); return Promise.resolve(); }
+    const a = el.animate(frames, { fill: "forwards", ...options }); animations.add(a);
+    return a.finished.catch(() => {});
+  }
+  function cancelAnimations() { for (const a of animations) a.cancel(); animations.clear(); }
+  function dispose() {
+    if (phase === "closed") return;
+    phase = "closed"; cancelAnimations(); busy = false;
+    document.removeEventListener("keydown", onKey, true);
+    document.removeEventListener("visibilitychange", onVisibility);
+    o.remove(); if (app) app.inert = wasInert;
+    if (previousFocus?.isConnected) previousFocus.focus({ preventScroll: true });
+    else $("acct")?.focus({ preventScroll: true });
+  }
+  o.closeOpening = dispose;
+  function finish() {
+    if (phase === "closed" || phase === "revealed") return;
+    phase = "revealed"; cancelAnimations(); busy = false;
+    pack.hidden = true;
+    card.style.opacity = "1"; card.style.transform = "none";
+    turn.style.transform = "rotateY(180deg)"; halo.style.opacity = ".45";
+    q(".rip-shards").hidden = true; q(".rip-hint").hidden = true; q(".rip-skip").hidden = true;
+    q("#ripTitle").textContent = res.preview ? "The reveal, reimagined." : res.free ? "Dinner, decided." : "Your card is here.";
+    o.classList.add("is-revealed");
+    showResult(res, o); q("#ores").hidden = false;
+    if (!reduced) animate(q("#ores"), [{ opacity: 0, transform: "translateY(10px)" }, { opacity: 1, transform: "none" }], { duration: 220, easing: "ease-out" });
+    q("#ores button")?.focus({ preventScroll: true });
+  }
+  async function rip() {
+    if (phase !== "ready") return;
+    phase = "opening"; pack.disabled = true; q(".rip-hint").textContent = "Opening…";
+    if (reduced) { finish(); return; }
     audio();
-    st.classList.remove("ready"); st.setAttribute("aria-label", "Pack opened"); o.querySelector("#ohint").textContent = "";
-    st.classList.add("shake");
-    at(300, () => { st.classList.remove("shake"); st.classList.add("torn", "spilling"); sfx("rip"); buzz(30); });
-    at(700, () => st.classList.add("dropped"));
-    at(1050, () => { st.classList.add("gone"); spin(); });
-  };
-  st.addEventListener("click", rip);
-  st.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); rip(); } });
-  st.addEventListener("pointerdown", e => { x0 = e.clientX; });
-  st.addEventListener("pointermove", e => { if (x0 !== null && Math.abs(e.clientX - x0) > 40) { x0 = null; rip(); } });
-  st.focus({ preventScroll: true });
+    await animate(pack, [{ transform: "rotate(-3deg) scale(1)" }, { transform: "rotate(-2deg) scale(.97)" }, { transform: "rotate(0deg) scale(1)" }], { duration: 160, easing: "ease-out" });
+    if (phase !== "opening") return;
+    sfx("rip"); buzz(12);
+    q(".rip-seam").hidden = true; q(".rip-touch").hidden = true;
+    animate(q(".rip-cap"), [{ transform: "translate3d(0,0,0) rotate(0deg)", opacity: 1 }, { transform: "translate3d(80px,-110px,0) rotate(25deg)", opacity: 0 }], { duration: 560, easing: "cubic-bezier(.16,.8,.3,1)" });
+    animate(q(".rip-body"), [{ transform: "translate3d(0,0,0) rotate(0deg)", opacity: 1 }, { transform: "translate3d(-16px,100px,0) rotate(-8deg)", opacity: 0 }], { duration: 650, delay: 120, easing: "cubic-bezier(.4,0,.8,1)" });
+    animate(halo, [{ opacity: 0, transform: "scale(.65)" }, { opacity: .85, transform: "scale(1)" }, { opacity: .45, transform: "scale(1)" }], { duration: 1200, easing: "ease-out" });
+    q(".rip-shards").querySelectorAll("i").forEach((el, i) => {
+      const dx = (i - 2.5) * 32, dy = -28 - (i % 3) * 18;
+      animate(el, [{ opacity: 0, transform: "translate(0,0) rotate(0deg)" }, { opacity: .65, offset: .15 }, { opacity: 0, transform: `translate(${dx}px,${dy}px) rotate(${i * 40 - 90}deg)` }], { duration: 600, delay: i * 12, easing: "ease-out" });
+    });
+    await animate(card, [{ opacity: 0, transform: "translate3d(0,65px,0) rotate(-7deg) scale(.78)" }, { opacity: 1, offset: .2 }, { opacity: 1, transform: "translate3d(0,-12px,0) rotate(-5deg) scale(1.02)", offset: .8 }, { opacity: 1, transform: "translate3d(0,0,0) rotate(-3deg) scale(1)" }], { duration: 1050, delay: 100, easing: "cubic-bezier(.18,.8,.24,1)" });
+    if (phase !== "opening") return;
+    pack.hidden = true;
+    await animate(turn, [{ transform: "rotateY(0deg)" }, { transform: "rotateY(180deg)" }], { duration: 680, easing: "cubic-bezier(.25,.6,.2,1)" });
+    if (phase !== "opening") return;
+    sfx("impact"); buzz(10);
+    animate(halo, [{ opacity: .8, transform: "scale(1.04)" }, { opacity: .45, transform: "scale(1)" }], { duration: 380, easing: "ease-out" });
+    animate(card, [{ transform: "rotate(-3deg) scale(1)" }, { transform: "rotate(1deg) scale(1.025)", offset: .55 }, { transform: "rotate(0deg) scale(1)" }], { duration: 560, easing: "cubic-bezier(.16,.8,.3,1)" });
+    await animate(q(".rip-gleam"), [{ transform: "translateX(-115%)" }, { transform: "translateX(115%)" }], { duration: 560, easing: "ease-in-out" });
+    if (phase === "opening") finish();
+  }
+  function onKey(e) {
+    if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); dispose(); return; }
+    if (e.key !== "Tab") return;
+    const controls = [...o.querySelectorAll("button:not([disabled]), a[href]")].filter(el => !el.hidden && el.getClientRects().length);
+    if (!controls.length) return;
+    const first = controls[0], last = controls[controls.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
+  function onVisibility() { if (document.hidden && phase === "opening") finish(); }
+  document.addEventListener("keydown", onKey, true);
+  document.addEventListener("visibilitychange", onVisibility);
+  q(".rip-close").onclick = dispose;
+  q(".rip-skip").onclick = finish;
+  q(".rip-sound").onclick = e => { S.muted = !S.muted; e.currentTarget.innerHTML = icon(S.muted ? "muted" : "sound"); e.currentTarget.setAttribute("aria-label", S.muted ? "Turn sound on" : "Mute sound"); };
+  pack.onclick = rip;
+  pack.addEventListener("pointerdown", e => { pointer = { id: e.pointerId, x: e.clientX, y: e.clientY }; pack.setPointerCapture?.(e.pointerId); });
+  pack.addEventListener("pointermove", e => { if (pointer?.id === e.pointerId && Math.abs(e.clientX - pointer.x) > 35 && Math.abs(e.clientY - pointer.y) < 60) { pointer = null; rip(); } });
+  for (const event of ["pointerup", "pointercancel", "lostpointercapture"]) pack.addEventListener(event, () => { pointer = null; });
+  pack.focus({ preventScroll: true });
 }
+
 
 /* ---------- Sheets ---------- */
 function closeSheet() { document.querySelectorAll(".scrim").forEach(m => m.remove()); }
@@ -1148,8 +1110,14 @@ function sheet(html, label, closable = true) {
   return m;
 }
 function showResult(r, o) {
-  const close = () => { o.remove(); };
+  const close = () => { if (o.closeOpening) o.closeOpening(); else o.remove(); };
   const q = id => o.querySelector("#" + id);
+  if (r.preview) {
+    q("ores").innerHTML = `<span class="rp" style="background:#d8b46516;color:#d8bc83">MOTION STUDY 01</span><h2>Worth the anticipation?</h2><p class="sub">Animation preview only. No order or wallet card was created.</p><div class="sacts"><button class="btn light" id="previewReplay" type="button">Replay opening</button><button class="btn soft" id="previewBack" type="button">Back to pack</button></div>`;
+    q("previewReplay").onclick = () => { close(); previewOpening(r.p); };
+    q("previewBack").onclick = close;
+    return;
+  }
   if (r.api) {
     o.querySelector("#ores").innerHTML = `<span class="rp" style="--rb:rgba(245,184,74,.14);--rf:#f5c26b">Test card · NOT REDEEMABLE</span>
       <p class="eyebrow">You pulled</p>
@@ -1195,6 +1163,7 @@ const bind = {
   },
   pack() {
     setSlide(S.slide);
+    if ($("previewOpening")) $("previewOpening").onclick = () => previewOpening(packOf(S.packId));
     $("prev").onclick = () => setSlide(S.slide - 1); $("next").onclick = () => setSlide(S.slide + 1);
     document.querySelectorAll("#dots [data-dot]").forEach(d => d.onclick = () => setSlide(+d.dataset.dot));
     let x0 = null; const st = $("stage");
