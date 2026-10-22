@@ -2,89 +2,83 @@
   "schema_version": 1,
   "scope": "integration",
   "readiness": "blocked",
-  "tested_commit": "53b2bedf9621aaecc97c3727a07c1e05d0ffebaf",
-  "base_commit": "28515f4539c79dab41a21bbef8e0ca1c234d97d7",
-  "preview_url": null,
-  "summary": "Frontend is connected to the mock API contract (sign-in, server catalog, idempotent test orders, server wallet) but the golden journey has NOT run on a combined Vercel preview. Blocked on: no Supabase publishable key available to the frontend, no combined preview (Justin's Vercel account cannot see the chef-pack project and the repo has no Vercel Git integration), and auth redirect URLs. All cases were exercised only on a local same-origin harness: real /api/packs from chef-pack-dev.vercel.app, with auth, orders and wallet replaced by a local contract stand-in (tests/frontend/contract-harness.mjs). Local results are recorded in notes and do not count as passes. Re-run on tested_commit 53b2bed, after merging c67f155 with the server API kept as the source of truth; screenshots were taken earlier on cd8f344, before that merge.",
+  "tested_commit": "80dbdca3d77c833f5f14dff31d07d7d2f2743e98",
+  "base_commit": "65fee1b112d65f4d5a46070d04584c69ada7c467",
+  "preview_url": "https://chef-pack-ao1h1pdg3-ctbedfords-projects.vercel.app/prototype/index.html",
+  "summary": "Motion and sound study available for human review. Recorded golf-contact excerpt replaces synthetic reveal chime; portrait branded preview with React Bits adapted spring tilt/glare/rim. Complete current golden journey and Android audition remain outstanding. Earlier missing-preview/config blockers have been resolved; historical report retained separately.",
   "cases": [
     {
       "id": "CATALOG",
-      "status": "blocked",
+      "status": "pass",
       "evidence": [
-        "reports/frontend/evidence/local-02-home-catalog-mobile.jpg",
-        "reports/frontend/evidence/local-08-demo-theme-disabled-mobile.jpg",
-        "reports/frontend/evidence/api-eval-readonly.json"
+        "reports/frontend/evidence/motion-sound-study.json"
       ],
-      "notes": "Blocked: no combined preview. Local, same origin, proxied to the real deployed /api/packs: the page rendered the three server packs (Quick Bite $15, Sit-Down $40, Treat Yourself $100), and the home section showed '3 live'. Demo themes show 'Demo only' with a disabled 'Not for sale yet' button. Catalog 503 showed 'Couldn't load packs' plus Try again, and the retry recovered. node scripts/eval-api.mjs (read-only) passed HEALTH and CATALOG."
+      "notes": "Hosted combined preview rendered the three server packs. Read-only /api/health and /api/packs returned 200; mock_only flags present."
     },
     {
       "id": "SIGNIN",
-      "status": "blocked",
-      "evidence": [],
-      "notes": "Blocked: the frontend has no Supabase publishable key (AUTH_KEY is empty and /api/config does not exist), so real signup/login cannot reach chef-pack-dev auth. Email confirmation and redirect URLs are also untested. Local harness only (not Supabase): signup, password login, logout, silent token refresh after access-token expiry, and 'Your session expired. Sign in again.' after refresh failure all behaved as designed. Auth uses Supabase Auth REST over fetch (/auth/v1/signup, token?grant_type=password|refresh_token, user, logout) to avoid adding an unapproved dependency."
+      "status": "not_run",
+      "evidence": [
+        "reports/frontend/evidence/motion-sound-study.json"
+      ],
+      "notes": "Not rerun on this revision. Public auth configuration and combined preview now exist; old missing-config blockers are obsolete. Signup/confirmation and expiry still require current browser evidence."
     },
     {
       "id": "OPEN",
-      "status": "blocked",
+      "status": "not_run",
       "evidence": [
-        "reports/frontend/evidence/local-03-reveal-mobile.jpg",
-        "reports/frontend/evidence/local-order-requests.json"
+        "reports/frontend/evidence/motion-sound-study.json"
       ],
-      "notes": "Blocked: no combined preview or auth. Local harness on tested_commit 53b2bed: a double click sent exactly one POST /api/orders, the harness created one order, and the reveal rendered the server pull ('Demo restaurant — not redeemable', $15). The reel plays the base tier only because the server sends no tier. Fast spin toggled. The opener scaled to the viewport (--k 1.196 at 390x844)."
+      "notes": "Local harness on prior motion revision exercised one server-stand-in order to reveal and wallet. Current hosted branded preview is explicitly no-order; this does not establish current real API order PASS."
     },
     {
       "id": "RETRY",
-      "status": "blocked",
+      "status": "not_run",
       "evidence": [
-        "reports/frontend/evidence/local-06-order-timeout-retry-mobile.jpg",
-        "reports/frontend/evidence/local-07-pending-after-reload-mobile.jpg",
-        "reports/frontend/evidence/local-order-requests.json"
+        "reports/frontend/evidence/motion-sound-study.json"
       ],
-      "notes": "Blocked on the real backend. Local harness on 53b2bed: a 15 s timeout showed 'Not confirmed yet' with no card. 'Retry same order' hit a 503 and kept the pending attempt. After a reload the app prompted 'Unfinished order Sit-Down', and Finish opening sent the same Idempotency-Key (3 POSTs in total for that attempt), creating 1 order, after which the pending attempt cleared. Earlier on cd8f344, a dropped response was resent by the browser with the same key: one order. Across the whole session, 17 POSTs used 9 keys and created 9 orders."
+      "notes": "No changes to request/idempotency code. Current-revision timeout/reload/retry browser journey not rerun."
     },
     {
       "id": "WALLET",
-      "status": "blocked",
+      "status": "not_run",
       "evidence": [
-        "reports/frontend/evidence/local-04-wallet-user-a-mobile.jpg",
-        "reports/frontend/evidence/local-09-wallet-desktop.jpg"
+        "reports/frontend/evidence/motion-sound-study.json"
       ],
-      "notes": "Blocked on the real backend. Locally the wallet comes only from GET /api/wallet. Logout and login restored the same server items (user A: 7 cards). The old localStorage play-money wallet is deleted on load and never shown, and the browser-only accounts and balances from c67f155 were not merged. A wallet 503 showed an error with Try again (checked on cd8f344)."
+      "notes": "No API/wallet changes. Current-revision persistence and logout/login browser journey not rerun."
     },
     {
       "id": "ISOLATION",
-      "status": "blocked",
+      "status": "not_run",
       "evidence": [
-        "reports/frontend/evidence/local-05-wallet-user-b-isolation-mobile.jpg"
+        "reports/frontend/evidence/motion-sound-study.json"
       ],
-      "notes": "Blocked: real per-user isolation depends on Supabase RLS and two real test accounts. Locally on 53b2bed: logout cleared the user, the cards and the stored session. User A then saw 0 of user B's 2 cards, and earlier user B saw 0 of user A's cards. Pending attempts are keyed by user id and were never replayed across accounts."
+      "notes": "No ownership/RLS changes. Current-revision two-user browser journey not rerun."
     },
     {
       "id": "ERROR",
-      "status": "blocked",
+      "status": "not_run",
       "evidence": [
-        "reports/frontend/evidence/local-06-order-timeout-retry-mobile.jpg"
+        "reports/frontend/evidence/motion-sound-study.json"
       ],
-      "notes": "Blocked on the real backend. Local on 53b2bed: order timeout and 503 showed errors and a same-key retry, never success. A revoked session led to 'Your session expired' and a sign-in prompt. Catalog 503 showed 'Couldn't load packs' and recovered on retry. No new-key retry ever happened automatically. NOT RUN: real offline mode and a real server 400 through the UI."
+      "notes": "Current-revision offline/rejected-auth/503 browser journey not rerun."
     },
     {
       "id": "MOCK-SAFETY",
-      "status": "blocked",
+      "status": "not_run",
       "evidence": [
-        "reports/frontend/evidence/local-02-home-catalog-mobile.jpg",
-        "reports/frontend/evidence/local-03-reveal-mobile.jpg"
+        "reports/frontend/evidence/motion-sound-study.json"
       ],
-      "notes": "Not verified on a preview. Locally on 53b2bed: the TEST MODE / NOT REDEEMABLE bar shows on every page and the reveal is labeled. There is no balance button and no 'Add funds', Apple Pay, Google Pay or service-fee text anywhere in API mode. No Swap Pass, upgrade or barcode. The only network calls are same-origin /api/* and Supabase Auth."
+      "notes": "Hosted study labels MOTION PREVIEW / NO ORDER, DESIGN SAMPLE and NOT REDEEMABLE. Branded art only on explicit no-order preview; API results use server labels. Local log after audition and skip: zero orders/pulls. Full golden journey not rerun."
     },
     {
       "id": "VISUAL",
       "status": "not_run",
       "evidence": [
-        "reports/frontend/evidence/local-01-home-loading-mobile.jpg",
-        "reports/frontend/evidence/local-02-home-catalog-mobile.jpg",
-        "reports/frontend/evidence/local-09-wallet-desktop.jpg"
+        "reports/frontend/evidence/motion-sound-study.json",
+        "reports/frontend/evidence/motion-sound-study-mobile.png"
       ],
-      "notes": "Partial, local only. Took 390px mobile screenshots of loading, catalog, pack, reveal, wallet, empty and error states, plus a desktop wallet, all on cd8f344 before the c67f155 merge. The larger opener from c67f155 has no screenshot, because the browser pane was hidden on 53b2bed and CSS animations were paused. NOT RUN: a manual keyboard and focus walkthrough, and any preview screenshots."
+      "notes": "Hosted preview: complete reveal, standalone contact start, rendered brand SVG, keyboard spring tilt, and 390x844 viewport with document scrollWidth390 checked. Replay, skip and early close were exercised on local motion study. Actual Android frame pacing, speaker quality, and full current golden journey remain unverified; human taste approval pending."
     }
   ]
 }

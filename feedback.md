@@ -1,3 +1,20 @@
+# Current motion and sound handoff
+
+Readiness: BLOCKED for integration; ready for a human audition of the study.
+Tested code: 80dbdca3d77c833f5f14dff31d07d7d2f2743e98
+Main included: 65fee1b112d65f4d5a46070d04584c69ada7c467
+Combined preview: https://chef-pack-ao1h1pdg3-ctbedfords-projects.vercel.app/prototype/index.html
+
+Replaced the long reel with a native tear/lift/flip reveal. Added no-order replay. Latest iteration adds a 27KB edited CC0 golf contact recording, decoded once and replayed using Web Audio, plus an isolated sound audition button. Synthetic reveal impact removed. Added a portrait Burger King artwork sample and adapted React Bits spring tilt, glare, and rim; licenses and asset sources are under prototype/. Real API results retain server labels; branded sample never enters wallet. No dependencies/backend/auth contract changes.
+
+Checks: inline script syntax, 7 backend tests, scope check, hosted catalog/health, audio decode/start UI, branded artwork render, local zero-order preview; see reports/frontend/evidence/motion-sound-study.json. Screenshots accompany this handoff.
+
+Outstanding: Tyler and Justin judge sound/art/motion; test actual Android speaker, latency, and frame pacing. Complete the current golden integration journey before accepting or merging. The old missing publishable-key/preview blockers were resolved by main and this combined deployment; do not repeat them. Keep PR draft.
+
+---
+
+## Historical handoff (older revisions; not current proof)
+
 # Frontend handoff feedback
 
 Readiness: BLOCKED. The frontend is connected to the mock API contract, but the golden journey has not run on a combined Vercel preview.
