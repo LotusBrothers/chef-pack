@@ -1143,6 +1143,7 @@ function reveal(p, res) {
   }
   async function rip() {
     if (phase !== "ready") return;
+    const capStart = q(".rip-cap").style.transform || "translate3d(0,0,0) rotate(0deg)", capOpacity = q(".rip-cap").style.opacity || 1;
     phase = "opening"; q(".rip-skip").hidden = false; q(".rip-cap").style.transform = ""; q(".rip-cap").style.opacity = ""; pack.style.transform = ""; pack.disabled = true; q(".rip-hint").textContent = "Opening…";
     if (reduced) { finish(); return; }
     audio();
@@ -1150,7 +1151,7 @@ function reveal(p, res) {
     if (phase !== "opening") return;
     sfx("rip"); buzz(12);
     q(".rip-seam").hidden = true; q(".rip-touch").hidden = true;
-    animate(q(".rip-cap"), [{ transform: "translate3d(0,0,0) rotate(0deg)", opacity: 1 }, { transform: "translate3d(80px,-110px,0) rotate(25deg)", opacity: 0 }], { duration: 560, easing: "cubic-bezier(.16,.8,.3,1)" });
+    animate(q(".rip-cap"), [{ transform: capStart, opacity: capOpacity }, { transform: "translate3d(-145px,-110px,0) rotate(-35deg)", opacity: 0 }], { duration: 560, easing: "cubic-bezier(.16,.8,.3,1)" });
     animate(q(".rip-body"), [{ transform: "translate3d(0,0,0) rotate(0deg)", opacity: 1 }, { transform: "translate3d(-16px,100px,0) rotate(-8deg)", opacity: 0 }], { duration: 650, delay: 120, easing: "cubic-bezier(.4,0,.8,1)" });
     animate(halo, [{ opacity: 0, transform: "scale(.65)" }, { opacity: .85, transform: "scale(1)" }, { opacity: .45, transform: "scale(1)" }], { duration: 1200, easing: "ease-out" });
     q(".rip-shards").querySelectorAll("i").forEach((el, i) => {
