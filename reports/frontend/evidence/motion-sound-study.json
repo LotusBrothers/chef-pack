@@ -1,0 +1,32 @@
+{
+  "tested_commit": "80dbdca3d77c833f5f14dff31d07d7d2f2743e98",
+  "preview_url": "https://chef-pack-ao1h1pdg3-ctbedfords-projects.vercel.app/prototype/index.html",
+  "checks": {
+    "inline_syntax": "pass",
+    "backend_tests": "7 passed",
+    "contact_wav": {
+      "bytes": 26924,
+      "duration_seconds": 0.28,
+      "sample_rate": 48000,
+      "channels": 1,
+      "peak_dbfs": -3.1
+    },
+    "hosted_audio_decode": "Hear contact sound enabled",
+    "hosted_audio_start": "Played recorded contact / Hear again",
+    "hosted_health": 200,
+    "hosted_packs": 200,
+    "local_preview_orders": 0,
+    "local_preview_pulls": 0
+  },
+  "limitations": [
+    "No independent auditory quality claim; user audition required",
+    "Actual Android device performance not measured",
+    "Full integration journey not rerun on this code"
+  ],
+  "sources": [
+    "https://freesound.org/people/inbeeld/sounds/21877/",
+    "https://www.gameaudiolearning.com/knowledgebase/how-to-process-and-edit-audio-for-games",
+    "https://developer.mozilla.org/en-US/docs/Web/API/AudioBufferSourceNode",
+    "https://github.com/DavidHDev/react-bits/tree/main/src/content/Components/TiltedCard"
+  ]
+}

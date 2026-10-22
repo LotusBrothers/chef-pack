@@ -1,0 +1,43 @@
+{
+  "tested_commit": "b16e7c7c7adaf0a346295ebd39f3493becfe46d5",
+  "preview_url": "https://chef-pack-jh0m04bt1-ctbedfords-projects.vercel.app/",
+  "simulation": {
+    "initial_credits": 100,
+    "opening_cost": 10,
+    "rewards": [
+      {
+        "chance_percent": 70,
+        "credits": 5
+      },
+      {
+        "chance_percent": 25,
+        "credits": 15
+      },
+      {
+        "chance_percent": 5,
+        "credits": 50
+      }
+    ],
+    "restaurants": 9,
+    "restaurant_selection": "uniform; independent of reward",
+    "purchases": false,
+    "redemption": false,
+    "storage": "local browser, last 30 pulls; not an account ledger"
+  },
+  "verification": {
+    "local_browser": "Taco Bell 100 -> 95; refresh retained; second Olive Garden draw retained after refresh; refill to 100; skip third draw resulted in one credit award",
+    "hosted_browser": "Capital Grille Classic reward +5 CR; 100 -> 95; collection and balance persisted after refresh",
+    "local_network": {
+      "orders": 0,
+      "pulls": 0,
+      "post_requests": 0
+    },
+    "automated": "2 simulation tests pass, seven backend tests pass, syntax and frontend scope pass",
+    "mobile": "390px local viewport; no horizontal overflow; screenshot inspected",
+    "not_run": [
+      "Real Android hardware",
+      "Final reduced-motion emulation",
+      "Real registered-user account golden journey"
+    ]
+  }
+}

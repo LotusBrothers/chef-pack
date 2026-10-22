@@ -2,64 +2,127 @@
   "schema_version": 1,
   "scope": "integration",
   "readiness": "blocked",
-  "tested_commit": "648c2ed42a8fed3263501f9d74320789178b8103",
-  "base_commit": "7ed776df5038c33bbb03c3d6ae806c216ecc93e5",
-  "preview_url": "https://chef-pack-dev.vercel.app",
-  "summary": "Setup only: frontend is not integrated; this URL has the backend branch, not Justin's combined UI.",
+  "tested_commit": "b96cce6fa2f083bf375f82d0b9d6124b9d4267c1",
+  "base_commit": "65fee1b112d65f4d5a46070d04584c69ada7c467",
+  "preview_url": "https://chef-pack-r4lk248re-ctbedfords-projects.vercel.app/",
+  "summary": "Refined Play screen uses the shared real 3D mystery card and plate, a dark shell, compact balance and direct gold Open pack action. Hosted Slim Chickens result completes with +5 credits and balance 95. See reports/frontend/evidence/refined-play.json and refined-play.png. Free simulation remains separate from the account wallet; full real-account integration remains blocked.",
   "cases": [
     {
       "id": "CATALOG",
-      "status": "not_run",
-      "evidence": [],
-      "notes": "Pending Justin's integration and combined-preview browser evaluation."
+      "status": "pass",
+      "evidence": [
+        "reports/frontend/evidence/integrated-pack-experience.json",
+        "reports/frontend/evidence/integrated-choose-packs.png",
+        "reports/frontend/evidence/integrated-premium-result-hosted.png",
+        "reports/frontend/evidence/restaurant-logo-verification.json",
+        "reports/frontend/evidence/cascade-corner-fix.json",
+        "reports/frontend/evidence/free-simulation.json"
+      ],
+      "notes": "Current hosted Choose Packs renders Quick Bite $15, Sit-Down $40, Treat Yourself $100, canonical tier details and nine directory entries; unsupported legacy themes removed from picker."
     },
     {
       "id": "SIGNIN",
-      "status": "not_run",
-      "evidence": [],
-      "notes": "Pending Justin's integration and combined-preview browser evaluation."
+      "status": "blocked",
+      "evidence": [
+        "reports/frontend/evidence/integrated-pack-experience.json",
+        "reports/frontend/evidence/integrated-choose-packs.png",
+        "reports/frontend/evidence/integrated-premium-result-hosted.png",
+        "reports/frontend/evidence/restaurant-logo-verification.json",
+        "reports/frontend/evidence/cascade-corner-fix.json",
+        "reports/frontend/evidence/free-simulation.json"
+      ],
+      "notes": "Real-account acceptance unverified. A disposable local stand-in account exercised signup/open/reveal/wallet only; this is not proof of real Supabase behavior."
     },
     {
       "id": "OPEN",
-      "status": "not_run",
-      "evidence": [],
-      "notes": "Pending Justin's integration and combined-preview browser evaluation."
+      "status": "blocked",
+      "evidence": [
+        "reports/frontend/evidence/integrated-pack-experience.json",
+        "reports/frontend/evidence/integrated-choose-packs.png",
+        "reports/frontend/evidence/integrated-premium-result-hosted.png",
+        "reports/frontend/evidence/restaurant-logo-verification.json",
+        "reports/frontend/evidence/cascade-corner-fix.json",
+        "reports/frontend/evidence/free-simulation.json"
+      ],
+      "notes": "Real-account acceptance unverified. A disposable local stand-in account exercised signup/open/reveal/wallet only; this is not proof of real Supabase behavior."
     },
     {
       "id": "RETRY",
-      "status": "not_run",
-      "evidence": [],
-      "notes": "Pending Justin's integration and combined-preview browser evaluation."
+      "status": "blocked",
+      "evidence": [
+        "reports/frontend/evidence/integrated-pack-experience.json",
+        "reports/frontend/evidence/integrated-choose-packs.png",
+        "reports/frontend/evidence/integrated-premium-result-hosted.png",
+        "reports/frontend/evidence/restaurant-logo-verification.json",
+        "reports/frontend/evidence/cascade-corner-fix.json",
+        "reports/frontend/evidence/free-simulation.json"
+      ],
+      "notes": "Real-account acceptance unverified. A disposable local stand-in account exercised signup/open/reveal/wallet only; this is not proof of real Supabase behavior."
     },
     {
       "id": "WALLET",
-      "status": "not_run",
-      "evidence": [],
-      "notes": "Pending Justin's integration and combined-preview browser evaluation."
+      "status": "blocked",
+      "evidence": [
+        "reports/frontend/evidence/integrated-pack-experience.json",
+        "reports/frontend/evidence/integrated-choose-packs.png",
+        "reports/frontend/evidence/integrated-premium-result-hosted.png",
+        "reports/frontend/evidence/restaurant-logo-verification.json",
+        "reports/frontend/evidence/cascade-corner-fix.json",
+        "reports/frontend/evidence/free-simulation.json"
+      ],
+      "notes": "Real-account acceptance unverified. A disposable local stand-in account exercised signup/open/reveal/wallet only; this is not proof of real Supabase behavior."
     },
     {
       "id": "ISOLATION",
-      "status": "not_run",
-      "evidence": [],
-      "notes": "Pending Justin's integration and combined-preview browser evaluation."
+      "status": "blocked",
+      "evidence": [
+        "reports/frontend/evidence/integrated-pack-experience.json",
+        "reports/frontend/evidence/integrated-choose-packs.png",
+        "reports/frontend/evidence/integrated-premium-result-hosted.png",
+        "reports/frontend/evidence/restaurant-logo-verification.json",
+        "reports/frontend/evidence/cascade-corner-fix.json",
+        "reports/frontend/evidence/free-simulation.json"
+      ],
+      "notes": "Real-account acceptance unverified. A disposable local stand-in account exercised signup/open/reveal/wallet only; this is not proof of real Supabase behavior."
     },
     {
       "id": "ERROR",
       "status": "not_run",
-      "evidence": [],
-      "notes": "Pending Justin's integration and combined-preview browser evaluation."
+      "evidence": [
+        "reports/frontend/evidence/integrated-pack-experience.json",
+        "reports/frontend/evidence/integrated-choose-packs.png",
+        "reports/frontend/evidence/integrated-premium-result-hosted.png",
+        "reports/frontend/evidence/restaurant-logo-verification.json",
+        "reports/frontend/evidence/cascade-corner-fix.json",
+        "reports/frontend/evidence/free-simulation.json"
+      ],
+      "notes": "Real-account acceptance unverified. A disposable local stand-in account exercised signup/open/reveal/wallet only; this is not proof of real Supabase behavior."
     },
     {
       "id": "MOCK-SAFETY",
       "status": "not_run",
-      "evidence": [],
-      "notes": "Pending Justin's integration and combined-preview browser evaluation."
+      "evidence": [
+        "reports/frontend/evidence/integrated-pack-experience.json",
+        "reports/frontend/evidence/integrated-choose-packs.png",
+        "reports/frontend/evidence/integrated-premium-result-hosted.png",
+        "reports/frontend/evidence/restaurant-logo-verification.json",
+        "reports/frontend/evidence/cascade-corner-fix.json",
+        "reports/frontend/evidence/free-simulation.json"
+      ],
+      "notes": "Preview controls explicitly create no orders or gift cards. Signed-in shared 3D path preserves generic server label; local harness has one intentional order, one pull, one request. Full real authenticated safety acceptance unrun. Separate local free simulation has no purchase, redemption or server wallet path; local harness recorded zero orders/pulls/posts."
     },
     {
       "id": "VISUAL",
       "status": "not_run",
-      "evidence": [],
-      "notes": "Pending Justin's integration and combined-preview browser evaluation."
+      "evidence": [
+        "reports/frontend/evidence/integrated-pack-experience.json",
+        "reports/frontend/evidence/integrated-choose-packs.png",
+        "reports/frontend/evidence/integrated-premium-result-hosted.png",
+        "reports/frontend/evidence/restaurant-logo-verification.json",
+        "reports/frontend/evidence/cascade-corner-fix.json",
+        "reports/frontend/evidence/free-simulation.json"
+      ],
+      "notes": "Hosted picker -> premium details -> selected restaurant -> 3D reveal complete. Local harness includes signup/order/reveal/wallet. Full real-account journey, narrow viewport recheck and reduced-motion/Android checks remain outstanding. Latest logo-only pass verifies 9/9 hosted images and two new 3D logo textures. Full integration visual coverage remains incomplete. Free simulation desktop hosted result and 390px local landing inspected; skip, refill and refresh verified. Full API acceptance still incomplete."
     }
   ]
 }

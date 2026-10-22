@@ -1,0 +1,4 @@
+Three.js 0.186.1
+https://cdn.jsdelivr.net/npm/three@0.186.1/
+MIT license retained. RoomEnvironment import points to local module. No package manifest changes.
+Minified module core import points to local three.core.min.js.

@@ -1,0 +1,71 @@
+{
+  "tested_commit": "b1f1d0d48186c70d3a5ce289ce90b4edde7ee96e",
+  "base_commit": "65fee1b112d65f4d5a46070d04584c69ada7c467",
+  "preview_url": "https://chef-pack-4o2mofa42-ctbedfords-projects.vercel.app/",
+  "scope": "guest_visual_and_readonly_api",
+  "automated": {
+    "backend_tests": {
+      "command": "node --test tests/backend/*.test.mjs",
+      "passed": 7,
+      "failed": 0
+    },
+    "scope_check": "pass",
+    "inline_script_syntax": "pass",
+    "scene_module_syntax": "pass"
+  },
+  "hosted": {
+    "deployment_state": "READY",
+    "renderer": "webgl",
+    "selected_brand": "Little Caesars",
+    "selected_sound": "Clear confirm",
+    "plate_playback": "started",
+    "card_contact_playback": "started",
+    "confirmation_playback": "started",
+    "cascade_removed_after_completion": true,
+    "health_status": 200,
+    "health_payments": "mock_only",
+    "health_gift_cards": "mock_only",
+    "catalog_status": 200,
+    "catalog": [
+      [
+        "quick-bite",
+        1500
+      ],
+      [
+        "sit-down",
+        4000
+      ],
+      [
+        "treat-yourself",
+        10000
+      ]
+    ],
+    "viewport": {
+      "clientWidth": 390,
+      "scrollWidth": 390,
+      "clientHeight": 844
+    }
+  },
+  "local": {
+    "guest_order_requests": 0,
+    "orders": 0,
+    "pulls": 0,
+    "drop_twirl_completed": true,
+    "cascade_screenshot": "victory-cascade-local.png"
+  },
+  "limits": [
+    "No dedicated real test accounts configured in this session; combined-preview sign-in/order/retry/wallet/isolation journey NOT RUN.",
+    "Real Android hardware, frame pacing and audio latency NOT measured.",
+    "Reduced-motion behavior present in code but not emulated in this final run.",
+    "Mobile screenshot includes browser viewport framing; DOM reports 390 CSS pixels without horizontal content overflow.",
+    "Initial automatic arrival cannot guarantee sound before a user gesture; button-triggered replay started all three sounds."
+  ],
+  "implementation": {
+    "renderer": "Three.js 0.186.1 vendored with MIT license",
+    "plate_and_main_card": "WebGL geometry",
+    "victory_cascade": "16 mobile / 24 desktop DOM card images with perspective transforms; not additional WebGL meshes",
+    "idle": "on-demand renderer",
+    "pixel_ratio_cap": 1.5,
+    "shadow_map": 512
+  }
+}

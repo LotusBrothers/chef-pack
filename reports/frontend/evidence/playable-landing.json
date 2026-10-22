@@ -1,0 +1,29 @@
+{
+  "tested_commit": "fea8d524acd62e0b2d10d2fd8e3f88d3100aded1",
+  "preview_url": "https://chef-pack-3o55db9b9-ctbedfords-projects.vercel.app/",
+  "checks": {
+    "root_redirect": "hosted root reached prototype/index.html and playable guest stage",
+    "guest_auth": "no login form encountered",
+    "local_keyboard": "Enter opened starter pack",
+    "hosted_short_swipe": "returned sealed",
+    "hosted_full_swipe": "entered opening then result",
+    "local_replay": "returned to sealed starter",
+    "local_choose_pack": "opened server-backed catalog",
+    "phone_viewport": {
+      "width": 390,
+      "height": 844,
+      "document_scroll_width": 390
+    },
+    "local_guest_order_requests": 0,
+    "local_guest_orders": 0,
+    "local_guest_pulls": 0,
+    "syntax": "pass",
+    "frontend_scope": "pass"
+  },
+  "limitations": [
+    "No real Android device tested",
+    "Full current golden account/order/wallet journey remains incomplete",
+    "Human taste review pending"
+  ],
+  "brief": "frontend/GAME-EXPERIENCE-BRIEF.md"
+}

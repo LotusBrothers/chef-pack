@@ -1,0 +1,16 @@
+{
+  "tested_commit": "e9cfed80496956faebdea79d2e0a4fee87b46301",
+  "preview_url": "https://chef-pack-3niua0ze6-ctbedfords-projects.vercel.app/",
+  "change": "Cascade images default to opacity zero; delayed flights use fill both so first keyframe applies before start.",
+  "verification": [
+    "Inline script syntax passes",
+    "Frontend scope passes",
+    "Hosted replay creates cascade; screenshot taken immediately after cascade image attachment shows no idle corner stack",
+    "Clear confirm playback label reaches Played"
+  ],
+  "limits": [
+    "DOM animation timing introspection is unsupported in browser tooling; no such measurement claimed.",
+    "No paid random rewards, real balances or redemption implemented.",
+    "Real-account integration acceptance remains blocked."
+  ]
+}
