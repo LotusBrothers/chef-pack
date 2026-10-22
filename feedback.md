@@ -1,3 +1,20 @@
+# Restrained confirmation sound handoff
+
+Readiness: BLOCKED for integration; sound comparison ready to audition.
+Tested code: 99ec42c8f02d6ac4a1a6787bce85e18763a3a312
+Main included: 65fee1b112d65f4d5a46070d04584c69ada7c467
+Preview: https://chef-pack-rc8368quj-ctbedfords-projects.vercel.app/
+
+Replaced game-style reward palette with six original brief completion cues: Soft confirm, Clear confirm, Warm confirm, Glass confirm, Gentle confirm, Quiet tick. Each still automatically replays the scene. All six local replays and final hosted Clear confirm completed with the correct Played label. Syntax and scope passed. Existing visual design unchanged.
+
+Research favors subtle, transition-synchronized UI feedback (Apple sound-design guidance and SND sine-kit design); specific cue timings and pitches need user judgment. No Apple/SND audio copied. Visual investigation: actual meshes and reflected lighting are needed for a more convincing rotating metallic cloche; damped springs and on-demand rendering are the proposed next pass, not implemented here. See reports/frontend/evidence/confirmation-sound-study.json for references and metrics.
+
+Full account/order/wallet acceptance and actual Android measurement remain outstanding. Keep draft; the blocked report gate intentionally fails.
+
+---
+
+## Previous handoff
+
 # Cloche and six-sound comparison handoff
 
 Readiness: BLOCKED for full integration; guest comparison preview available.

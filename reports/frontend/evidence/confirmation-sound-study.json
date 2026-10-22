@@ -1,0 +1,81 @@
+{
+  "tested_commit": "99ec42c8f02d6ac4a1a6787bce85e18763a3a312",
+  "preview_url": "https://chef-pack-rc8368quj-ctbedfords-projects.vercel.app/",
+  "sounds": [
+    {
+      "file": "soft-confirm.wav",
+      "seconds": 0.23,
+      "bytes": 14764,
+      "peak_dbfs": -9.11,
+      "sha256": "919fe8afbedb85d4d154485b9e2be8c3ae657ce11369819fdec7aa32fa692f99"
+    },
+    {
+      "file": "clear-confirm.wav",
+      "seconds": 0.25,
+      "bytes": 16044,
+      "peak_dbfs": -9.16,
+      "sha256": "a26eba8eb1da97fd3d999f43fdd85a08feb0679a0100ef41896e46d0628b0c21"
+    },
+    {
+      "file": "warm-confirm.wav",
+      "seconds": 0.27,
+      "bytes": 17324,
+      "peak_dbfs": -8.77,
+      "sha256": "3e247c00a408d588d880de72893aa038a9d4952d7b59db8ca4aa417ac803c48b"
+    },
+    {
+      "file": "glass-confirm.wav",
+      "seconds": 0.22,
+      "bytes": 14124,
+      "peak_dbfs": -8.1,
+      "sha256": "d24c37c0af5335f59f8df9154bf782b7a146d6dcc79f3940944cc2757792c100"
+    },
+    {
+      "file": "gentle-confirm.wav",
+      "seconds": 0.29,
+      "bytes": 18604,
+      "peak_dbfs": -9.5,
+      "sha256": "093e41fa78387ae2cdf90388f6e102161efb42659b05d10ec7d3ed5a43e0501e"
+    },
+    {
+      "file": "quiet-tick.wav",
+      "seconds": 0.16,
+      "bytes": 10284,
+      "peak_dbfs": -10.51,
+      "sha256": "10ea40c736083691a1d4085a5066843217e85250d98f8b070a7bcd88593f1748"
+    }
+  ],
+  "checks": {
+    "local_six_replays": [
+      "Soft confirm",
+      "Clear confirm",
+      "Warm confirm",
+      "Glass confirm",
+      "Gentle confirm",
+      "Quiet tick"
+    ],
+    "hosted_replay": "Clear confirm; matching Played label and completed result",
+    "syntax": "pass",
+    "frontend_scope": "pass"
+  },
+  "research": {
+    "audio": "Brief subtle confirmation fitted to visual transition. Target durations are audition hypotheses, not universal psychoacoustic claims.",
+    "current_visual_limitation": "Cloche/plate are SVG drawings, card is CSS3D; current keyframe staging is not rigid-body simulation.",
+    "proposed_visual_direction": "Small actual3D scene with lathed dish/cloche, metal/roughness material, environment reflections, restrained springs and render-on-demand. Not implemented by this sound-only revision.",
+    "sources": [
+      "https://developer.apple.com/videos/play/wwdc2023/10271/",
+      "https://developer.apple.com/design/human-interface-guidelines/feedback",
+      "https://snd.dev/",
+      "https://threejs.org/docs/pages/LatheGeometry.html",
+      "https://threejs.org/docs/pages/MeshStandardMaterial.html",
+      "https://threejs.org/manual/pages/rendering-on-demand.html",
+      "https://motion.dev/docs/spring"
+    ]
+  },
+  "limitations": [
+    "Human sound preference not accepted",
+    "No actual Android hardware measurement",
+    "Full golden integration browser journey unrun",
+    "True3D visual upgrade is a recommendation, not completed work"
+  ]
+}
