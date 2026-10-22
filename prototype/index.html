@@ -735,6 +735,34 @@
 .mystery-face .mf-price{position:absolute;left:0;right:0;top:118.5cqw;margin:0;text-align:center;font-size:3.2cqw}
 .mystery-odds .mf-brands{margin:5cqw 0 0;font-size:3.6cqw;line-height:1.5;color:#9aa0a8}
 @media (prefers-reduced-motion: reduce){.mf-orbit,.orb-badge{animation:none}.orb-dot{opacity:1;transform:none}}
+
+/* ---------- See what's inside ---------- */
+.sim-under{display:grid;justify-items:center;gap:2px;margin:8px 0 14px}
+.sim-under .sim-hint{margin:2px 0 0}
+.sim-inside{display:inline-flex;align-items:center;gap:7px;min-height:40px;padding:0 16px;border:0;border-radius:99px;background:var(--surface);color:var(--fg);font-size:14px;font-weight:600}
+.sim-inside svg{width:17px;height:17px}
+.sim-inside:active{transform:scale(.97)}
+.inside h2{margin:2px 0 4px;font:700 26px/1.12 var(--display);letter-spacing:-.03em}
+.inside .sub{margin:0;color:var(--muted);font-size:14.5px;line-height:1.45}
+.ins-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin:22px 0 10px}
+.ins-head h3{margin:0;font:700 18px/1.2 var(--display);letter-spacing:-.02em}.ins-head small{color:var(--muted);font-size:12.5px}
+.ins-tiers{display:grid;background:var(--surface);border-radius:16px;overflow:hidden}
+.ins-tiers>div{display:grid;grid-template-columns:minmax(0,1fr) auto 46px;align-items:center;gap:2px 12px;padding:12px 16px;position:relative}
+.ins-tiers>div+div::before{content:"";position:absolute;top:0;left:16px;right:0;border-top:1px solid var(--line)}
+.ins-tiers b{font:700 18px/1 var(--display);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.ins-odds{text-align:right;color:var(--muted);font-size:14px;font-weight:600;font-variant-numeric:tabular-nums}
+.ins-tiers small{grid-column:1/-1;color:var(--muted);font-size:12px}
+.ins-pill{justify-self:start;font-size:12px;font-weight:700;letter-spacing:.04em;padding:5px 10px;border-radius:99px;background:#e9e9ed;color:#3a3a3c}
+.ins-pill[data-tier="foil"]{background:linear-gradient(135deg,#f6f7f9,#c9ced6,#eef0f3);color:#3d434b;box-shadow:inset 0 0 0 1px #00000010}
+.ins-pill[data-tier="holo"]{background:linear-gradient(110deg,#c8f6ef,#ead7ff,#fff0c2,#cfe6ff);color:#3b3350}
+.ins-pill[data-tier="black"]{background:linear-gradient(160deg,#2a2c30,#0b0b0c);color:#e3e7eb;box-shadow:inset 0 0 0 1px #b9bfc7}
+.ins-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px 10px}
+.ins-card{display:grid;gap:2px;min-width:0}
+.ins-card .col-art{border-radius:12px;border-width:2px;margin-bottom:5px;gap:6px}
+.ins-card .col-art b{font-size:15px}
+.ins-name{font-size:13.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ins-card small{color:var(--muted);font-size:11.5px}
+.ins-done{width:100%;margin-top:14px}
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -1018,7 +1046,7 @@ const openPack = id => go("pack", { packId: id, from: S.page, slide: 3 });
 /* ---------- Pages ---------- */
 function starterPack() { return { id: "starter-preview", name: "Starter Pack", guest: true, price: 15, tiers: [15], spots: [R.bk] }; }
 function home() {
-  return `<section class="sim-game"><span class="sim-tag"><i></i>Free play</span><div class="sim-card-host" id="simCardHost"></div><p class="sim-hint" id="simHint">${game.balance < COST ? 'Not enough credits · tap your balance to refill' : 'Drag the card to see what’s inside'}</p><div class="swipe" id="simSwipe" ${game.balance < COST ? 'data-disabled' : ''}><span class="swipe-fill"></span><span class="swipe-label"><span>${game.balance < COST ? 'Not enough credits' : 'Swipe to open'}</span><small>${COST} credits</small></span><button class="swipe-knob" id="simPlay" type="button" aria-label="Swipe right to open the pack for ${COST} credits, or press Enter" ${game.balance < COST ? 'disabled' : ''}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l6 6-6 6M12 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div><p class="sim-disclaimer">Demo credits · no cash value</p>${(() => { const open = game.history.filter(r => r.status === "open").length; return open ? `<button class="sim-pending" id="simPending" type="button">${open} card${open === 1 ? "" : "s"} waiting for you to decide <span>Collection →</span></button>` : ""; })()}</section>`;
+  return `<section class="sim-game"><span class="sim-tag"><i></i>Free play</span><div class="sim-card-host" id="simCardHost"></div><div class="sim-under"><button class="sim-inside" id="simInside" type="button">${icon("cards")}See what’s inside</button>${game.balance < COST ? `<p class="sim-hint" id="simHint">Not enough credits · tap your balance to refill</p>` : ""}</div><div class="swipe" id="simSwipe" ${game.balance < COST ? 'data-disabled' : ''}><span class="swipe-fill"></span><span class="swipe-label"><span>${game.balance < COST ? 'Not enough credits' : 'Swipe to open'}</span><small>${COST} credits</small></span><button class="swipe-knob" id="simPlay" type="button" aria-label="Swipe right to open the pack for ${COST} credits, or press Enter" ${game.balance < COST ? 'disabled' : ''}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l6 6-6 6M12 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div><p class="sim-disclaimer">Demo credits · no cash value</p>${(() => { const open = game.history.filter(r => r.status === "open").length; return open ? `<button class="sim-pending" id="simPending" type="button">${open} card${open === 1 ? "" : "s"} waiting for you to decide <span>Collection →</span></button>` : ""; })()}</section>`;
 }
 /* ---------- Collection: every free-play card and what happened to it ---------- */
 function collection() {
@@ -1036,13 +1064,13 @@ function collection() {
 function colTile(r) {
   const status = r.status === "open" ? `<span class="col-status open">Decide</span>` : r.status === "sold" ? `<span class="col-status sold">Sold · +${sellValue(r.tier.credits)}</span>` : `<span class="col-status kept">Redeemed</span>`;
   return `<button class="col-card${r.status === "sold" ? " is-sold" : ""}" type="button" data-num="${r.number}" aria-label="${esc(r.brand.name)}, ${esc(r.tier.name)} ${r.tier.credits}-credit card, ${r.status === "open" ? "waiting for a decision" : r.status}">
-    <span class="col-art" style="--c:${r.brand.bg};--a:${r.brand.accent};--i:${r.brand.ink};--o:${r.brand.orbit}"><span class="col-tier">${esc(r.tier.name)}</span>${r.brand.art !== null ? `<span class="col-logo"><img src="./art/${esc(r.brand.art || r.brand.id + ".svg")}" alt=""></span>` : `<strong>${esc(r.brand.name)}</strong>`}<b>${r.tier.credits} CR</b></span>
+    <span class="col-art" style="--c:${r.brand.bg};--a:${r.brand.accent};--i:${r.brand.ink};--o:${isDark(r.brand.orbit) ? "#f1f2f4" : r.brand.orbit}"><span class="col-tier">${esc(r.tier.name)}</span>${r.brand.art !== null ? `<span class="col-logo"><img src="./art/${esc(r.brand.art || r.brand.id + ".svg")}" alt=""></span>` : `<strong>${esc(r.brand.name)}</strong>`}<b>${r.tier.credits} CR</b></span>
     <span class="col-name">${esc(r.brand.name)}</span><small>Pack #${r.number}</small>${status}</button>`;
 }
 function colCardSheet(number) {
   const r = game.history.find(x => x.number === number); if (!r) return;
   if (r.status === "open") return simDecisionSheet(number);
-  sheet(`<div class="sim-thumb" style="--card-color:${r.brand.bg};--card-ink:${r.brand.ink};--card-accent:${r.brand.accent};--o:${r.brand.orbit}">${r.brand.art !== null ? `<span class="col-logo"><img src="./art/${esc(r.brand.art || r.brand.id + ".svg")}" alt=""></span>` : ""}<b>${r.tier.credits} CR</b></div>
+  sheet(`<div class="sim-thumb" style="--card-color:${r.brand.bg};--card-ink:${r.brand.ink};--card-accent:${r.brand.accent};--o:${isDark(r.brand.orbit) ? "#f1f2f4" : r.brand.orbit}">${r.brand.art !== null ? `<span class="col-logo"><img src="./art/${esc(r.brand.art || r.brand.id + ".svg")}" alt=""></span>` : ""}<b>${r.tier.credits} CR</b></div>
     <div class="result"><p class="eyebrow">${esc(r.tier.name)} · pack #${r.number}</p><h2>${esc(r.brand.name)}</h2>
     <div class="valuebox"><span><b>${r.status === "sold" ? `+${sellValue(r.tier.credits)}` : r.tier.credits}</b> credits</span><span>${r.status === "sold" ? "Sold back for play credits" : "Redeemed · in your collection"}</span></div>
     <p class="sub" style="margin-top:12px">Free play. ${r.status === "sold" ? "This card went back to Chef Pack." : "In the real app this is where your restaurant gift card and barcode appear."}</p></div>`, r.brand.name);
@@ -1154,6 +1182,22 @@ function mountHomeCard() {
   }
 }
 
+/* "See what's inside": every gift card in the mystery pack and the values it can hold. */
+function insideSheet() {
+  const lo = TIERS[0].credits, hi = TIERS[TIERS.length - 1].credits;
+  const m = sheet(`<div class="inside">
+    <p class="eyebrow">Mystery pack · ${COST} credits</p>
+    <h2>What’s inside</h2>
+    <p class="sub">One restaurant gift card per pack. Every card is worth at least the ${COST}-credit pack.</p>
+    <div class="ins-head"><h3>Card values</h3><small>Chance per pack</small></div>
+    <div class="ins-tiers">${TIERS.map(t => `<div><span class="ins-pill" data-tier="${t.id}">${esc(t.name)}</span><b>${t.credits} CR</b><span class="ins-odds">${t.chance}%</span><small>Sells back for ${sellValue(t.credits)}</small></div>`).join("")}</div>
+    <div class="ins-head"><h3>Gift cards</h3><small>${SIM_BRANDS.length} restaurants · 1 in ${SIM_BRANDS.length} each</small></div>
+    <div class="ins-grid">${SIM_BRANDS.map(b => `<div class="ins-card"><span class="col-art" style="--c:${b.bg};--a:${b.accent};--i:${b.ink};--o:${isDark(b.orbit) ? "#f1f2f4" : b.orbit}">${b.art !== null ? `<span class="col-logo"><img src="./art/${esc(b.art || b.id + ".svg")}" alt=""></span>` : `<strong>${esc(b.name)}</strong>`}<b>${lo}–${hi}</b></span><span class="ins-name">${esc(b.name)}</span><small>${lo}–${hi} credit card</small></div>`).join("")}</div>
+    <p class="foot">The restaurant and the card value are drawn separately when you open the pack.<br>Free play · credits have no cash value · not real gift cards.</p>
+    <button class="btn ins-done" id="insDone" type="button">Back to the pack</button>
+  </div>`, "What’s inside the mystery pack");
+  m.querySelector("#insDone").onclick = closeSheet;
+}
 function simulationRules() {
   sheet(`<div class="result"><p class="eyebrow">FREE SIMULATION</p><h2>Rip, flip, then decide.</h2><p>Start with 100 free credits. Each pack costs ${COST} credits and holds one restaurant card. Every card is worth at least the pack price:</p><ul>${TIERS.map(t=>`<li>${t.name}: ${t.chance}% chance · ${t.credits}-credit card</li>`).join('')}</ul><p>After the reveal, choose once per card. <b>Redeem</b> keeps the card in your collection. <b>Sell back</b> returns ${Math.round(SELL_BACK*100)}% of the card's value as play credits (${TIERS.map(t=>sellValue(t.credits)).join(', ')} credits). Close the reveal without choosing and the card waits in your Collection.</p><p>Each of the nine restaurant designs has an equal chance (1 in 9), independent of the card value. Outcomes are drawn when you tap Open; skipping or closing the animation does not redraw them.</p><p>You can refill to 100 free credits at any time. Credits have no cash value and cannot be bought, withdrawn or transferred. Redeeming here gives no real gift card. This browser stores your balance and the last 30 pulls; clearing site data resets the game. This is a local simulation, not a secure account ledger.</p></div>`, 'Free play rules');
 }
@@ -1201,7 +1245,7 @@ function simDecision(host, number, close) {
 function simDecisionSheet(number) {
   const r = game.history.find(x => x.number === number);
   if (!r || busy) return;
-  const m = sheet(`<div class="sim-thumb" style="--card-color:${r.brand.bg};--card-ink:${r.brand.ink};--card-accent:${r.brand.accent};--o:${r.brand.orbit}">${r.brand.art !== null ? `<span class="col-logo"><img src="./art/${esc(r.brand.art || r.brand.id + ".svg")}" alt=""></span>` : ""}<b>${r.tier.credits} CR</b></div><div class="result sim-sheet" id="simDecide"></div>`, "Decide on your card");
+  const m = sheet(`<div class="sim-thumb" style="--card-color:${r.brand.bg};--card-ink:${r.brand.ink};--card-accent:${r.brand.accent};--o:${isDark(r.brand.orbit) ? "#f1f2f4" : r.brand.orbit}">${r.brand.art !== null ? `<span class="col-logo"><img src="./art/${esc(r.brand.art || r.brand.id + ".svg")}" alt=""></span>` : ""}<b>${r.tier.credits} CR</b></div><div class="result sim-sheet" id="simDecide"></div>`, "Decide on your card");
   simDecision(m.querySelector("#simDecide"), number, () => { closeSheet(); render(); });
 }
 function playSimulation() {
@@ -2158,6 +2202,7 @@ function showBrand(s) {
 const bind = {
   home() {
     bindSwipe();
+    $("simInside").onclick = insideSheet;
     mountHomeCard();
     if ($("simPending")) $("simPending").onclick = () => go("collection", { colFilter: "open" });
   },
