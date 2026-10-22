@@ -658,6 +658,45 @@
 .guest-note{color:#8a6a2c}.guest-note small{color:var(--muted)}
 .game-entry .rip-heading .rip-caption{color:var(--muted)}.game-entry .rip-hint{color:var(--fg)}
 .audition,.rip-audition{color:var(--fg-2)}
+
+/* ---------- Collection and Profile pages ---------- */
+.sim-pending{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;margin-top:4px;padding:14px 16px;border:0;border-radius:14px;background:var(--surface);color:var(--fg);font-size:14px;font-weight:600;text-align:left}
+.sim-pending span{color:var(--muted);font-weight:500;white-space:nowrap}
+.col-chips{margin-top:16px}
+.col-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 12px;margin-top:16px}
+.col-card{display:grid;gap:3px;min-width:0;padding:0;border:0;background:none;text-align:left;transition:transform .15s var(--ease)}
+.col-card:active{transform:scale(.97)}
+.col-art{position:relative;display:grid;place-items:center;align-content:center;gap:10px;aspect-ratio:.75;margin-bottom:6px;border-radius:16px;overflow:hidden;color:var(--i);
+  background:repeating-linear-gradient(118deg,transparent 0 30px,#ffffff10 30px 31px),linear-gradient(150deg,#ffffff26,transparent 50%),var(--c);border:3px solid var(--a);box-shadow:0 8px 18px rgba(0,0,0,.12)}
+.col-art img{width:64%;height:34%;object-fit:contain}
+.col-art strong{font:700 17px/1.1 var(--display);text-align:center;padding:0 10px}
+.col-art b{font:700 22px/1 var(--display);letter-spacing:-.03em}
+.col-tier{position:absolute;top:8px;right:8px;font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:rgba(0,0,0,.28);color:#fff;padding:3px 7px;border-radius:99px}
+.col-card.is-sold .col-art{filter:grayscale(.85);opacity:.55}
+.col-name{font-size:15px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.col-card small{color:var(--muted);font-size:12.5px}
+.col-status{justify-self:start;margin-top:4px;font-size:11.5px;font-weight:600;padding:4px 9px;border-radius:99px}
+.col-status.open{background:var(--fg);color:#fff}.col-status.kept{background:var(--ok-bg);color:var(--ok)}.col-status.sold{background:var(--surface);color:var(--muted)}
+.phead{display:flex;align-items:center;gap:14px;padding-top:10px}
+.phead h1{margin:0;font:700 26px/1.1 var(--display);letter-spacing:-.03em;word-break:break-word}
+.phead p{margin:4px 0 0;color:var(--muted);font-size:14px}
+.pavatar{flex:none;width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(160deg,#2a2c30,#0b0b0c);color:#d9dde2;font:700 22px/1 var(--display);text-transform:uppercase;box-shadow:inset 0 0 0 1.5px #b9bfc7}
+.pavatar svg{width:28px;height:28px}
+.pstats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:20px}
+.pstats div{display:grid;gap:4px;padding:14px 16px;border-radius:16px;background:var(--surface);min-width:0}
+.pstats small{color:var(--muted);font-size:12.5px;font-weight:500}
+.pstats b{font:700 26px/1 var(--display);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.pstats span{color:var(--ok);font-size:12px;font-weight:600}
+.pbest{margin:12px 2px 0;font-size:13.5px;color:var(--muted)}.pbest b{color:var(--fg);font-weight:600}
+.psec{margin:28px 0 10px;font:700 19px/1.2 var(--display);letter-spacing:-.02em}
+.plist{display:grid;background:var(--surface);border-radius:16px;overflow:hidden}
+.prow{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:60px;padding:10px 16px;border:0;background:none;text-align:left;position:relative}
+.prow+.prow::before{content:"";position:absolute;top:0;left:16px;right:0;border-top:1px solid var(--line)}
+.prow b{display:block;font-size:15.5px;font-weight:600}.prow small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}
+.prow-r{color:var(--faint);font-size:22px;line-height:1}
+.prow[aria-pressed="true"] .tog{background:var(--ok)}.prow[aria-pressed="true"] .tog::after{transform:translateX(20px)}
+.col-logo{width:62%;aspect-ratio:1;border-radius:50%;background:var(--o);display:grid;place-items:center;box-shadow:0 4px 10px rgba(0,0,0,.14)}
+.col-art .col-logo img,.sim-thumb .col-logo img{width:74%;height:74%;object-fit:contain}
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -681,6 +720,7 @@
     <symbol id="ic-card" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 10h18" stroke="currentColor" stroke-width="2"/></symbol>
     <symbol id="ic-sound" viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
     <symbol id="ic-muted" viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="m16 9 6 6m0-6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="ic-user" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="4" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
     <symbol id="ic-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
     <symbol id="hat-w" viewBox="0 0 32 32">
       <path fill="currentColor" d="M9.2 23.2v-6.1a6 6 0 0 1-.6-11.4 7.4 7.4 0 0 1 14.8 0 6 6 0 0 1-.6 11.4v6.1z"/>
@@ -868,7 +908,7 @@ function setPending(a) { const all = pendingAll(); all[a.user_id] = a; try { loc
 function clearPending(a) { const all = pendingAll(); if (all[a.user_id]?.key === a.key) { delete all[a.user_id]; try { localStorage.setItem(PENDING_KEY, JSON.stringify(all)); } catch (e) {} } }
 
 let S, busy = false;
-const fresh = () => ({ page: "home", packId: "quick-bite", from: "home", cat: "all", q: "", slide: 3, muted: false, fastSpin: false,
+const fresh = () => ({ page: "home", colFilter: "all", packId: "quick-bite", from: "home", cat: "all", q: "", slide: 3, muted: false, fastSpin: false,
   catalog: null, catErr: "", user: null, pulls: [], wstate: "signedout", werr: "", note: "" });
 const packOf = id => [...(S?.catalog || []), ...DEMO, ...PACKS, FREE].find(p => p.id === id);
 
@@ -876,11 +916,11 @@ const packOf = id => [...(S?.catalog || []), ...DEMO, ...PACKS, FREE].find(p => 
 function go(page, extra = {}) { if (busy) return; Object.assign(S, { page }, extra); render(true); if (page === "wallet") loadWallet(); }
 function render(motion = false) {
   idleScene?.dispose(); idleScene = null; disposeHomeCard();
-  $("app").classList.toggle("playing", S.page === "home");
+  $("app").classList.toggle("playing", isPlayPage());
   closeSheet();
   chrome();
   const v = $("view");
-  v.innerHTML = ({ home, browse, pack, cards, wallet })[S.page]();
+  v.innerHTML = ({ home, collection, profile, browse, pack, cards, wallet })[S.page]();
   v.scrollTop = 0; $("top").classList.remove("shadow");
   if (motion) { v.classList.remove("in-fade"); v.offsetWidth; v.classList.add("in-fade"); }
   bind[S.page]?.();
@@ -895,24 +935,27 @@ const testBar = `<div class="testbar" role="note"><b>TEST MODE</b><span>No real 
 const acctBtn = () => S.user
   ? `<button class="bal me" id="acct" type="button" aria-label="Account: ${esc(S.user.email || "signed in")}">${esc((S.user.email || "A").trim().charAt(0))}</button>`
   : `<button class="bal" id="acct" type="button" aria-label="Sign in"><span>Sign in</span></button>`;
+const PLAY_PAGES = ["home", "collection", "profile"];
+const isPlayPage = () => PLAY_PAGES.includes(S.page);
 function topBar() {
-  if (S.page === "home") return `<div class="bar"><button class="brand" id="brand" type="button" aria-label="Chef Pack home"><svg aria-hidden="true"><use href="#hat"/></svg><b>Chef Pack</b></button><span class="grow"></span><button class="sim-header-rules" id="simRules" type="button">Rules</button><button class="bal" id="acct" type="button" aria-label="Balance: ${game.balance} free credits">${game.balance}<small>credits</small></button></div>`;
+  if (isPlayPage()) return `<div class="bar"><button class="brand" id="brand" type="button" aria-label="Chef Pack home"><svg aria-hidden="true"><use href="#hat"/></svg><b>Chef Pack</b></button><span class="grow"></span><button class="sim-header-rules" id="simRules" type="button">Rules</button><button class="bal" id="acct" type="button" aria-label="Balance: ${game.balance} free credits">${game.balance}<small>credits</small></button></div>`;
   if (S.page === "pack") return `${testBar}<div class="bar"><button class="round" id="back" type="button" aria-label="Back">${icon("back")}</button><span class="bartitle">${esc(packOf(S.packId).name)}</span>${acctBtn()}</div>`;
   const searchable = S.page === "browse" || S.page === "cards";
   return `${testBar}<div class="bar"><button class="brand" id="brand" type="button" aria-label="Chef Pack home"><svg aria-hidden="true"><use href="#hat"/></svg><b>Chef Pack</b></button><span class="grow"></span><span class="pill">${icon("pin")}${CITY}</span>${acctBtn()}</div>
     ${searchable ? `<label class="search">${icon("search")}<input id="q" type="search" inputmode="search" enterkeyhint="search" autocomplete="off" placeholder="${S.page === "cards" ? "Search gift cards" : "Search restaurants or packs"}" aria-label="Search" value="${esc(S.q)}"></label>` : ""}`;
 }
 function tabBar() {
-  if (S.page === "home") return `<nav class="tabbar" aria-label="Free game"><button type="button" data-go="home" aria-current="page">${icon('home')}Play</button><button type="button" id="simCollectionNav">${icon('cards')}Collection</button></nav>`;
   const t = (id, ic, label, extra = "") => `<button type="button" data-go="${id}" aria-current="${S.page === id ? "page" : "false"}">${icon(ic)}${label}${extra}</button>`;
+  if (isPlayPage()) { const open = game.history.filter(r => r.status === "open").length;
+    return `<nav class="tabbar" aria-label="Free game">${t("home", "home", "Play")}${t("collection", "cards", "Collection", open ? `<span class="dot">${open}</span>` : "")}${t("profile", "user", "Profile")}</nav>`; }
   return `<nav class="tabbar" aria-label="Main">${t("home", "home", "Play")}${t("browse", "cards", "Test packs")}${t("wallet", "wallet", "Test wallet", S.pulls.length ? `<span class="dot">${S.pulls.length}</span>` : "")}</nav>`;
 }
 function bindChrome() {
   document.querySelectorAll("[data-go]").forEach(b => b.onclick = () => go(b.dataset.go, { q: "" }));
   if ($("brand")) $("brand").onclick = () => go("home", { cat: "all", q: "" });
   if ($("back")) $("back").onclick = () => go(S.from || "home");
-  $("acct").onclick = () => S.page === "home" ? simulationBalance() : accountSheet();
-  if ($("simCollectionNav")) $("simCollectionNav").onclick = () => document.querySelector('.sim-history').scrollIntoView({block:'start'});
+  $("acct").onclick = () => isPlayPage() ? simulationBalance() : accountSheet();
+  if ($("simRules")) $("simRules").onclick = simulationRules;
   if ($("simRulesNav")) $("simRulesNav").onclick = simulationRules;
   if ($("open")) $("open").onclick = openFlow;
   if ($("q")) $("q").oninput = e => { S.q = e.target.value; S.page === "browse" ? renderPacks() : renderShelf(); };
@@ -937,7 +980,61 @@ const openPack = id => go("pack", { packId: id, from: S.page, slide: 3 });
 /* ---------- Pages ---------- */
 function starterPack() { return { id: "starter-preview", name: "Starter Pack", guest: true, price: 15, tiers: [15], spots: [R.bk] }; }
 function home() {
-  return `<section class="sim-game"><span class="sim-tag"><i></i>Free play</span><div class="sim-card-host" id="simCardHost"></div><p class="sim-hint" id="simHint">${game.balance < COST ? 'Not enough credits · tap your balance to refill' : 'Tap the pack to open it · drag to see what’s inside'}</p><button class="btn sim-play" id="simPlay" type="button" ${game.balance < COST ? 'disabled' : ''}>Open pack <span>${COST} credits</span></button><p class="sim-disclaimer">Demo credits · no cash value</p><section class="sim-history"><h2>Recent pulls <small>${gameSaved ? 'Saved here' : 'Session only'}</small></h2>${game.history.length ? game.history.map(simHistoryRow).join('') : '<div class="sim-empty">Your first pack is ready.</div>'}</section><p class="foot">Free play. Credits have no cash value. Redeeming keeps the card in your collection; it is not a real gift card.</p><button class="sim-refill" id="simBackend" type="button">Developer tools</button></section>`;
+  return `<section class="sim-game"><span class="sim-tag"><i></i>Free play</span><div class="sim-card-host" id="simCardHost"></div><p class="sim-hint" id="simHint">${game.balance < COST ? 'Not enough credits · tap your balance to refill' : 'Tap the pack to open it · drag to see what’s inside'}</p><button class="btn sim-play" id="simPlay" type="button" ${game.balance < COST ? 'disabled' : ''}>Open pack <span>${COST} credits</span></button><p class="sim-disclaimer">Demo credits · no cash value</p>${(() => { const open = game.history.filter(r => r.status === "open").length; return open ? `<button class="sim-pending" id="simPending" type="button">${open} card${open === 1 ? "" : "s"} waiting for you to decide <span>Collection →</span></button>` : ""; })()}</section>`;
+}
+/* ---------- Collection: every free-play card and what happened to it ---------- */
+function collection() {
+  const h = game.history, open = h.filter(r => r.status === "open"), kept = h.filter(r => r.status === "redeemed"), sold = h.filter(r => r.status === "sold");
+  const earned = sold.reduce((a, r) => a + sellValue(r.tier.credits), 0);
+  const f = S.colFilter || "all", list = f === "all" ? h : h.filter(r => r.status === f);
+  const chip = (id, label, n) => `<button class="chip" type="button" data-col="${id}" aria-pressed="${f === id}">${label}${n !== undefined ? ` · ${n}` : ""}</button>`;
+  const head = `<div class="pagehead"><h1>Collection</h1><p>Every card you pull lands here.</p></div>`;
+  if (!h.length) return head + `<div class="empty"><b>No cards yet</b><p>Open a mystery pack and your first card shows up here.</p><button class="btn" id="colPlay" type="button" style="margin-top:8px">Open a pack</button></div>`;
+  return head + `<div class="wsum"><small>Cards in your collection</small><b>${kept.length + open.length}</b><span>${kept.length} redeemed · ${open.length} to decide · ${sold.length} sold back (+${earned} credits)</span></div>
+    <div class="chips col-chips" role="group" aria-label="Filter cards">${chip("all", "All", h.length)}${chip("open", "To decide", open.length)}${chip("redeemed", "Redeemed", kept.length)}${chip("sold", "Sold back", sold.length)}</div>
+    ${list.length ? `<div class="col-grid">${list.map(colTile).join("")}</div>` : `<div class="none">No cards here yet.</div>`}
+    <p class="foot">Free play · credits have no cash value · redeemed cards are not real gift cards.<br>${gameSaved ? "Saved in this browser" : "This session only"} · last 30 pulls.</p>`;
+}
+function colTile(r) {
+  const status = r.status === "open" ? `<span class="col-status open">Decide</span>` : r.status === "sold" ? `<span class="col-status sold">Sold · +${sellValue(r.tier.credits)}</span>` : `<span class="col-status kept">Redeemed</span>`;
+  return `<button class="col-card${r.status === "sold" ? " is-sold" : ""}" type="button" data-num="${r.number}" aria-label="${esc(r.brand.name)}, ${esc(r.tier.name)} ${r.tier.credits}-credit card, ${r.status === "open" ? "waiting for a decision" : r.status}">
+    <span class="col-art" style="--c:${r.brand.bg};--a:${r.brand.accent};--i:${r.brand.ink};--o:${r.brand.orbit}"><span class="col-tier">${esc(r.tier.name)}</span>${r.brand.art !== null ? `<span class="col-logo"><img src="./art/${esc(r.brand.art || r.brand.id + ".svg")}" alt=""></span>` : `<strong>${esc(r.brand.name)}</strong>`}<b>${r.tier.credits} CR</b></span>
+    <span class="col-name">${esc(r.brand.name)}</span><small>Pack #${r.number}</small>${status}</button>`;
+}
+function colCardSheet(number) {
+  const r = game.history.find(x => x.number === number); if (!r) return;
+  if (r.status === "open") return simDecisionSheet(number);
+  sheet(`<div class="sim-thumb" style="--card-color:${r.brand.bg};--card-ink:${r.brand.ink};--card-accent:${r.brand.accent};--o:${r.brand.orbit}">${r.brand.art !== null ? `<span class="col-logo"><img src="./art/${esc(r.brand.art || r.brand.id + ".svg")}" alt=""></span>` : ""}<b>${r.tier.credits} CR</b></div>
+    <div class="result"><p class="eyebrow">${esc(r.tier.name)} · pack #${r.number}</p><h2>${esc(r.brand.name)}</h2>
+    <div class="valuebox"><span><b>${r.status === "sold" ? `+${sellValue(r.tier.credits)}` : r.tier.credits}</b> credits</span><span>${r.status === "sold" ? "Sold back for play credits" : "Redeemed · in your collection"}</span></div>
+    <p class="sub" style="margin-top:12px">Free play. ${r.status === "sold" ? "This card went back to Chef Pack." : "In the real app this is where your restaurant gift card and barcode appear."}</p></div>`, r.brand.name);
+}
+
+/* ---------- Profile: player stats, settings and tools ---------- */
+function profile() {
+  const h = game.history, kept = h.filter(r => r.status === "redeemed").length, sold = h.filter(r => r.status === "sold");
+  const earned = sold.reduce((a, r) => a + sellValue(r.tier.credits), 0), best = h.reduce((m, r) => r.tier.credits > (m?.tier.credits || 0) ? r : m, null);
+  const who = S.user ? esc(S.user.email || "Test account") : "Guest player";
+  const row = (id, label, right = "›", sub = "") => `<button class="prow" id="${id}" type="button"><span><b>${label}</b>${sub ? `<small>${sub}</small>` : ""}</span><span class="prow-r">${right}</span></button>`;
+  return `<div class="phead"><span class="pavatar">${S.user ? esc((S.user.email || "A").trim().charAt(0)) : `<svg aria-hidden="true"><use href="#hat-w"/></svg>`}</span><div><h1>${who}</h1><p>${S.user ? "Signed in · test mode" : "Free play on this device"}</p></div></div>
+    <div class="pstats">
+      <div><small>Credits</small><b>${game.balance}</b></div>
+      <div><small>Packs opened</small><b>${game.plays}</b></div>
+      <div><small>Redeemed</small><b>${kept}</b></div>
+      <div><small>Sold back</small><b>${sold.length}</b><span>+${earned} credits</span></div>
+    </div>
+    ${best ? `<p class="pbest">Best pull: <b>${esc(best.tier.name)} ${esc(best.brand.name)}</b> · ${best.tier.credits} credits</p>` : ""}
+    <h2 class="psec">Play</h2>
+    <div class="plist">${row("pRefill", "Add free credits", "›", "Top up to 100 any time")}${row("pRules", "How it works", "›", "Odds, card values and sell-back")}<button class="prow" id="pSound" type="button" aria-pressed="${!S.muted}"><span><b>Sound</b><small>${S.muted ? "Off" : "On"} · reveal and plate sounds</small></span><span class="tog" aria-hidden="true"></span></button></div>
+    <h2 class="psec">Account</h2>
+    <div class="plist">${row("pAccount", S.user ? "Test account" : "Sign in", "›", S.user ? who : "For test orders and the test wallet")}${row("pDev", "Developer tools", "›", "Test packs and the test wallet")}${row("pReset", "Reset free play", "›", "Start over with 100 credits")}</div>
+    <p class="foot">Chef Pack · free play<br>Credits have no cash value and cannot be bought, withdrawn or transferred.</p>`;
+}
+function resetSheet() {
+  const m = sheet(`<div class="result"><p class="eyebrow">Free play</p><h2>Start over?</h2><p class="sub" style="margin-top:6px">This clears your ${game.history.length} card${game.history.length === 1 ? "" : "s"} and sets your balance back to 100 credits. It can't be undone.</p>
+    <div class="sacts"><button class="btn soft" id="rNo" type="button">Keep playing</button><button class="btn" id="rYes" type="button">Reset</button></div></div>`, "Reset free play");
+  m.querySelector("#rNo").onclick = closeSheet;
+  m.querySelector("#rYes").onclick = () => { game = newGame(); persistGame(); render(); };
 }
 function simulationBalance() {
   const m = sheet(`<div class="sim-balance-sheet"><p class="eyebrow">DEMO BALANCE</p><h2>Your credits</h2><strong>${game.balance} <small>credits</small></strong><p>Use ${COST} credits to open a pack. Need more? Top up to 100 for free.</p><button class="btn" id="simRefill" type="button">Add free credits</button><p>Credits have no cash value and cannot be bought, transferred or redeemed.</p></div>`, 'Demo balance');
@@ -972,14 +1069,14 @@ function mountHomeCard() {
 }
 
 function simulationRules() {
-  sheet(`<div class="result"><p class="eyebrow">FREE SIMULATION</p><h2>Rip, flip, then decide.</h2><p>Start with 100 free credits. Each pack costs ${COST} credits and holds one restaurant card. Every card is worth at least the pack price:</p><ul>${TIERS.map(t=>`<li>${t.name}: ${t.chance}% chance · ${t.credits}-credit card</li>`).join('')}</ul><p>After the reveal, choose once per card. <b>Redeem</b> keeps the card in your collection. <b>Sell back</b> returns ${Math.round(SELL_BACK*100)}% of the card's value as play credits (${TIERS.map(t=>sellValue(t.credits)).join(', ')} credits). Close the reveal without choosing and the card waits in Recent pulls.</p><p>Each of the nine restaurant designs has an equal chance (1 in 9), independent of the card value. Outcomes are drawn when you tap Open; skipping or closing the animation does not redraw them.</p><p>You can refill to 100 free credits at any time. Credits have no cash value and cannot be bought, withdrawn or transferred. Redeeming here gives no real gift card. This browser stores your balance and the last 30 pulls; clearing site data resets the game. This is a local simulation, not a secure account ledger.</p></div>`, 'Free play rules');
+  sheet(`<div class="result"><p class="eyebrow">FREE SIMULATION</p><h2>Rip, flip, then decide.</h2><p>Start with 100 free credits. Each pack costs ${COST} credits and holds one restaurant card. Every card is worth at least the pack price:</p><ul>${TIERS.map(t=>`<li>${t.name}: ${t.chance}% chance · ${t.credits}-credit card</li>`).join('')}</ul><p>After the reveal, choose once per card. <b>Redeem</b> keeps the card in your collection. <b>Sell back</b> returns ${Math.round(SELL_BACK*100)}% of the card's value as play credits (${TIERS.map(t=>sellValue(t.credits)).join(', ')} credits). Close the reveal without choosing and the card waits in your Collection.</p><p>Each of the nine restaurant designs has an equal chance (1 in 9), independent of the card value. Outcomes are drawn when you tap Open; skipping or closing the animation does not redraw them.</p><p>You can refill to 100 free credits at any time. Credits have no cash value and cannot be bought, withdrawn or transferred. Redeeming here gives no real gift card. This browser stores your balance and the last 30 pulls; clearing site data resets the game. This is a local simulation, not a secure account ledger.</p></div>`, 'Free play rules');
 }
 /* Redeem or sell back one free-play card. One confirmation shows the exact offer and where the credits go.
    Renders into the reveal's result panel or the collection sheet; close() leaves that surface. */
 function simDecision(host, number, close) {
   const paint = mode => {
     const r = game.history.find(x => x.number === number);
-    if (!r) { host.innerHTML = `<p class="sub">This card is no longer in your recent pulls.</p>`; return; }
+    if (!r) { host.innerHTML = `<p class="sub">This card is no longer in your collection.</p>`; return; }
     const sell = sellValue(r.tier.credits);
     const head = `<p class="eyebrow">${esc(r.tier.name)} · free play</p><h2>${esc(r.brand.name)}</h2><p class="sub">${r.tier.credits}-credit card · you paid ${COST} credits</p>`;
     if (r.status !== "open") {
@@ -988,7 +1085,7 @@ function simDecision(host, number, close) {
         <div class="sacts"><button class="btn light" id="simAgain" type="button" ${can ? "" : "disabled"}>Open another · ${COST} credits</button><button class="btn soft" id="simDone" type="button">Collection</button></div>
         ${can ? "" : `<p class="sub sim-fine">Not enough credits. Tap your balance to refill.</p>`}`;
       host.querySelector("#simAgain").onclick = () => { close(); playSimulation(); };
-      host.querySelector("#simDone").onclick = () => { close(); document.querySelector(".sim-history")?.scrollIntoView({ block: "start" }); };
+      host.querySelector("#simDone").onclick = () => { close(); go("collection"); };
       host.querySelector("#simAgain:not([disabled])")?.focus({ preventScroll: true });
       return;
     }
@@ -1018,13 +1115,8 @@ function simDecision(host, number, close) {
 function simDecisionSheet(number) {
   const r = game.history.find(x => x.number === number);
   if (!r || busy) return;
-  const m = sheet(`<div class="sim-thumb" style="--card-color:${r.brand.bg};--card-ink:${r.brand.ink};--card-accent:${r.brand.accent}">${r.brand.art !== null ? `<img src="./art/${esc(r.brand.art || r.brand.id + ".svg")}" alt="">` : ""}<b>${r.tier.credits} CR</b></div><div class="result sim-sheet" id="simDecide"></div>`, "Decide on your card");
+  const m = sheet(`<div class="sim-thumb" style="--card-color:${r.brand.bg};--card-ink:${r.brand.ink};--card-accent:${r.brand.accent};--o:${r.brand.orbit}">${r.brand.art !== null ? `<span class="col-logo"><img src="./art/${esc(r.brand.art || r.brand.id + ".svg")}" alt=""></span>` : ""}<b>${r.tier.credits} CR</b></div><div class="result sim-sheet" id="simDecide"></div>`, "Decide on your card");
   simDecision(m.querySelector("#simDecide"), number, () => { closeSheet(); render(); });
-}
-function simHistoryRow(r) {
-  const right = r.status === 'open' ? `<button class="sim-decide" type="button" data-decide="${r.number}">Decide</button>`
-    : r.status === 'sold' ? `<strong>Sold · +${sellValue(r.tier.credits)} CR</strong>` : `<strong class="sim-kept">Redeemed</strong>`;
-  return `<article><img src="./art/${esc(r.brand.art || r.brand.id+'.svg')}" alt=""><div><b>${esc(r.brand.name)}</b><small>${esc(r.tier.name)} · ${r.tier.credits}-credit card</small></div>${right}</article>`;
 }
 function playSimulation() {
   if (busy || document.querySelector('.opener')) return;
@@ -1980,10 +2072,21 @@ function showBrand(s) {
 const bind = {
   home() {
     $("simPlay").onclick = playSimulation;
-    $("simRules").onclick = simulationRules;
     mountHomeCard();
-    $("simBackend").onclick = () => go("browse");
-    $("view").querySelectorAll("[data-decide]").forEach(b => b.onclick = () => simDecisionSheet(+b.dataset.decide));
+    if ($("simPending")) $("simPending").onclick = () => go("collection", { colFilter: "open" });
+  },
+  collection() {
+    if ($("colPlay")) $("colPlay").onclick = () => go("home");
+    $("view").querySelectorAll("[data-col]").forEach(b => b.onclick = () => { S.colFilter = b.dataset.col; render(); });
+    $("view").querySelectorAll("[data-num]").forEach(b => b.onclick = () => colCardSheet(+b.dataset.num));
+  },
+  profile() {
+    $("pRefill").onclick = simulationBalance;
+    $("pRules").onclick = simulationRules;
+    $("pSound").onclick = () => { S.muted = !S.muted; render(); };
+    $("pAccount").onclick = () => accountSheet();
+    $("pDev").onclick = () => go("browse");
+    $("pReset").onclick = resetSheet;
   },
   browse() {
     $("pOpen").onclick = () => { const p = packOf("quick-bite"); if (p) previewOpening(p, false, true); };
@@ -2016,7 +2119,7 @@ async function start(data) {
   S = Object.assign(fresh(), (data && data.S) || {}, { catalog: null, pulls: [], user: null, wstate: "signedout" });
   // The old play-money wallet held fabricated cards and barcodes; it is never shown as inventory.
   try { localStorage.removeItem("chefpack.app.v3"); } catch (e) {}
-  if (!({ home: 1, browse: 1, cards: 1, wallet: 1 })[S.page]) S.page = "home";
+  if (!({ home: 1, collection: 1, profile: 1, browse: 1, cards: 1, wallet: 1 })[S.page]) S.page = "home";
   busy = false;
   $("view").addEventListener("scroll", () => $("top").classList.toggle("shadow", $("view").scrollTop > 4), { passive: true });
   addEventListener("keydown", e => { if (e.key === "Escape" && !busy) { closeSheet(); document.querySelector(".opener")?.remove(); } });
