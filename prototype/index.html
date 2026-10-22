@@ -624,16 +624,17 @@
 .sim-game button:focus-visible,.playing button:focus-visible,.flip-card:focus-visible{outline-color:var(--fg)}
 .sim-decide{background:var(--fg);color:#fff}.sim-kept{color:var(--ok)!important}
 
-/* Pearl card: the sealed pack and every card back */
-.mystery-face,.mystery-odds,.fc-back{border:1.5px solid #d6bd85;box-shadow:inset 0 0 0 6px #fbf8f1,inset 0 0 0 7px #d6bd8566;color:var(--fg);
-  background:repeating-linear-gradient(118deg,transparent 0 46px,#b48a3a0b 46px 47px),radial-gradient(120% 80% at 20% 0%,#ffffff,transparent 60%),linear-gradient(160deg,#fdfcf8,#f3eee3 60%,#ece4d2)}
-.mf-top,.fc-back-mark{color:#8a6a2c}
-.mf-ring{border-color:#c9a65c88;color:#b0883c;box-shadow:inset 0 0 8cqw #d6bd8522,0 0 0 2.4cqw #ffffff99}
-.mf-name{color:#1a1814}.mf-price{color:#8f8573}
-.mystery-odds li{border-bottom-color:#00000012}.mystery-odds li span{color:#8a6420}.mystery-odds li small{color:#8f8573}
-.mystery-odds p{color:#4a463e}.mystery-odds .mf-fine{color:#9b9282}
-.fc-back h3{color:#1a1814}.fc-back p{color:#6e675b}.fc-back-value{border-top-color:#00000014}
-.fc-back-value b{color:#8a6420}.fc-back-value span,.fc-back small{color:#8f8573}
+/* Black card with silver: the sealed pack and every card back, set on the white page */
+.mystery-face,.mystery-odds,.fc-back{border:1.5px solid #b9bfc7;box-shadow:inset 0 0 0 6px #121314,inset 0 0 0 7px #b9bfc755;color:#eef0f2;
+  background:repeating-linear-gradient(118deg,transparent 0 46px,#ffffff07 46px 47px),radial-gradient(120% 80% at 20% 0%,#ffffff14,transparent 55%),linear-gradient(160deg,#2a2c30,#151618 58%,#0b0b0c)}
+.mf-top,.fc-back-mark{color:#c9ced5}
+.mf-ring{border-color:#b9bfc777;color:transparent;background:linear-gradient(160deg,#f4f6f8,#9ea4ac 55%,#e3e6ea) text;-webkit-background-clip:text;background-clip:text;box-shadow:inset 0 0 8cqw #ffffff0c,0 0 0 2.4cqw #ffffff06}
+.mf-name{color:#f5f6f7}.mf-price{color:#9aa0a8}
+.mystery-odds li{border-bottom-color:#ffffff14}.mystery-odds li span{color:#dfe3e8}.mystery-odds li small{color:#9aa0a8}
+.mystery-odds p{color:#c3c7cd}.mystery-odds .mf-fine{color:#80868e}
+.fc-back h3{color:#f5f6f7}.fc-back p{color:#a9aeb5}.fc-back-value{border-top-color:#ffffff1a}
+.fc-back-value b{color:#e3e7eb}.fc-back-value span,.fc-back small{color:#8e949c}
+.fc-back-mark svg{filter:invert(1) grayscale(1) brightness(.85)}
 
 /* The reveal: a bright tabletop instead of a dark room */
 .opener.rip-opener,.game-entry.rip-opener{background:radial-gradient(ellipse 90% 60% at 50% 40%,#ffffff 0%,#f7f5f0 55%,#efece5 100%)!important;color:var(--fg)}
@@ -956,7 +957,7 @@ function mountHomeCard() {
   const front = `<div class="mystery-face"><span class="mf-top"><svg aria-hidden="true"><use href="#hat-w"/></svg>CHEF PACK</span><span class="mf-ring">?</span><span class="mf-name">Mystery pack</span><span class="mf-price">${COST} credits · 1 restaurant card</span></div>`;
   const back = `<div class="mystery-odds"><span class="mf-top"><svg aria-hidden="true"><use href="#hat-w"/></svg>WHAT’S INSIDE</span><ul>${TIERS.map(t => `<li><b>${esc(t.name)}</b><span>${t.credits} CR</span><small>${t.chance}%</small></li>`).join("")}</ul><p>Every card is worth at least the ${COST}-credit pack. Redeem it, or sell it back for ${Math.round(SELL_BACK * 100)}% in play credits.</p><small class="mf-fine">Free play · no cash value</small></div>`;
   homeCard = createFlipCard({ front, back, flipOnClick: false, draggable: true, tilt: true, tiltMax: 12, glare: true, glareOpacity: .22, hoverScale: 1.03,
-    perspective: 1100, stiffness: 170, damping: 20, radius: 22, background: "#f7f4ee", color: "#1a1814", shadow: true, shadowColor: "#3a2c12", shadowOpacity: .22,
+    perspective: 1100, stiffness: 170, damping: 20, radius: 22, background: "#151618", color: "#eef0f2", shadow: true, shadowColor: "#000000", shadowOpacity: .3,
     ariaLabel: "Mystery pack. Press Enter to flip it and see the odds.",
     onFlipChange: flipped => { const h = $("simHint"); if (h && game.balance >= COST) h.textContent = flipped ? "Drag back to the pack · tap to open it" : "Tap the pack to open it · drag to see what’s inside"; } });
   // A tap (not a drag) opens the pack.
@@ -1703,7 +1704,7 @@ function reveal(p, res) {
       axis: "y", flipOnClick: true, draggable: true, dragDistance: 0,
       tilt: true, tiltMax: 12, glare: true, glareOpacity: .22, hoverScale: 1.03,
       perspective: 1100, stiffness: 170, damping: 20, width: 300, height: 400, radius: 22,
-      background: "#f7f4ee", color: "#1a1814", shadow: true, shadowColor: "#3a2c12", shadowOpacity: .28,
+      background: "#151618", color: "#eef0f2", shadow: true, shadowColor: "#000000", shadowOpacity: .34,
       ariaLabel: "Your card. Press Enter, tap, or drag sideways to flip it over.",
       onFlipChange: flipped => { o.dataset.cardSide = flipped ? "back" : "front"; const hint = q(".fc-hint"); if (hint) hint.textContent = flipped ? "Tap or drag to see the front" : "Tap or drag to flip the card"; }
     });
