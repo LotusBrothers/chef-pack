@@ -428,6 +428,7 @@
   .serving-steam i:nth-child(2){left:30%;height:200px}.serving-steam i:nth-child(3){left:60%;height:150px}
   .cloche-study .rip-card-shell { z-index:2; }
   .cloche-study .rip-heading h2 { max-width:350px; font-size:30px; }
+  .cloche-study .rip-body { visibility:hidden; }
   .cloche-study .brand-choices { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); width:min(100%,390px); gap:4px; }
   .cloche-study .brand-choices button { padding:7px 4px; font-size:9px; min-height:36px; }
   .cloche-study:not(.is-revealed) .rip-scene { height:265px;min-height:265px; }
@@ -458,7 +459,7 @@
   .has-3d .rip-pack,.has-3d.game-entry:not(.is-revealed) .rip-pack {inset:0;width:100%;height:100%;aspect-ratio:auto;z-index:6;opacity:1!important;transform:none!important;}
   .has-3d .rip-pack>* {visibility:hidden;}
   .has-3d .rip-pack:focus-visible {outline:none;}
-  .has-3d .rip-pack:focus-visible::after {content:"Press Enter to lift";position:absolute;bottom:0;left:50%;transform:translateX(-50%);font-size:10px;color:#ddbf93;}
+  .has-3d .rip-pack:focus-visible::after {content:"Press Enter to reveal";position:absolute;bottom:0;left:50%;transform:translateX(-50%);font-size:10px;color:#ddbf93;}
 
   /* ---------- Wallet ---------- */
   .pagehead { padding-top: 6px; }
@@ -1177,12 +1178,12 @@ function reveal(p, res) {
   o.setAttribute("role", "dialog"); o.setAttribute("aria-modal", "true"); o.setAttribute("aria-labelledby", "ripTitle");
   const note = res.landing ? "CHEF PACK · PLAY THE DEMO" : res.preview ? "MOTION PREVIEW · NO ORDER" : res.api ? "TEST MODE · NOT REDEEMABLE" : "FREE PICK · NO CARD";
   o.innerHTML = `<div class="rip-controls"><button class="rip-sound" type="button" aria-label="${S.muted ? "Turn sound on" : "Mute sound"}">${icon(S.muted ? "muted" : "sound")}</button><button class="rip-skip" type="button">Skip animation</button><button class="rip-close" type="button" aria-label="${res.landing ? "Choose a pack" : "Close opening"}">${res.landing ? "Choose pack" : icon("close")}</button></div>
-    <header class="rip-heading"><p class="rip-kicker">${note}</p><h2 id="ripTitle">${res.landing ? "Something good is under here." : "A little anticipation."}</h2><p class="rip-caption">${res.landing ? "Lift the cover. Find your card." : esc(p.name) + (res.preview ? " · preview only" : "")}</p></header>
+    <header class="rip-heading"><p class="rip-kicker">${note}</p><h2 id="ripTitle">${res.landing ? "Your next pull starts here." : "A little anticipation."}</h2><p class="rip-caption">${res.landing ? "Drop it. Spin it. Reveal it." : esc(p.name) + (res.preview ? " · preview only" : "")}</p></header>
     ${res.preview ? brandControls() : ""}<div class="rip-scene">${res.preview ? servingPlate() + '<span class="card-ground-shadow" aria-hidden="true"></span><div class="serving-steam" aria-hidden="true"><i></i><i></i><i></i></div>' : ""}<span class="rip-halo" aria-hidden="true"></span><span class="rip-floor" aria-hidden="true"></span>
       <div class="rip-card-shell"><div class="rip-tilt" tabindex="-1" role="img" aria-label="Card preview"><div class="rip-card-turn"><div class="rip-card-face rip-card-back"><svg aria-hidden="true"><use href="#hat"/></svg><b>CHEF PACK</b><small>GOOD THINGS INSIDE</small></div><div class="rip-card-face rip-card-front">${revealFace(res)}<span class="rip-holo"></span><span class="rip-glare"></span><span class="rip-gleam"></span><span class="rip-edge"></span></div></div></div></div>
-      <button class="rip-pack" type="button" aria-label="${res.preview ? "Lift silver cover" : "Tear open " + esc(p.name)}"><span class="rip-wrap rip-body">${res.preview ? silverCloche() : foil(p)}</span><span class="rip-wrap rip-cap" ${res.preview ? "hidden" : ""}>${res.preview ? "" : foil(p)}</span><span class="rip-seam" aria-hidden="true" ${res.preview ? "hidden" : ""}></span><span class="rip-touch" aria-hidden="true">${res.preview ? "↑" : "↗"}</span></button>
+      <button class="rip-pack" type="button" aria-label="${res.preview ? "Drop and spin card" : "Tear open " + esc(p.name)}"><span class="rip-wrap rip-body">${res.preview ? silverCloche() : foil(p)}</span><span class="rip-wrap rip-cap" ${res.preview ? "hidden" : ""}>${res.preview ? "" : foil(p)}</span><span class="rip-seam" aria-hidden="true" ${res.preview ? "hidden" : ""}></span><span class="rip-touch" aria-hidden="true">${res.preview ? "↑" : "↗"}</span></button>
       <div class="rip-shards" aria-hidden="true">${Array.from({ length: 6 }, () => "<i></i>").join("")}</div>
-    </div><p class="rip-hint" role="status">${res.landing ? "Tap the silver cover to reveal" : "Tap the pack<span></span>or swipe across the seam"}</p>${res.landing ? '<p class="guest-note">FREE PREVIEW · NO ACCOUNT NEEDED<small>No purchase. No gift card.</small></p>' : ""}${res.preview ? comparisonControls() : ""}<div class="ores" id="ores" hidden></div>`;
+    </div><p class="rip-hint" role="status">${res.landing ? "Tap the plate to drop your card" : "Tap the pack<span></span>or swipe across the seam"}</p>${res.landing ? '<p class="guest-note">FREE PREVIEW · NO ACCOUNT NEEDED<small>No purchase. No gift card.</small></p>' : ""}${res.preview ? comparisonControls() : ""}<div class="ores" id="ores" hidden></div>`;
   document.body.appendChild(o);
   const q = sel => o.querySelector(sel), pack = q(".rip-pack"), card = q(".rip-card-shell"), turn = q(".rip-card-turn"), halo = q(".rip-halo");
   const tilt = q(".rip-tilt");
@@ -1371,7 +1372,7 @@ function reveal(p, res) {
     if (phase === "closed") return;
     phase = "ready"; pack.disabled = false; pack.style.opacity = "1";
     pack.focus({ preventScroll: true });
-    q(".rip-hint").textContent = "Tap the silver cover to reveal";
+    q(".rip-hint").textContent = "Tap the plate to drop your card";
     o.querySelectorAll("[data-reward]").forEach(b => b.disabled = !rewardBuffers.has(b.dataset.reward));
     o.querySelectorAll("[data-study]").forEach(b => b.disabled = false);
     q(".reward-status").textContent = "Selected: " + REWARD_SOUNDS.find(s => s.id === selectedReward).name;
@@ -1380,7 +1381,7 @@ function reveal(p, res) {
     if (!res.preview) return;
     phase = "arriving"; pack.disabled = true;
     o.querySelectorAll("[data-reward], [data-study]").forEach(b => b.disabled = true);
-    q(".reward-status").textContent = "Your covered plate is arriving…";
+    q(".reward-status").textContent = "Your plate is arriving…";
     q(".rip-hint").textContent = "Something good is being served.";
     const stage = await sceneReady;
     if (phase === "closed") return;

@@ -43,7 +43,7 @@ export async function createServingScene(host, { brand, value, reduced = false, 
   renderer.setClearColor(0x000000, 0); renderer.toneMapping = T.ACESFilmicToneMapping; renderer.toneMappingExposure = .75;
   renderer.shadowMap.enabled = true; renderer.shadowMap.type = T.PCFSoftShadowMap;
   const canvas = renderer.domElement; canvas.className = 'serving-canvas';
-  canvas.setAttribute('role', 'img'); canvas.setAttribute('aria-label', 'Three dimensional covered plate. After revealing, drag to inspect the restaurant card.');
+  canvas.setAttribute('role', 'img'); canvas.setAttribute('aria-label', 'Three dimensional card drop and spin. After revealing, drag to inspect the restaurant card.');
   canvas.tabIndex = -1; host.appendChild(canvas);
   const scene = new T.Scene(), camera = new T.PerspectiveCamera(32, 1, .1, 40);
   const cameraHome = new T.Vector3(2.35, 2.8, 5.1), cameraTarget = new T.Vector3(0, .65, 0);
@@ -56,16 +56,10 @@ export async function createServingScene(host, { brand, value, reduced = false, 
   key.shadow.mapSize.set(512, 512); Object.assign(key.shadow.camera, { left: -2.5, right: 2.5, top: 3, bottom: -2, near: .1, far: 16 });
   key.shadow.bias = -.0005; key.shadow.normalBias = .02; scene.add(key);
   const fill = new T.DirectionalLight(0xdce8ff, .35); fill.position.set(4, 2, -3); scene.add(fill);
-  const metal = new T.MeshStandardMaterial({ color: 0xd3d8dc, metalness: 1, roughness: .23, envMapIntensity: 1.1 });
   const porcelain = new T.MeshStandardMaterial({ color: 0xf0ede6, roughness: .35, metalness: 0 });
-  const plateRoot = new T.Group(), lidRoot = new T.Group(); scene.add(plateRoot, lidRoot);
+  const plateRoot = new T.Group(); scene.add(plateRoot);
   const platePoints = [[.001,.055],[.5,.055],[.95,.06],[1.12,.075],[1.22,.13],[1.38,.18],[1.57,.17],[1.62,.145],[1.58,.115],[1.35,.105],[1.12,.035],[.3,.018],[.001,.018]].map(p => new T.Vector2(...p));
   const dish = new T.Mesh(new T.LatheGeometry(platePoints.reverse(), 64), porcelain); dish.castShadow = true; dish.receiveShadow = true; plateRoot.add(dish);
-  const lidPoints = [[1.24,.15],[1.24,.19],[1.2,.24],[1.13,.38],[1.01,.52],[.84,.64],[.63,.73],[.38,.79],[.14,.815],[.001,.82]].map(p => new T.Vector2(...p));
-  const lid = new T.Mesh(new T.LatheGeometry(lidPoints, 64), metal); lid.castShadow = true; lid.receiveShadow = true; lidRoot.add(lid);
-  const rim = new T.Mesh(new T.TorusGeometry(1.238, .019, 8, 64), metal); rim.rotation.x = Math.PI / 2; rim.position.y = .165; lidRoot.add(rim);
-  const handle = new T.Mesh(new T.TorusGeometry(.082, .018, 8, 24), metal); handle.position.y = .897; handle.castShadow = true; lidRoot.add(handle);
-  const foot = new T.Mesh(new T.CylinderGeometry(.12, .14, .024, 24), metal); foot.position.y = .825; lidRoot.add(foot);
   const floor = new T.Mesh(new T.PlaneGeometry(20, 20), new T.ShadowMaterial({ opacity: .27 })); floor.rotation.x = -Math.PI / 2; floor.position.y = -.005; floor.receiveShadow = true; scene.add(floor);
   const texture = await cardTexture(brand, value);
   const card = new T.Group(); scene.add(card);
@@ -76,17 +70,13 @@ export async function createServingScene(host, { brand, value, reduced = false, 
   // Preserve printed brand colors independently of the reflective serving ware.
   const front = new T.Mesh(new T.PlaneGeometry(w,h), new T.MeshBasicMaterial({ map: texture, toneMapped: false, transparent: true, alphaTest: .5 })); front.position.set(0,h/2,.013); card.add(front);
   const back = new T.Mesh(new T.PlaneGeometry(w,h), new T.MeshStandardMaterial({ color: 0x262323, roughness: .35, metalness: .2 })); back.position.set(0,h/2,-.013); back.rotation.y = Math.PI; card.add(back);
-  const steamCanvas = document.createElement('canvas'); steamCanvas.width = 64; steamCanvas.height = 128;
-  const sc = steamCanvas.getContext('2d'), grad = sc.createRadialGradient(32,64,0,32,64,60); grad.addColorStop(0,'#ffffff70'); grad.addColorStop(1,'#ffffff00'); sc.fillStyle = grad; sc.fillRect(0,0,64,128);
-  const steamTexture = new T.CanvasTexture(steamCanvas), steam = [];
-  for (let i=0;i<4;i++) { const sprite = new T.Sprite(new T.SpriteMaterial({ map:steamTexture, transparent:true, opacity:0, depthWrite:false })); scene.add(sprite); steam.push(sprite); }
   let disposed = false, frame = 0, animation = null, state = 'covered', last = 0;
   let yaw = 0, yawV = 0, yawTarget = 0, pitch = 0, pitchV = 0, pitchTarget = 0;
   let drawingFrames = 0, zoom = 1;
   function resize() { const rect = host.getBoundingClientRect(); renderer.setSize(rect.width, rect.height, false); camera.aspect = rect.width / Math.max(1,rect.height); camera.updateProjectionMatrix(); request(); }
   function flat() { card.position.set(0,.106,.69); card.rotation.set(-Math.PI/2,0,0); }
-  function final() { plateRoot.position.y = 0; lidRoot.visible = false; card.position.set(0,.14,.35); card.rotation.set(0,.28,0); zoom=.86; for(const s of steam)s.material.opacity=0; state='revealed'; canvas.tabIndex=0; }
-  flat();
+  function final() { plateRoot.position.y = 0; card.visible = true; card.position.set(0,.14,.35); card.rotation.set(0,.28,0); zoom=.86; state='revealed'; canvas.tabIndex=0; }
+  flat(); card.visible=false;
   function draw() { renderer.render(scene,camera); drawingFrames++; canvas.dataset.frames = String(drawingFrames); }
   function request() { if (!disposed && !frame) frame = requestAnimationFrame(tick); }
   function tick(now) {
@@ -102,19 +92,20 @@ export async function createServingScene(host, { brand, value, reduced = false, 
           const after=elapsed-hit;
           return .028*Math.abs(Math.sin(after*24))*Math.exp(-11*after);
         };
-        plateRoot.position.y=settle(t,0,.85); lidRoot.position.y=settle(t,.2,1.2);
-        lidRoot.rotation.z=.035*Math.exp(-5*Math.max(0,t-.2))*Math.sin(Math.max(0,t-.2)*17);
+        plateRoot.position.y=settle(t,0,.85);
         if(t>=Math.sqrt(2*.85/18)&&!animation.plate){animation.plate=true;contact('plate');}
-        if(t>=.2+Math.sqrt(2*1.2/18)&&!animation.lid){animation.lid=true;contact('cover');}
       }else{
-        const lift=ease(t/.76); zoom=1-.14*ease((t-.45)/.8); lidRoot.position.set(-.8*lift,1.9*lift,-.35*lift); lidRoot.rotation.set(.1*lift,0,-.28*lift); lidRoot.visible=t<.96;
-        const rise=clamp(spring(t-.36,10.5,.79),0,1.035);
-        card.rotation.set(-Math.PI/2*(1-rise),.28*rise,-.035*Math.sin(rise*Math.PI));
-        card.position.set(0,.106+.034*rise,.69-.34*rise);
-        steam.forEach((s,i)=>{const p=clamp((t-.12-i*.045)/1.25);s.position.set((i-1.5)*.34+Math.sin(p*4+i)*.1,.2+p*1.3,-.1);s.scale.set(.3+p*.35,.6+p*.8,1);s.material.opacity=Math.sin(p*Math.PI)*.24;});
-        if(t>=1.08&&!animation.confirmed){animation.confirmed=true;contact('confirm');}
+        card.visible=true;
+        const hit=Math.sqrt(2*1.65/18), landed=t>=hit;
+        const spin=clamp((t-hit-.12)/1.2), rise=clamp(spring(t-hit-.12,10,.76),0,1.04);
+        const bounce=landed?.045*Math.abs(Math.sin((t-hit)*24))*Math.exp(-10*(t-hit)):1.65-9*t*t;
+        card.position.set(0,.106+Math.max(0,bounce)+.034*rise,-.69+1.04*rise);
+        card.rotation.set(Math.PI/2*(1-rise), (Math.PI*2+.28)*ease(spin), -.07*Math.sin(spin*Math.PI));
+        zoom=1-.14*ease(spin);
+        if(landed&&!animation.landed){animation.landed=true;contact('cover');}
+        if(t>=hit+1.14&&!animation.confirmed){animation.confirmed=true;contact('confirm');}
       }
-      if(t>=animation.duration){const done=animation.done,kind=animation.kind;animation=null;if(kind==='serve'){plateRoot.position.y=0;lidRoot.position.set(0,0,0);lidRoot.rotation.set(0,0,0);}else final();done();}
+      if(t>=animation.duration){const done=animation.done,kind=animation.kind;animation=null;if(kind==='serve'){plateRoot.position.y=0;}else final();done();}
     }
     camera.position.copy(cameraHome).sub(cameraTarget).multiplyScalar(zoom).applyAxisAngle(new T.Vector3(0,1,0),yaw).add(cameraTarget); camera.position.y+=pitch; camera.lookAt(cameraTarget);
     draw();
@@ -128,9 +119,9 @@ export async function createServingScene(host, { brand, value, reduced = false, 
   canvas.addEventListener('pointermove',pointer);canvas.addEventListener('pointerleave',reset);canvas.addEventListener('pointercancel',reset);canvas.addEventListener('blur',reset);canvas.addEventListener('keydown',keydown);
   const observer=new ResizeObserver(resize);observer.observe(host);resize();
   return {
-    async serve(){state='covered';zoom=1;lidRoot.visible=true;flat();await play('serve',.95);},
-    async reveal(){state='opening';await play('reveal',1.45);},
+    async serve(){state='ready';zoom=1;card.visible=false;flat();await play('serve',.65);},
+    async reveal(){state='opening';await play('reveal',1.95);},
     finish(){cancel();final();draw();},
-    dispose(){if(disposed)return;disposed=true;cancel();cancelAnimationFrame(frame);observer.disconnect();canvas.removeEventListener('pointermove',pointer);canvas.removeEventListener('pointerleave',reset);canvas.removeEventListener('pointercancel',reset);canvas.removeEventListener('blur',reset);canvas.removeEventListener('keydown',keydown);scene.traverse(obj=>{obj.geometry?.dispose();const mats=Array.isArray(obj.material)?obj.material:[obj.material];for(const m of mats)m?.dispose();});texture.dispose();steamTexture.dispose();environment.dispose();renderer.dispose();renderer.forceContextLoss();canvas.remove();}
+    dispose(){if(disposed)return;disposed=true;cancel();cancelAnimationFrame(frame);observer.disconnect();canvas.removeEventListener('pointermove',pointer);canvas.removeEventListener('pointerleave',reset);canvas.removeEventListener('pointercancel',reset);canvas.removeEventListener('blur',reset);canvas.removeEventListener('keydown',keydown);scene.traverse(obj=>{obj.geometry?.dispose();const mats=Array.isArray(obj.material)?obj.material:[obj.material];for(const m of mats)m?.dispose();});texture.dispose();environment.dispose();renderer.dispose();renderer.forceContextLoss();canvas.remove();}
   };
 }
