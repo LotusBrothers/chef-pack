@@ -437,6 +437,9 @@
   @media(max-height:740px){.cloche-study:not(.is-revealed) .rip-scene{height:230px;min-height:230px}.cloche-study .rip-heading{margin-top:12px}.cloche-study .rip-heading h2{font-size:27px}.cloche-study .rip-pack{width:280px}}
 
 
+  .victory-cascade { position:fixed; inset:0; z-index:10000; pointer-events:none; overflow:hidden; perspective:850px; contain:layout paint; }
+  .victory-cascade img { position:absolute; left:0; top:0; width:120px; height:169px; border-radius:8px; box-shadow:0 6px 0 #7a5b30,0 15px 24px #0007; backface-visibility:visible; will-change:transform,opacity; }
+  .victory-sweep { position:absolute; inset:-30%; background:radial-gradient(ellipse at center,#ffd38166,transparent 55%); opacity:0; }
   /* Shared CSS 3D stage: card lies in the dish, then pivots around its front edge. */
   .cloche-study .rip-scene,.cloche-study:not(.is-revealed) .rip-scene,.cloche-study.is-revealed .rip-scene {height:320px;min-height:320px;perspective:900px;perspective-origin:50% 42%;}
   .cloche-study .rip-card-shell {width:min(57vw,220px);bottom:16px;left:0;right:0;margin:auto;transform-origin:50% 100%;transform-style:preserve-3d;}
@@ -1226,7 +1229,32 @@ function reveal(p, res) {
     o.querySelectorAll("[data-study]").forEach(button => button.onclick = () => { if (phase === "opening") return; selectedCard = button.dataset.study; dispose(); previewOpening(p, res.landing); });
   } else prepareContact();
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  let phase = "ready", pointer = null, stage3d = null;
+  let phase = "ready", pointer = null, stage3d = null, celebration = null;
+  function celebrate() {
+    if (reduced || celebration || !stage3d?.cardArtwork || phase !== "opening") return;
+    const rect = q(".rip-scene").getBoundingClientRect(), width = innerWidth, height = innerHeight;
+    const layer = document.createElement("div"); layer.className = "victory-cascade"; layer.setAttribute("aria-hidden", "true");
+    celebration = layer; o.appendChild(layer);
+    const glow = document.createElement("div"); glow.className = "victory-sweep"; layer.appendChild(glow);
+    animate(glow, [{opacity:0,transform:"scale(.5)"},{opacity:.7,offset:.2},{opacity:0,transform:"scale(1.6)"}], {duration:1300,easing:"ease-out"});
+    const count = width < 500 ? 16 : 24, startX = rect.left + rect.width / 2 - 60, startY = rect.top + rect.height * .45 - 84;
+    const flights = [];
+    for (let i = 0; i < count; i++) {
+      const img = document.createElement("img"); img.src = stage3d.cardArtwork; img.alt = ""; layer.appendChild(img);
+      const side = i % 2 ? 1 : -1, row = Math.floor(i / 2), spread = .24 + (row % 4) * .12;
+      const crestX = startX + side * width * spread, crestY = Math.max(-180, startY - height * (.3 + row % 3 * .12));
+      const endX = startX + side * width * (.48 + row % 3 * .15), depth = (i % 4) * 85;
+      const pose = (x,y,z,rotation,spin,scale) => `translate3d(${x}px,${y}px,${z}px) rotateZ(${rotation}deg) rotateY(${spin}deg) scale(${scale})`;
+      flights.push(animate(img, [
+        {opacity:0,transform:pose(startX,startY,-120,0,0,.4)},
+        {opacity:1,transform:pose(startX+side*35,startY-70,depth,side*12,side*35,.8),offset:.12},
+        {opacity:1,transform:pose(crestX,crestY,depth,side*(30+row*9),side*180,1),offset:.43},
+        {opacity:.95,transform:pose(endX,height*.75,depth,side*(100+row*13),side*320,.85),offset:.79},
+        {opacity:0,transform:pose(endX+side*70,height+220,-70,side*180,side*420,.65)}
+      ], {duration:2200 + row % 3 * 120,delay:row*65,easing:"linear"}));
+    }
+    Promise.all(flights).then(() => { layer.remove(); if (celebration === layer) celebration = null; });
+  }
   const sceneReady = res.preview ? import("./scene3d.mjs").then(module => module.createServingScene(q(".rip-scene"), {
     brand: CARD_STUDIES.find(b => b.id === selectedCard), value: money(res.value || 15), reduced,
     contact(kind) {
@@ -1234,22 +1262,22 @@ function reveal(p, res) {
       const played = sfx(kind === "confirm" ? "impact" : kind);
       o.dataset[kind + "Contacts"] = String(+(o.dataset[kind + "Contacts"] || 0) + 1);
       o.dataset[kind + "Playback"] = played ? "started" : "silent";
-      if (kind === "confirm") { buzz(10); q(".reward-status").textContent = played ? "Played: " + REWARD_SOUNDS.find(s => s.id === selectedReward).name + " · choose another to compare" : "Sound unavailable or muted"; }
+      if (kind === "confirm") { celebrate(); buzz(10); q(".reward-status").textContent = played ? "Played: " + REWARD_SOUNDS.find(s => s.id === selectedReward).name + " · choose another to compare" : "Sound unavailable or muted"; }
     }
   })).then(stage => {
     if (phase === "closed") { stage.dispose(); return null; }
     stage3d = stage; o.classList.add("has-3d"); o.dataset.renderer = "webgl"; return stage;
   }).catch(error => { o.dataset.renderer = "css-fallback"; o.dataset.rendererError = error.message; console.warn("3D scene fallback:", error.message); return null; }) : Promise.resolve(null);
-  const animations = new Set();
+  const animations = new Set(), celebrationAnimations = new Set();
   function animate(el, frames, options) {
     if (!el.animate) { Object.assign(el.style, frames[frames.length - 1]); return Promise.resolve(); }
-    const a = el.animate(frames, { fill: "forwards", ...options }); animations.add(a);
+    const a = el.animate(frames, { fill: "forwards", ...options }); (el.closest(".victory-cascade") ? celebrationAnimations : animations).add(a);
     return a.finished.catch(() => {});
   }
   function cancelAnimations() { for (const a of animations) a.cancel(); animations.clear(); }
   function dispose() {
     if (phase === "closed") return;
-    phase = "closed"; stage3d?.dispose(); cancelAnimations(); cancelAnimationFrame(tiltFrame); stopContact(); busy = false;
+    phase = "closed"; for (const a of celebrationAnimations) a.cancel(); celebrationAnimations.clear(); celebration?.remove(); celebration = null; stage3d?.dispose(); cancelAnimations(); cancelAnimationFrame(tiltFrame); stopContact(); busy = false;
     document.removeEventListener("keydown", onKey, true);
     document.removeEventListener("visibilitychange", onVisibility);
     o.remove(); if (app) app.inert = wasInert;
@@ -1353,7 +1381,7 @@ function reveal(p, res) {
       if (!res.preview) q(".rip-cap").style.opacity = 1 - pointer.progress * .3;
       pack.style.transform = "rotate(" + (-3 + pointer.progress * 4) + "deg)";
     }
-    q(".rip-hint").textContent = pointer.progress >= .72 ? "Release to reveal" : (res.preview ? "↑ Lift the cover" : "← Keep pulling the seal");
+    q(".rip-hint").textContent = pointer.progress >= .72 ? "Release to reveal" : (res.preview ? "↑ Release your card" : "← Keep pulling the seal");
   });
   function releaseSeal(e) {
     if (pointer?.id !== e.pointerId) return;
@@ -1364,7 +1392,7 @@ function reveal(p, res) {
       const cap = res.preview ? q(".rip-body") : q(".rip-cap");
       if (!reduced) { animate(cap, [{ transform: cap.style.transform || "none", opacity: cap.style.opacity || 1 }, { transform: "none", opacity: 1 }], { duration: 180, easing: "ease-out", fill: "none" }); }
       cap.style.transform = ""; cap.style.opacity = ""; pack.style.transform = "";
-      q(".rip-hint").textContent = "← Drag the seal to rip, or tap the pack";
+      q(".rip-hint").textContent = res.preview ? "Tap the plate to drop your card" : "← Drag the seal to rip, or tap the pack";
     }
   }
   for (const event of ["pointerup", "pointercancel", "lostpointercapture"]) pack.addEventListener(event, releaseSeal);

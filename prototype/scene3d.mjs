@@ -119,6 +119,7 @@ export async function createServingScene(host, { brand, value, reduced = false, 
   canvas.addEventListener('pointermove',pointer);canvas.addEventListener('pointerleave',reset);canvas.addEventListener('pointercancel',reset);canvas.addEventListener('blur',reset);canvas.addEventListener('keydown',keydown);
   const observer=new ResizeObserver(resize);observer.observe(host);resize();
   return {
+    cardArtwork: texture.image.toDataURL('image/png'),
     async serve(){state='ready';zoom=1;card.visible=false;flat();await play('serve',.65);},
     async reveal(){state='opening';await play('reveal',1.95);},
     finish(){cancel();final();draw();},
