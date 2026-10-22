@@ -1,69 +1,28 @@
-# Justin's agent: Chef Pack changes and next steps
+# Justin's agent: current Chef Pack handoff
 
-## Latest integrated UI update
+Tested implementation: e3c9692c1f69f9340301b14ecf3a1d497cbae74f
+Frontend branch: frontend/justin
+Base main: 65fee1b112d65f4d5a46070d04584c69ada7c467
+Combined preview: https://chef-pack-ekjnbf0o8-ctbedfords-projects.vercel.app/
 
-Current tested code: 759a46aab6a1734a852e6b2803128d461b1fb48f. Preview: https://chef-pack-a8j0vl7r3-ctbedfords-projects.vercel.app/
+## Current experience
 
-Choose Packs and API tier pages now share the new visual language. Tier cards play the 3D reveal directly; detail pages let the visitor audition each restaurant without sign-in. A selected tier filters restaurant artwork. The picker has nine Supabase-backed designs across three tiers, including four explicit wordmark/initials designs where no logo file is supplied. The obsolete study-only result wording is replaced with a pack preview result.
+Guest landing, Choose Packs and tier-detail previews use a shared plate/card drop, twirl and fullscreen perspective victory cascade. Choose Packs has three readable stacked tiers. Restaurant selections are filtered by tier; previews require no account and create no order. Signed-in test orders use the same 3D scene but preserve the server label and value. The central card/plate are WebGL meshes; the fullscreen cascade uses perspective DOM images. Rendering stops when still, DPR is capped at 1.5 and shadows at 512px. No package manifests changed; pinned Three.js and its MIT license are under prototype/vendor/three/.
 
-Server-backed test orders now also use the 3D scene, with a generic card texture using the server label/value rather than a chosen sample brand. The order/wallet contract is unchanged. A local stand-in signup/order/reveal/wallet run produced exactly one $15 item and one order request. This does not clear the real-account golden journey.
+The silver cover is removed. Six restrained original confirmation sounds remain, with plate/card contact cues and one reveal cue. Replay loads the selected cue. Browser autoplay can suppress arrival sounds before the first user gesture.
 
-Directory loading prefers /api/restaurants, then uses the deployed public SELECT-only Supabase table on endpoint 404. This permits the UI update without merging the backend branch. The local harness optionally reads a public-config JSON file outside the repository via CHEFPACK_DIRECTORY_CONFIG; never commit real secrets or treat harness sessions as real users.
+## Restaurant logos and data
 
-Evidence: reports/frontend/evidence/integrated-pack-experience.json. Frontend report remains BLOCKED.
+Nine brands have actual logo assets: McDonald’s, Subway, Taco Bell, Slim Chickens, Little Caesars, Chili’s, Olive Garden, Ruth’s Chris and The Capital Grille. The last four were retrieved from official restaurant sites; sources are in prototype/art/SOURCES.md. Olive Garden needs a white logo backing for contrast. Hosted image checks pass 5/5 Quick Bite, 2/2 Sit-Down and 2/2 Treat Yourself. SVG and PNG logos render in 3D textures.
 
+The development Supabase restaurant_directory has nine active rows and nine card_art filenames. Metadata is public SELECT-only with RLS. The frontend prefers /api/restaurants, then reads that public table on endpoint 404. The backend PR https://github.com/LotusBrothers/chef-pack/pull/5 contains the additive directory and logo metadata migrations. It cannot merge without an approving review. No unmerged backend branch was merged into this frontend branch. Older immutable previews lack the newly added files; use the current preview above.
 
-## Follow-on restaurant and credit work
+## Verification and merge status
 
-The presentation and this handoff were pushed to `frontend/justin`. The user then authorized real restaurant metadata and Supabase work. A separate backend PR, [Add public restaurant directory grouped by pack tier](https://github.com/LotusBrothers/chef-pack/pull/5), adds `GET /api/restaurants`. Its migration is already applied to the development database: 9 brands across the 3 existing tiers, public SELECT-only access with RLS. Backend tests and both GitHub workflows passed for its implementation. Its hosted endpoint is https://chef-pack-9bbyomuvt-ctbedfords-projects.vercel.app/api/restaurants .
+Current logo pass: syntax/scope and 9 hosted image loads pass; Olive Garden and Capital Grille 3D artwork inspected. See reports/frontend/evidence/restaurant-logo-verification.json. Earlier integrated-flow evidence is in integrated-pack-experience.json: hosted tier previews plus disposable local harness signup -> one Quick Bite order -> generic server-result 3D reveal -> one $15 wallet item. The harness's auth/orders/wallet are in-memory stand-ins, not real Supabase acceptance. Its directory can read live public metadata via an external public-config JSON file configured by CHEFPACK_DIRECTORY_CONFIG; never commit privileged keys.
 
-GitHub rejected the normal merge because an approving review from a write-access reviewer is required. Neither PR has been merged. Do not bypass that rule or pull an unmerged backend branch into this shared frontend branch. Once approved and merged, synchronize from main. The latest UI already reads the public directory directly until the same-origin endpoint is present.
+Frontend PR https://github.com/LotusBrothers/chef-pack/pull/3 stays draft. The real registered-user golden journey, retry/pending reload, wallet persistence and second-account isolation are incomplete. The BLOCKED report gate intentionally fails. Android hardware and final reduced-motion checks are also outstanding. Do not turn these into PASS or switch to visual scope to hide integration work already on this branch. User authorized merge only if everything works; main remains unchanged. Synchronize normally from origin/main after reviewed backend changes land, preserving shared history.
 
-The user clarified that the proposed guest welcome balance should eventually be actual credit redeemable for gift cards, not cash withdrawal. The open question is whether purchased credits have guaranteed redemption value or fund chance-based rewards. No credit ledger, guest monetary grant, payment collection or gift-card fulfillment has been implemented. Keep the existing demo labels and do not display a funded balance based solely on an animation. The coin landing is pending that decision and provider setup.
+## Credit request remains separate
 
-## Current state
-
-Branch: `frontend/justin`. Tested implementation commit: `b1f1d0d48186c70d3a5ce289ce90b4edde7ee96e`.
-Base included: `65fee1b112d65f4d5a46070d04584c69ada7c467`.
-Combined preview: https://chef-pack-4o2mofa42-ctbedfords-projects.vercel.app/
-
-The user requested committing, pushing and merging only if everything works. Code is committed; this report is a separate evidence commit. Integration remains BLOCKED. Main has not been merged. Check remote branch/PR status when picking this up.
-
-## What changed
-
-- Guest landing is playable without signing in. It creates no order or wallet inventory.
-- The final design removes the silver cover entirely. A card drops face-down onto a white plate, makes contact, spins through a full turn while rising, and settles upright.
-- A Solitaire-style victory cascade sends copies of the selected card over the page text, then removes them. The central plate/card is WebGL; the fullscreen cascade uses perspective DOM transforms to avoid another WebGL context.
-- Added Little Caesars using its official franchise-site logo. Five artwork choices now include McDonald's, Subway, Taco Bell, Slim Chickens and Little Caesars. They are illustrative, non-redeemable samples; real API results retain the server label.
-- Balanced plate lighting and kept printed card colors independent of reflective lighting.
-- Six restrained original confirmation cues remain selectable. Plate contact uses Quiet tick; card landing reuses Warm confirm; the final cue uses the selected sound. The internal `cover` contact name now means card contact, not a visible cover.
-- Three.js 0.186.1 is vendored under `prototype/vendor/three/`, with MIT attribution and local imports. No package manifests changed. Rendering stops when settled; DPR is capped at 1.5, shadows at 512px. Hardware Android performance remains unmeasured.
-
-## Where to look
-
-- `prototype/scene3d.mjs`: plate/card geometry, artwork texture, drop and spring/spin timelines, contact events, camera inspection and disposal.
-- `prototype/index.html`: guest landing, brand/sound controls, dynamic renderer loading, CSS fallback, fullscreen cascade and cleanup.
-- `prototype/art/`: artwork and source attribution.
-- `tests/frontend/contract-harness.mjs`: local stand-in, including module MIME support. This is not real Supabase acceptance.
-- `reports/frontend/current.json` and `feedback.md`: authoritative current readiness.
-- `reports/frontend/evidence/card-drop-verification.json`: exact checks and limitations; screenshots are alongside it.
-
-## Code commits in this pass
-
-- `45fab1c`: pinned vendored Three.js.
-- `3242198`, `0ee0a53`: original 3D staging/contact synchronization, later superseded visually.
-- `a996964`: Little Caesars and lighting.
-- `6e0ea31`: cover removed; card drop and twirl.
-- `b1f1d0d`: fullscreen perspective victory cascade.
-
-Earlier commits on the branch include the account/order/wallet integration and presentation iterations. Do not reset or overwrite Justin's branch to main.
-
-## Verified and outstanding
-
-`node --test tests/backend/*.test.mjs`: 7/7 pass. Scope and syntax checks pass. Hosted guest reveal uses WebGL, Little Caesars renders, all three replay contact/confirmation sounds report started, and the cascade cleans up. Hosted health and three-pack catalog return 200. DOM width at mobile size is 390px with no horizontal content overflow. Local guest log has zero order requests, orders or pulls.
-
-The required combined-preview golden journey is NOT verified: registered sign-in, one Quick Bite result, idempotent retry including pending reload, wallet persistence, sign-out and second-account isolation. No dedicated real account tokens are configured in the current session. Do not treat stand-in harness evidence or a healthy public catalog as a pass for these cases. Reduced motion and actual Android performance also need final checks.
-
-Synchronize normally with origin, preserve the frontend, and run `docs/ACCEPTANCE.md` using two dedicated test accounts on the combined preview. Update the code-linked report only with observed results. The report checker intentionally rejects BLOCKED readiness. Keep the existing integration PR in draft until these requirements pass; do not bypass its gate or switch the report to visual scope to conceal earlier integration changes.
-
-No real payments, fulfillment or database changes were made in this presentation pass. Initial page-arrival audio can be blocked by browser autoplay policy; user-triggered replay is the verified sound path.
+User proposed a guest welcome coin and actual credit redeemable for gift cards, not cash. Guaranteed-value versus chance-based rewards remains unanswered. No funds, welcome grant, paid funding, redemption or actual gift-card fulfillment is implemented. Do not treat the animation or local browser state as proof of a real balance or inventory.

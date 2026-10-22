@@ -2,10 +2,10 @@
   "schema_version": 1,
   "scope": "integration",
   "readiness": "blocked",
-  "tested_commit": "759a46aab6a1734a852e6b2803128d461b1fb48f",
+  "tested_commit": "e3c9692c1f69f9340301b14ecf3a1d497cbae74f",
   "base_commit": "65fee1b112d65f4d5a46070d04584c69ada7c467",
-  "preview_url": "https://chef-pack-a8j0vl7r3-ctbedfords-projects.vercel.app/",
-  "summary": "Integrated restaurant directory and new 3D reveal into Choose Packs, tier detail pages, restaurant auditions and server-result test opening. Hosted 9-restaurant/3-tier navigation and premium reveal pass. Local stand-in sign-in/open/reveal/wallet path yields one $15 test item. Full real-account integration remains blocked.",
+  "preview_url": "https://chef-pack-ekjnbf0o8-ctbedfords-projects.vercel.app/",
+  "summary": "All nine Supabase restaurant records now have actual logo artwork. Four remaining marks sourced directly from official sites; hosted picker image checks pass 9/9, and new logos render on 3D card textures. Full registered-account integration remains blocked.",
   "cases": [
     {
       "id": "CATALOG",
@@ -13,7 +13,8 @@
       "evidence": [
         "reports/frontend/evidence/integrated-pack-experience.json",
         "reports/frontend/evidence/integrated-choose-packs.png",
-        "reports/frontend/evidence/integrated-premium-result-hosted.png"
+        "reports/frontend/evidence/integrated-premium-result-hosted.png",
+        "reports/frontend/evidence/restaurant-logo-verification.json"
       ],
       "notes": "Current hosted Choose Packs renders Quick Bite $15, Sit-Down $40, Treat Yourself $100, canonical tier details and nine directory entries; unsupported legacy themes removed from picker."
     },
@@ -23,7 +24,8 @@
       "evidence": [
         "reports/frontend/evidence/integrated-pack-experience.json",
         "reports/frontend/evidence/integrated-choose-packs.png",
-        "reports/frontend/evidence/integrated-premium-result-hosted.png"
+        "reports/frontend/evidence/integrated-premium-result-hosted.png",
+        "reports/frontend/evidence/restaurant-logo-verification.json"
       ],
       "notes": "Real-account acceptance unverified. A disposable local stand-in account exercised signup/open/reveal/wallet only; this is not proof of real Supabase behavior."
     },
@@ -33,7 +35,8 @@
       "evidence": [
         "reports/frontend/evidence/integrated-pack-experience.json",
         "reports/frontend/evidence/integrated-choose-packs.png",
-        "reports/frontend/evidence/integrated-premium-result-hosted.png"
+        "reports/frontend/evidence/integrated-premium-result-hosted.png",
+        "reports/frontend/evidence/restaurant-logo-verification.json"
       ],
       "notes": "Real-account acceptance unverified. A disposable local stand-in account exercised signup/open/reveal/wallet only; this is not proof of real Supabase behavior."
     },
@@ -43,7 +46,8 @@
       "evidence": [
         "reports/frontend/evidence/integrated-pack-experience.json",
         "reports/frontend/evidence/integrated-choose-packs.png",
-        "reports/frontend/evidence/integrated-premium-result-hosted.png"
+        "reports/frontend/evidence/integrated-premium-result-hosted.png",
+        "reports/frontend/evidence/restaurant-logo-verification.json"
       ],
       "notes": "Real-account acceptance unverified. A disposable local stand-in account exercised signup/open/reveal/wallet only; this is not proof of real Supabase behavior."
     },
@@ -53,7 +57,8 @@
       "evidence": [
         "reports/frontend/evidence/integrated-pack-experience.json",
         "reports/frontend/evidence/integrated-choose-packs.png",
-        "reports/frontend/evidence/integrated-premium-result-hosted.png"
+        "reports/frontend/evidence/integrated-premium-result-hosted.png",
+        "reports/frontend/evidence/restaurant-logo-verification.json"
       ],
       "notes": "Real-account acceptance unverified. A disposable local stand-in account exercised signup/open/reveal/wallet only; this is not proof of real Supabase behavior."
     },
@@ -63,7 +68,8 @@
       "evidence": [
         "reports/frontend/evidence/integrated-pack-experience.json",
         "reports/frontend/evidence/integrated-choose-packs.png",
-        "reports/frontend/evidence/integrated-premium-result-hosted.png"
+        "reports/frontend/evidence/integrated-premium-result-hosted.png",
+        "reports/frontend/evidence/restaurant-logo-verification.json"
       ],
       "notes": "Real-account acceptance unverified. A disposable local stand-in account exercised signup/open/reveal/wallet only; this is not proof of real Supabase behavior."
     },
@@ -73,7 +79,8 @@
       "evidence": [
         "reports/frontend/evidence/integrated-pack-experience.json",
         "reports/frontend/evidence/integrated-choose-packs.png",
-        "reports/frontend/evidence/integrated-premium-result-hosted.png"
+        "reports/frontend/evidence/integrated-premium-result-hosted.png",
+        "reports/frontend/evidence/restaurant-logo-verification.json"
       ],
       "notes": "Real-account acceptance unverified. A disposable local stand-in account exercised signup/open/reveal/wallet only; this is not proof of real Supabase behavior."
     },
@@ -83,7 +90,8 @@
       "evidence": [
         "reports/frontend/evidence/integrated-pack-experience.json",
         "reports/frontend/evidence/integrated-choose-packs.png",
-        "reports/frontend/evidence/integrated-premium-result-hosted.png"
+        "reports/frontend/evidence/integrated-premium-result-hosted.png",
+        "reports/frontend/evidence/restaurant-logo-verification.json"
       ],
       "notes": "Preview controls explicitly create no orders or gift cards. Signed-in shared 3D path preserves generic server label; local harness has one intentional order, one pull, one request. Full real authenticated safety acceptance unrun."
     },
@@ -93,9 +101,10 @@
       "evidence": [
         "reports/frontend/evidence/integrated-pack-experience.json",
         "reports/frontend/evidence/integrated-choose-packs.png",
-        "reports/frontend/evidence/integrated-premium-result-hosted.png"
+        "reports/frontend/evidence/integrated-premium-result-hosted.png",
+        "reports/frontend/evidence/restaurant-logo-verification.json"
       ],
-      "notes": "Hosted picker -> premium details -> selected restaurant -> 3D reveal complete. Local harness includes signup/order/reveal/wallet. Full real-account journey, narrow viewport recheck and reduced-motion/Android checks remain outstanding."
+      "notes": "Hosted picker -> premium details -> selected restaurant -> 3D reveal complete. Local harness includes signup/order/reveal/wallet. Full real-account journey, narrow viewport recheck and reduced-motion/Android checks remain outstanding. Latest logo-only pass verifies 9/9 hosted images and two new 3D logo textures. Full integration visual coverage remains incomplete."
     }
   ]
 }

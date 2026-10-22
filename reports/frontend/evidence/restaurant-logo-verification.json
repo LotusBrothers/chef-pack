@@ -1,0 +1,47 @@
+{
+  "tested_commit": "e3c9692c1f69f9340301b14ecf3a1d497cbae74f",
+  "preview_url": "https://chef-pack-ekjnbf0o8-ctbedfords-projects.vercel.app/",
+  "database": {
+    "restaurants": 9,
+    "non_null_artwork": 9,
+    "applied_migration": "20261022014438_restaurant_logos",
+    "changed_rows": 4
+  },
+  "hosted_image_checks": {
+    "quick-bite": {
+      "loaded": 5,
+      "total": 5
+    },
+    "sit-down": {
+      "loaded": 2,
+      "total": 2
+    },
+    "treat-yourself": {
+      "loaded": 2,
+      "total": 2
+    }
+  },
+  "new_assets": {
+    "chilis.svg": "https://green.chilis.com/assets/chilis-logo.svg",
+    "olive-garden.svg": "https://media.olivegarden.com/images/OG_Redesign_Assets/OG_Logo.svg",
+    "ruths-chris.png": "https://media.ruthschris.com/images/assets/logo.png",
+    "capital-grille.png": "https://media.thecapitalgrille.com/images/site/responsive/logo.png"
+  },
+  "visual_checks": [
+    "Chili’s and Olive Garden picker logos render",
+    "Ruth’s Chris and The Capital Grille picker logos render",
+    "Olive Garden logo renders on the 3D result with a white backing",
+    "Capital Grille logo renders on the final 3D pose; observed finish label indicated animation skipped, so this is final-artwork evidence, not proof of uninterrupted audio/cascade playback"
+  ],
+  "checks": {
+    "inline_syntax": "pass",
+    "frontend_scope": "pass",
+    "file_existence": "9/9",
+    "security_advisor": "No new database warning; pre-existing leaked-password-protection warning unchanged"
+  },
+  "limits": [
+    "No funded welcome credit or gift-card issuance",
+    "Full real-account acceptance remains blocked",
+    "No new Android hardware performance measurement"
+  ]
+}
