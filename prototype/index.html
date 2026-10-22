@@ -697,6 +697,26 @@
 .prow[aria-pressed="true"] .tog{background:var(--ok)}.prow[aria-pressed="true"] .tog::after{transform:translateX(20px)}
 .col-logo{width:62%;aspect-ratio:1;border-radius:50%;background:var(--o);display:grid;place-items:center;box-shadow:0 4px 10px rgba(0,0,0,.14)}
 .col-art .col-logo img,.sim-thumb .col-logo img{width:74%;height:74%;object-fit:contain}
+
+/* ---------- Swipe to open ---------- */
+.swipe{position:relative;height:62px;border-radius:99px;overflow:hidden;user-select:none;-webkit-user-select:none;
+  background:linear-gradient(180deg,#1db866,#0f8f4a);box-shadow:0 10px 26px rgba(15,143,74,.28),inset 0 1px 0 rgba(255,255,255,.28)}
+.swipe-fill{position:absolute;left:0;top:0;bottom:0;width:72px;border-radius:inherit;background:linear-gradient(90deg,rgba(255,255,255,.08),rgba(255,255,255,.22));transition:width .35s var(--ease)}
+.swipe-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:8px;padding-left:46px;color:#fff;font-size:16.5px;font-weight:650;letter-spacing:-.01em;pointer-events:none;transition:opacity .35s var(--ease)}
+.swipe-label small{font-size:13.5px;font-weight:500;color:rgba(255,255,255,.78)}
+.swipe-label>span{background:linear-gradient(90deg,#fff 0 40%,#c9ffe0 50%,#fff 60% 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:swipeShine 2.6s linear infinite}
+@keyframes swipeShine{from{background-position:100% 0}to{background-position:-150% 0}}
+.swipe-knob{position:absolute;left:5px;top:5px;width:52px;height:52px;border-radius:50%;border:0;padding:0;background:#fff;color:#0f8f4a;display:grid;place-items:center;
+  box-shadow:0 3px 10px rgba(0,0,0,.2);cursor:grab;touch-action:none;transition:transform .35s var(--ease)}
+.swipe-knob svg{width:24px;height:24px}
+.swipe.dragging .swipe-knob,.swipe.dragging .swipe-fill,.swipe.dragging .swipe-label{transition:none}.swipe.dragging .swipe-knob{cursor:grabbing}
+.swipe.opened .swipe-knob,.swipe.opened .swipe-fill{transition:transform .2s ease-out,width .2s ease-out}
+.swipe.nudge .swipe-knob{animation:swipeNudge .7s var(--ease)}
+@keyframes swipeNudge{35%{transform:translateX(34px)}65%{transform:translateX(-3px)}100%{transform:none}}
+.swipe-knob:focus-visible{outline:3px solid #fff;outline-offset:-6px;box-shadow:0 0 0 3px #0f8f4a,0 3px 10px rgba(0,0,0,.2)}
+.swipe[data-disabled]{background:var(--surface-2);box-shadow:none}.swipe[data-disabled] .swipe-label>span{animation:none;background:none;color:var(--muted)}
+.swipe[data-disabled] .swipe-label small{color:var(--faint)}.swipe[data-disabled] .swipe-knob{color:var(--faint);cursor:default;box-shadow:none}.swipe[data-disabled] .swipe-fill{display:none}
+@media (prefers-reduced-motion: reduce){.swipe-label>span{animation:none;background:none;color:#fff}}
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -980,7 +1000,7 @@ const openPack = id => go("pack", { packId: id, from: S.page, slide: 3 });
 /* ---------- Pages ---------- */
 function starterPack() { return { id: "starter-preview", name: "Starter Pack", guest: true, price: 15, tiers: [15], spots: [R.bk] }; }
 function home() {
-  return `<section class="sim-game"><span class="sim-tag"><i></i>Free play</span><div class="sim-card-host" id="simCardHost"></div><p class="sim-hint" id="simHint">${game.balance < COST ? 'Not enough credits · tap your balance to refill' : 'Tap the pack to open it · drag to see what’s inside'}</p><button class="btn sim-play" id="simPlay" type="button" ${game.balance < COST ? 'disabled' : ''}>Open pack <span>${COST} credits</span></button><p class="sim-disclaimer">Demo credits · no cash value</p>${(() => { const open = game.history.filter(r => r.status === "open").length; return open ? `<button class="sim-pending" id="simPending" type="button">${open} card${open === 1 ? "" : "s"} waiting for you to decide <span>Collection →</span></button>` : ""; })()}</section>`;
+  return `<section class="sim-game"><span class="sim-tag"><i></i>Free play</span><div class="sim-card-host" id="simCardHost"></div><p class="sim-hint" id="simHint">${game.balance < COST ? 'Not enough credits · tap your balance to refill' : 'Drag the card to see what’s inside'}</p><div class="swipe" id="simSwipe" ${game.balance < COST ? 'data-disabled' : ''}><span class="swipe-fill"></span><span class="swipe-label"><span>${game.balance < COST ? 'Not enough credits' : 'Swipe to open'}</span><small>${COST} credits</small></span><button class="swipe-knob" id="simPlay" type="button" aria-label="Swipe right to open the pack for ${COST} credits, or press Enter" ${game.balance < COST ? 'disabled' : ''}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l6 6-6 6M12 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div><p class="sim-disclaimer">Demo credits · no cash value</p>${(() => { const open = game.history.filter(r => r.status === "open").length; return open ? `<button class="sim-pending" id="simPending" type="button">${open} card${open === 1 ? "" : "s"} waiting for you to decide <span>Collection →</span></button>` : ""; })()}</section>`;
 }
 /* ---------- Collection: every free-play card and what happened to it ---------- */
 function collection() {
@@ -1048,6 +1068,45 @@ function fitHomeCard() {
   const h = Math.max(300, Math.min(view.clientHeight - 170, w0 / .75));
   homeCard.setSize(Math.round(h * .75), Math.round(h));
 }
+/* Swipe to open: drag the knob to the end of the green track. Enter or Space also opens it. */
+function nudgeSwipe() {
+  const t = $("simSwipe"); if (!t || t.hasAttribute("data-disabled") || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  t.classList.remove("nudge"); void t.offsetWidth; t.classList.add("nudge");
+}
+function bindSwipe() {
+  const track = $("simSwipe"), knob = $("simPlay"); if (!track || !knob) return;
+  const fill = track.querySelector(".swipe-fill"), label = track.querySelector(".swipe-label");
+  let drag = null, done = false;
+  const max = () => track.clientWidth - knob.offsetWidth - 10;
+  const set = x => { knob.style.transform = `translateX(${x}px)`; fill.style.width = (x + knob.offsetWidth + 10) + "px"; label.style.opacity = String(Math.max(0, 1 - x / (max() * .7))); };
+  const back = () => { knob.classList.remove("dragging"); track.classList.remove("dragging"); set(0); };
+  knob.addEventListener("pointerdown", e => {
+    if (knob.disabled || done || e.button !== 0) return;
+    drag = { id: e.pointerId, x0: e.clientX, moved: false };
+    try { knob.setPointerCapture(e.pointerId); } catch {}
+    knob.classList.add("dragging"); track.classList.add("dragging"); audio();
+  });
+  knob.addEventListener("pointermove", e => {
+    if (!drag || drag.id !== e.pointerId) return;
+    const x = Math.max(0, Math.min(max(), e.clientX - drag.x0));
+    if (x > 4) drag.moved = true;
+    set(x);
+  });
+  const end = (e, cancel) => {
+    if (!drag || drag.id !== e.pointerId) return;
+    const x = Math.max(0, Math.min(max(), e.clientX - drag.x0)), moved = drag.moved; drag = null;
+    if (!cancel && x >= max() * .82) {
+      done = true; knob.classList.remove("dragging"); track.classList.remove("dragging"); track.classList.add("opened"); set(max()); buzz(12);
+      setTimeout(() => { playSimulation(); if (!document.querySelector(".opener")) { done = false; track.classList.remove("opened"); back(); } }, 200);
+      return;
+    }
+    back(); if (!moved && !cancel) nudgeSwipe();
+  };
+  knob.addEventListener("pointerup", e => end(e, false));
+  knob.addEventListener("pointercancel", e => end(e, true));
+  knob.addEventListener("lostpointercapture", e => end(e, true));
+  knob.addEventListener("click", e => { if (e.detail === 0 && !knob.disabled) playSimulation(); });
+}
 function disposeHomeCard() { homeCard?.destroy(); homeCard = null; removeEventListener("resize", fitHomeCard); }
 function mountHomeCard() {
   const host = $("simCardHost"); if (!host) return;
@@ -1056,14 +1115,14 @@ function mountHomeCard() {
   homeCard = createFlipCard({ front, back, flipOnClick: false, draggable: true, tilt: true, tiltMax: 12, glare: true, glareOpacity: .22, hoverScale: 1.03,
     perspective: 1100, stiffness: 170, damping: 20, radius: 22, background: "#151618", color: "#eef0f2", shadow: true, shadowColor: "#000000", shadowOpacity: .3,
     ariaLabel: "Mystery pack. Press Enter to flip it and see the odds.",
-    onFlipChange: flipped => { const h = $("simHint"); if (h && game.balance >= COST) h.textContent = flipped ? "Drag back to the pack · tap to open it" : "Tap the pack to open it · drag to see what’s inside"; } });
+    onFlipChange: flipped => { const h = $("simHint"); if (h && game.balance >= COST) h.textContent = flipped ? "Drag back to the pack · swipe below to open" : "Drag the card to see what’s inside"; } });
   // A tap (not a drag) opens the pack.
   let down = null;
   homeCard.el.addEventListener("pointerdown", e => { down = { x: e.clientX, y: e.clientY }; });
   homeCard.el.addEventListener("click", e => {
     if (e.detail === 0 || !down) return;
     const moved = Math.hypot(e.clientX - down.x, e.clientY - down.y); down = null;
-    if (moved < 8 && game.balance >= COST) playSimulation();
+    if (moved < 8) nudgeSwipe();
   });
   host.append(homeCard.el); fitHomeCard(); addEventListener("resize", fitHomeCard);
 }
@@ -2071,7 +2130,7 @@ function showBrand(s) {
 /* ---------- Bindings ---------- */
 const bind = {
   home() {
-    $("simPlay").onclick = playSimulation;
+    bindSwipe();
     mountHomeCard();
     if ($("simPending")) $("simPending").onclick = () => go("collection", { colFilter: "open" });
   },
