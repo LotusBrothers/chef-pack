@@ -1,9 +1,9 @@
 # Integrated pack experience handoff
 
 Readiness: BLOCKED for real-account integration and merge.
-Tested implementation: cfa75ed0d372de88c56737a7fe5b2a6a583897ab
+Tested implementation: 759a46aab6a1734a852e6b2803128d461b1fb48f
 Main included: 65fee1b112d65f4d5a46070d04584c69ada7c467
-Combined preview: https://chef-pack-2s8ibocrq-ctbedfords-projects.vercel.app/
+Combined preview: https://chef-pack-a8j0vl7r3-ctbedfords-projects.vercel.app/
 
 Choose Packs now shows three tier cards with direct animation auditions and nine restaurant names from Supabase. Tier pages show restaurant choices and a clear no-account preview action. Both these previews and signed-in server-result openings use the shared 3D drop/twirl/cascade. Test opens retain the server restaurant label, amount and wallet flow. The older foil showcase is replaced for API packs.
 

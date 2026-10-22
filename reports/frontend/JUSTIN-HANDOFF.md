@@ -2,7 +2,7 @@
 
 ## Latest integrated UI update
 
-Current tested code: cfa75ed0d372de88c56737a7fe5b2a6a583897ab. Preview: https://chef-pack-2s8ibocrq-ctbedfords-projects.vercel.app/
+Current tested code: 759a46aab6a1734a852e6b2803128d461b1fb48f. Preview: https://chef-pack-a8j0vl7r3-ctbedfords-projects.vercel.app/
 
 Choose Packs and API tier pages now share the new visual language. Tier cards play the 3D reveal directly; detail pages let the visitor audition each restaurant without sign-in. A selected tier filters restaurant artwork. The picker has nine Supabase-backed designs across three tiers, including four explicit wordmark/initials designs where no logo file is supplied. The obsolete study-only result wording is replaced with a pack preview result.
 

@@ -2,9 +2,9 @@
   "schema_version": 1,
   "scope": "integration",
   "readiness": "blocked",
-  "tested_commit": "cfa75ed0d372de88c56737a7fe5b2a6a583897ab",
+  "tested_commit": "759a46aab6a1734a852e6b2803128d461b1fb48f",
   "base_commit": "65fee1b112d65f4d5a46070d04584c69ada7c467",
-  "preview_url": "https://chef-pack-2s8ibocrq-ctbedfords-projects.vercel.app/",
+  "preview_url": "https://chef-pack-a8j0vl7r3-ctbedfords-projects.vercel.app/",
   "summary": "Integrated restaurant directory and new 3D reveal into Choose Packs, tier detail pages, restaurant auditions and server-result test opening. Hosted 9-restaurant/3-tier navigation and premium reveal pass. Local stand-in sign-in/open/reveal/wallet path yields one $15 test item. Full real-account integration remains blocked.",
   "cases": [
     {
