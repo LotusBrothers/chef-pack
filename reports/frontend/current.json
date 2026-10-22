@@ -2,82 +2,100 @@
   "schema_version": 1,
   "scope": "integration",
   "readiness": "blocked",
-  "tested_commit": "b1f1d0d48186c70d3a5ce289ce90b4edde7ee96e",
+  "tested_commit": "cfa75ed0d372de88c56737a7fe5b2a6a583897ab",
   "base_commit": "65fee1b112d65f4d5a46070d04584c69ada7c467",
-  "preview_url": "https://chef-pack-4o2mofa42-ctbedfords-projects.vercel.app/",
-  "summary": "Guest demo now uses a real 3D plate and card drop/twirl, followed by a fullscreen perspective victory cascade. Metal cover removed. Five sample brands include Little Caesars. Hosted guest replay and read-only health/catalog pass; seven automated tests pass. Full registered-account integration journey remains unverified, so merge is withheld.",
+  "preview_url": "https://chef-pack-2s8ibocrq-ctbedfords-projects.vercel.app/",
+  "summary": "Integrated restaurant directory and new 3D reveal into Choose Packs, tier detail pages, restaurant auditions and server-result test opening. Hosted 9-restaurant/3-tier navigation and premium reveal pass. Local stand-in sign-in/open/reveal/wallet path yields one $15 test item. Full real-account integration remains blocked.",
   "cases": [
     {
       "id": "CATALOG",
-      "status": "not_run",
+      "status": "pass",
       "evidence": [
-        "reports/frontend/evidence/card-drop-verification.json"
+        "reports/frontend/evidence/integrated-pack-experience.json",
+        "reports/frontend/evidence/integrated-choose-packs.png",
+        "reports/frontend/evidence/integrated-premium-result-hosted.png"
       ],
-      "notes": "Hosted API returns all three canonical IDs/prices; full browser catalog acceptance not rerun."
+      "notes": "Current hosted Choose Packs renders Quick Bite $15, Sit-Down $40, Treat Yourself $100, canonical tier details and nine directory entries; unsupported legacy themes removed from picker."
     },
     {
       "id": "SIGNIN",
       "status": "blocked",
       "evidence": [
-        "reports/frontend/evidence/card-drop-verification.json"
+        "reports/frontend/evidence/integrated-pack-experience.json",
+        "reports/frontend/evidence/integrated-choose-packs.png",
+        "reports/frontend/evidence/integrated-premium-result-hosted.png"
       ],
-      "notes": "Current combined-preview acceptance not completed. Dedicated real test accounts are not configured; local stand-in evidence from earlier work cannot substitute for real backend verification."
+      "notes": "Real-account acceptance unverified. A disposable local stand-in account exercised signup/open/reveal/wallet only; this is not proof of real Supabase behavior."
     },
     {
       "id": "OPEN",
       "status": "blocked",
       "evidence": [
-        "reports/frontend/evidence/card-drop-verification.json"
+        "reports/frontend/evidence/integrated-pack-experience.json",
+        "reports/frontend/evidence/integrated-choose-packs.png",
+        "reports/frontend/evidence/integrated-premium-result-hosted.png"
       ],
-      "notes": "Current combined-preview acceptance not completed. Dedicated real test accounts are not configured; local stand-in evidence from earlier work cannot substitute for real backend verification."
+      "notes": "Real-account acceptance unverified. A disposable local stand-in account exercised signup/open/reveal/wallet only; this is not proof of real Supabase behavior."
     },
     {
       "id": "RETRY",
       "status": "blocked",
       "evidence": [
-        "reports/frontend/evidence/card-drop-verification.json"
+        "reports/frontend/evidence/integrated-pack-experience.json",
+        "reports/frontend/evidence/integrated-choose-packs.png",
+        "reports/frontend/evidence/integrated-premium-result-hosted.png"
       ],
-      "notes": "Current combined-preview acceptance not completed. Dedicated real test accounts are not configured; local stand-in evidence from earlier work cannot substitute for real backend verification."
+      "notes": "Real-account acceptance unverified. A disposable local stand-in account exercised signup/open/reveal/wallet only; this is not proof of real Supabase behavior."
     },
     {
       "id": "WALLET",
       "status": "blocked",
       "evidence": [
-        "reports/frontend/evidence/card-drop-verification.json"
+        "reports/frontend/evidence/integrated-pack-experience.json",
+        "reports/frontend/evidence/integrated-choose-packs.png",
+        "reports/frontend/evidence/integrated-premium-result-hosted.png"
       ],
-      "notes": "Current combined-preview acceptance not completed. Dedicated real test accounts are not configured; local stand-in evidence from earlier work cannot substitute for real backend verification."
+      "notes": "Real-account acceptance unverified. A disposable local stand-in account exercised signup/open/reveal/wallet only; this is not proof of real Supabase behavior."
     },
     {
       "id": "ISOLATION",
       "status": "blocked",
       "evidence": [
-        "reports/frontend/evidence/card-drop-verification.json"
+        "reports/frontend/evidence/integrated-pack-experience.json",
+        "reports/frontend/evidence/integrated-choose-packs.png",
+        "reports/frontend/evidence/integrated-premium-result-hosted.png"
       ],
-      "notes": "Current combined-preview acceptance not completed. Dedicated real test accounts are not configured; local stand-in evidence from earlier work cannot substitute for real backend verification."
+      "notes": "Real-account acceptance unverified. A disposable local stand-in account exercised signup/open/reveal/wallet only; this is not proof of real Supabase behavior."
     },
     {
       "id": "ERROR",
       "status": "not_run",
       "evidence": [
-        "reports/frontend/evidence/card-drop-verification.json"
+        "reports/frontend/evidence/integrated-pack-experience.json",
+        "reports/frontend/evidence/integrated-choose-packs.png",
+        "reports/frontend/evidence/integrated-premium-result-hosted.png"
       ],
-      "notes": "Current combined-preview acceptance not completed. Dedicated real test accounts are not configured; local stand-in evidence from earlier work cannot substitute for real backend verification."
+      "notes": "Real-account acceptance unverified. A disposable local stand-in account exercised signup/open/reveal/wallet only; this is not proof of real Supabase behavior."
     },
     {
       "id": "MOCK-SAFETY",
       "status": "not_run",
       "evidence": [
-        "reports/frontend/evidence/card-drop-verification.json"
+        "reports/frontend/evidence/integrated-pack-experience.json",
+        "reports/frontend/evidence/integrated-choose-packs.png",
+        "reports/frontend/evidence/integrated-premium-result-hosted.png"
       ],
-      "notes": "Guest labels indicate sample/not redeemable; local guest log has zero order requests/orders/pulls. Full authenticated safety journey not rerun."
+      "notes": "Preview controls explicitly create no orders or gift cards. Signed-in shared 3D path preserves generic server label; local harness has one intentional order, one pull, one request. Full real authenticated safety acceptance unrun."
     },
     {
       "id": "VISUAL",
       "status": "not_run",
       "evidence": [
-        "reports/frontend/evidence/card-drop-verification.json"
+        "reports/frontend/evidence/integrated-pack-experience.json",
+        "reports/frontend/evidence/integrated-choose-packs.png",
+        "reports/frontend/evidence/integrated-premium-result-hosted.png"
       ],
-      "notes": "Local drop/twirl/cascade and hosted Little Caesars/Clear confirm replay completed. Desktop and 390px layout evidence saved. Full catalog -> account -> order -> wallet journey and final reduced-motion check not rerun."
+      "notes": "Hosted picker -> premium details -> selected restaurant -> 3D reveal complete. Local harness includes signup/order/reveal/wallet. Full real-account journey, narrow viewport recheck and reduced-motion/Android checks remain outstanding."
     }
   ]
 }

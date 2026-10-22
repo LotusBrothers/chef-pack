@@ -1,10 +1,23 @@
 # Justin's agent: Chef Pack changes and next steps
 
+## Latest integrated UI update
+
+Current tested code: cfa75ed0d372de88c56737a7fe5b2a6a583897ab. Preview: https://chef-pack-2s8ibocrq-ctbedfords-projects.vercel.app/
+
+Choose Packs and API tier pages now share the new visual language. Tier cards play the 3D reveal directly; detail pages let the visitor audition each restaurant without sign-in. A selected tier filters restaurant artwork. The picker has nine Supabase-backed designs across three tiers, including four explicit wordmark/initials designs where no logo file is supplied. The obsolete study-only result wording is replaced with a pack preview result.
+
+Server-backed test orders now also use the 3D scene, with a generic card texture using the server label/value rather than a chosen sample brand. The order/wallet contract is unchanged. A local stand-in signup/order/reveal/wallet run produced exactly one $15 item and one order request. This does not clear the real-account golden journey.
+
+Directory loading prefers /api/restaurants, then uses the deployed public SELECT-only Supabase table on endpoint 404. This permits the UI update without merging the backend branch. The local harness optionally reads a public-config JSON file outside the repository via CHEFPACK_DIRECTORY_CONFIG; never commit real secrets or treat harness sessions as real users.
+
+Evidence: reports/frontend/evidence/integrated-pack-experience.json. Frontend report remains BLOCKED.
+
+
 ## Follow-on restaurant and credit work
 
 The presentation and this handoff were pushed to `frontend/justin`. The user then authorized real restaurant metadata and Supabase work. A separate backend PR, [Add public restaurant directory grouped by pack tier](https://github.com/LotusBrothers/chef-pack/pull/5), adds `GET /api/restaurants`. Its migration is already applied to the development database: 9 brands across the 3 existing tiers, public SELECT-only access with RLS. Backend tests and both GitHub workflows passed for its implementation. Its hosted endpoint is https://chef-pack-9bbyomuvt-ctbedfords-projects.vercel.app/api/restaurants .
 
-GitHub rejected the normal merge because an approving review from a write-access reviewer is required. Neither PR has been merged. Do not bypass that rule or pull an unmerged backend branch into this shared frontend branch. Once approved and merged, synchronize from main and connect the directory to the UI; the current frontend still has its five local artwork choices.
+GitHub rejected the normal merge because an approving review from a write-access reviewer is required. Neither PR has been merged. Do not bypass that rule or pull an unmerged backend branch into this shared frontend branch. Once approved and merged, synchronize from main. The latest UI already reads the public directory directly until the same-origin endpoint is present.
 
 The user clarified that the proposed guest welcome balance should eventually be actual credit redeemable for gift cards, not cash withdrawal. The open question is whether purchased credits have guaranteed redemption value or fund chance-based rewards. No credit ledger, guest monetary grant, payment collection or gift-card fulfillment has been implemented. Keep the existing demo labels and do not display a funded balance based solely on an animation. The coin landing is pending that decision and provider setup.
 

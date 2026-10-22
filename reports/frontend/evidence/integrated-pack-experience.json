@@ -1,0 +1,39 @@
+{
+  "tested_commit": "cfa75ed0d372de88c56737a7fe5b2a6a583897ab",
+  "preview_url": "https://chef-pack-2s8ibocrq-ctbedfords-projects.vercel.app/",
+  "hosted": {
+    "state": "READY",
+    "catalog": "3 server tiers at $15/$40/$100",
+    "directory": "9 live Supabase directory rows",
+    "tier_names": [
+      "Quick Bite",
+      "Sit-Down",
+      "Treat Yourself"
+    ],
+    "path_verified": "Choose a pack -> Treat Yourself details -> The Capital Grille sample -> shared 3D reveal -> completed result",
+    "directory_source": "same-origin endpoint if present; public Supabase SELECT-only Data API fallback on 404",
+    "brand_artwork": "5 existing logo designs; 4 additional brands use explicit name/initials designs"
+  },
+  "local_contract_harness": {
+    "url": "http://localhost:5320",
+    "directory": "reads current Supabase public metadata using public config outside repository",
+    "auth_orders_wallet": "in-memory stand-ins, not the real backend",
+    "path": "create disposable local test account -> open Quick Bite -> click drop -> generic SERVER TEST RESULT -> View wallet",
+    "orders": 1,
+    "pulls": 1,
+    "order_requests": 1,
+    "value": 15
+  },
+  "tests": {
+    "backend": "7/7 pass on frontend branch",
+    "scope": "pass",
+    "script_syntax": "pass",
+    "module_syntax": "pass"
+  },
+  "limits": [
+    "Full real Supabase registered-account journey and isolation/retry acceptance still not verified.",
+    "Android hardware/frame pacing and final reduced-motion emulation not run.",
+    "Backend directory PR requires approving review; main unchanged.",
+    "No actual welcome credit, paid funding or gift-card fulfillment implemented."
+  ]
+}
