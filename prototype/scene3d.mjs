@@ -12,6 +12,19 @@ const spring = (time, omega = 13, damping = .78) => {
 async function cardTexture(brand, value) {
   const canvas = document.createElement('canvas'); canvas.width = 512; canvas.height = 720;
   const c = canvas.getContext('2d');
+  if (brand.mystery) {
+    c.fillStyle='#ccb985';c.beginPath();c.roundRect(0,0,512,720,28);c.fill();
+    c.fillStyle='#1b1d1d';c.beginPath();c.roundRect(8,8,496,704,22);c.fill();
+    const wash=c.createLinearGradient(0,0,512,720);wash.addColorStop(0,'#ffffff12');wash.addColorStop(1,'#ffffff00');c.fillStyle=wash;c.fillRect(12,12,488,696);
+    c.strokeStyle='#cbb57d24';c.lineWidth=1;
+    for(let n=0;n<9;n++){c.beginPath();c.moveTo(-200+n*100,0);c.lineTo(200+n*100,720);c.stroke();}
+    c.textAlign='center';c.fillStyle='#dfcc99';c.font='600 27px system-ui';c.fillText('CHEF PACK',256,99);
+    c.strokeStyle='#cbb57d55';c.lineWidth=2;c.beginPath();c.arc(256,345,126,0,Math.PI*2);c.stroke();
+    c.font='300 184px system-ui';c.fillText('?',256,407);
+    c.font='500 17px system-ui';c.fillText('MYSTERY PACK',256,625);
+    const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;return texture;
+  }
+
   c.fillStyle = brand.accent; c.beginPath(); c.roundRect(0, 0, 512, 720, 28); c.fill();
   c.fillStyle = brand.bg; c.beginPath(); c.roundRect(9, 9, 494, 702, 22); c.fill();
   const wash = c.createLinearGradient(0, 0, 512, 720); wash.addColorStop(0, '#ffffff26'); wash.addColorStop(1, '#00000012');
@@ -71,6 +84,7 @@ export async function createServingScene(host, { brand, value, reduced = false, 
   // Preserve printed brand colors independently of the reflective serving ware.
   const front = new T.Mesh(new T.PlaneGeometry(w,h), new T.MeshBasicMaterial({ map: texture, toneMapped: false, transparent: true, alphaTest: .5 })); front.position.set(0,h/2,.013); card.add(front);
   const back = new T.Mesh(new T.PlaneGeometry(w,h), new T.MeshStandardMaterial({ color: 0x262323, roughness: .35, metalness: .2 })); back.position.set(0,h/2,-.013); back.rotation.y = Math.PI; card.add(back);
+  if (brand.mystery) { plateRoot.scale.set(.85,1,.85); card.scale.setScalar(1.1); }
   let disposed = false, frame = 0, animation = null, state = 'covered', last = 0;
   let yaw = 0, yawV = 0, yawTarget = 0, pitch = 0, pitchV = 0, pitchTarget = 0;
   let drawingFrames = 0, zoom = 1;
