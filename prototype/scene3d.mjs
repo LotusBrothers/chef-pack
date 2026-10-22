@@ -33,7 +33,7 @@ async function cardTexture(brand, value) {
   c.strokeStyle = '#ffffff0e'; c.lineWidth = 2;
   for (let i = -720; i < 720; i += 42) { c.beginPath(); c.moveTo(i, 0); c.lineTo(i + 720, 720); c.stroke(); } c.restore();
   c.fillStyle = brand.ink; c.font = 'bold 15px system-ui'; c.fillText('CHEF PACK', 32, 47);
-  c.textAlign = 'right'; c.fillText(brand.simulation ? 'FREE PLAY' : brand.sample === false ? 'TEST MODE' : 'DESIGN SAMPLE', 480, 47); c.textAlign = 'center';
+  c.textAlign = 'right'; c.fillText(brand.simulation ? (brand.tierName || 'FREE PLAY').toUpperCase() : brand.sample === false ? 'TEST MODE' : 'DESIGN SAMPLE', 480, 47); c.textAlign = 'center';
   c.fillStyle = brand.orbit; c.beginPath(); c.arc(256, 247, 139, 0, Math.PI * 2); c.fill();
   const image = new Image(); if (brand.art !== null) image.src = new URL('./art/' + (brand.art || brand.id + '.svg'), import.meta.url).href;
   try {
