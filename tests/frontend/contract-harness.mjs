@@ -47,6 +47,14 @@ http.createServer(async (req, res) => {
     return json(res, 404, { msg: 'not found' });
   }
 
+  if (p === '/api/restaurants') {
+    try {
+      const config = process.env.CHEFPACK_DIRECTORY_CONFIG ? JSON.parse(readFileSync(process.env.CHEFPACK_DIRECTORY_CONFIG,'utf8')) : await (await fetch(UPSTREAM + '/api/config')).json();
+      const response = await fetch(config.supabase_url + '/rest/v1/restaurant_directory?select=id,name,tier_id,cuisine,official_url,card_art,color,redemption_available&active=eq.true&order=name.asc&limit=200', {headers:{apikey:config.supabase_publishable_key}});
+      if (!response.ok) return json(res,503,{error:'directory_unavailable'});
+      return json(res,200,{mode:'mock',restaurants:await response.json(),redemption_available:false});
+    } catch { return json(res,503,{error:'directory_unavailable'}); }
+  }
   if (p === '/api/packs' || p === '/api/health') {
     if (p === '/api/packs' && fault.packs === '503') return json(res, 503, { error: 'database_unreachable' });
     try { const r = await fetch(UPSTREAM + p); res.writeHead(r.status, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }); return res.end(await r.text()); }
