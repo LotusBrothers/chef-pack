@@ -87,6 +87,6 @@ http.createServer(async (req, res) => {
   if (f.endsWith('.html')) data = data.toString()
     .replace('const AUTH_URL = "https://umhbsphrgplijlrkzgps.supabase.co";', `const AUTH_URL = "http://localhost:${PORT}/mock-auth";`)
     .replace('const AUTH_KEY = "";', 'const AUTH_KEY = "local-test-key";');
-  const types = { '.html': 'text/html; charset=utf-8', '.png': 'image/png', '.webmanifest': 'application/manifest+json', '.js': 'text/javascript' };
+  const types = { '.html': 'text/html; charset=utf-8', '.png': 'image/png', '.svg': 'image/svg+xml', '.wav': 'audio/wav', '.webmanifest': 'application/manifest+json', '.js': 'text/javascript' };
   res.writeHead(200, { 'Content-Type': types[extname(f)] || 'application/octet-stream', 'Cache-Control': 'no-store' }); res.end(data);
 }).listen(PORT, () => console.log('harness on http://localhost:' + PORT));

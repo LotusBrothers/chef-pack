@@ -1,0 +1,12 @@
+# Brand study
+
+Burger King logo: https://commons.wikimedia.org/wiki/File:Burger_King_2020.svg
+Original: https://upload.wikimedia.org/wikipedia/commons/c/cc/Burger_King_2020.svg
+The source identifies this text logo as public domain; trademark rights remain with
+the brand owner. Used only on the explicitly labeled, non-redeemable design sample.
+No affiliation or gift-card inventory is represented. Server-backed pulls retain the
+server-provided restaurant label and never substitute this brand study.
+
+Card tilt spring and layered surface treatment adapted from React Bits Tilted Card:
+https://github.com/DavidHDev/react-bits/tree/main/src/content/Components/TiltedCard
+License retained at `../vendor/react-bits-LICENSE.txt`.

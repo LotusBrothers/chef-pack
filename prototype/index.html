@@ -337,6 +337,40 @@
   .rip-opener.is-revealed .rip-heading { margin-top: 18px; }
   @media (max-height: 680px) { .rip-heading { margin-top: 12px; } .rip-scene { height: 290px; min-height: 260px; } .rip-pack { width: 170px; } .rip-opener.is-revealed .rip-scene { height: 200px; min-height: 180px; } }
 
+
+  /* Card material and tilt adapted from React Bits; isolated to the reveal. */
+  .rip-opener { --study-orange: #ff883e; }
+  .rip-card-shell { width: min(64vw, 254px); }
+  .rip-tilt { transform-style: preserve-3d; perspective: 900px; outline: none; --gx: 50%; --gy: 50%; }
+  .rip-tilt:focus-visible { outline: 2px solid #ffae6a; outline-offset: 8px; border-radius: 20px; }
+  .rip-card-turn { aspect-ratio: .72; }
+  .rip-card-face { border-radius: 19px; }
+  .rip-card-back { background: repeating-linear-gradient(135deg, #ffffff03 0 1px, transparent 1px 8px),linear-gradient(145deg,#42312a,#171415 55%,#32241a); border: 2px solid #b58c55; box-shadow: inset 0 0 0 6px #141313,inset 0 0 0 7px #b58c5555,0 18px 28px #0006; }
+  .rip-card-back svg { width: 60px; height: 60px; }
+  .rip-card-back b { font-size: 19px; }
+  .rip-card-back small { margin-top: 35px; }
+  .collect-card { height: 100%; display:flex; flex-direction:column; align-items:center; color:#fff4d9; background:radial-gradient(ellipse at 30% 20%,#795537,#28211c 75%); padding: 18px 18px 14px; position:relative; border: 6px solid #ddc39c; border-radius:19px; box-shadow:inset 0 0 0 1px #5b3629; }
+  .collect-card.branded { background:radial-gradient(circle at 75% 5%,#ffb454,#fa7b32 45%,#be321d); border-color:#f8dfb2; color:#512314; }
+  .collect-card.branded::before { content:""; position:absolute; inset:0; opacity:.15; background:repeating-linear-gradient(135deg,transparent 0 10px,#fff1bd 11px 12px,transparent 13px 22px); pointer-events:none; }
+  .collect-top,.collect-bottom { display:flex; justify-content:space-between; width:100%; font-size:7px; font-weight:800; letter-spacing:.09em; z-index:1; }
+  .collect-top { padding-bottom:12px; border-bottom:1px solid #55200e44; }
+  .brand-orbit { width:136px; height:136px; border-radius:50%; display:grid; place-items:center; background:#fff2d8; box-shadow:0 8px 0 #8a32162b,0 14px 20px #8b2f1833; margin:19px 0 10px; }
+  .brand-orbit img { width:94px; height:103px; object-fit:contain; }
+  .collect-name { font:800 22px/1.1 var(--display); letter-spacing:-.04em; z-index:1; text-align:center; }
+  .collect-value { font:700 48px/1 var(--display); letter-spacing:-.06em; margin-top:12px; text-align:center; z-index:1; }
+  .collect-value small { display:block; font:600 6px/1.6 var(--display); letter-spacing:.18em; margin-top:5px; }
+  .collect-bottom { margin-top:auto; padding-top:13px; font-size:6px; border-top:1px solid #55200e44; }
+  .collect-monogram { margin:25px 0 20px; } .collect-monogram svg { width:70px; height:70px; }
+  .rip-holo,.rip-glare { position:absolute; inset:0; border-radius:inherit; pointer-events:none; }
+  .rip-holo { background:repeating-linear-gradient(120deg,#f7e5ac0a 0%,#69f5e329 12%,#edd7ff36 24%,#ffeca51c 36%,transparent 48%); mix-blend-mode:soft-light; opacity:.6; }
+  .rip-glare { background:radial-gradient(circle at var(--gx) var(--gy),#ffffff60,transparent 65%); mix-blend-mode:screen; opacity:.6; }
+  .rip-edge { border:1px solid #fff3c5aa; box-shadow:inset 0 1px 0 #fff9,inset 0 0 0 4px #fff1; }
+  .rip-audition { color:#d9c6a5; background:transparent; border:0; border-bottom:1px solid #756347; padding:7px; font:500 11px var(--display); margin:3px 0; cursor:pointer; }
+  .rip-audition:disabled { opacity:.4; cursor:default; }
+  .rip-opener.is-revealed .rip-scene { height:370px; min-height:370px; }
+  .rip-opener.is-revealed .rip-heading h2 { font-size:25px; }
+  @media(max-height:740px) { .rip-card-shell { width:210px; } .rip-opener.is-revealed .rip-scene { height:305px; min-height:305px; } .brand-orbit { width:106px; height:106px; margin:12px 0 8px; } .brand-orbit img { width:75px; height:82px; } .collect-name{font-size:20px}.collect-value{font-size:36px;margin-top:8px}.collect-card{padding:12px}.collect-top{font-size:6px}.collect-bottom{font-size:5px}.collect-value small{font-size:5px} }
+
   /* ---------- Wallet ---------- */
   .pagehead { padding-top: 6px; }
   .pagehead h1 { margin: 0; font: 700 32px/1.1 var(--display); letter-spacing: -.035em; }
@@ -866,31 +900,37 @@ async function takeRedirect() {
 /* ---------- Buy a test pack: one logical attempt per intentional purchase ---------- */
 /* ---------- Sound and haptics (only after the viewer taps; muted by the speaker button) ---------- */
 const TIER_COLOR = ["#ffffff", "#2fd27a", "#4f8dff", "#ffc83d"];
-let AC = null;
-function audio() { try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); if (AC.state === "suspended") AC.resume(); return AC; } catch (e) { return null; } }
+let AC = null, contactBuffer = null, contactLoading = null;
+const contactSources = new Set();
+function audio(resume = true) {
+  try {
+    AC ||= new (window.AudioContext || window.webkitAudioContext)({ latencyHint: "interactive" });
+    if (resume && AC.state === "suspended") AC.resume().catch(() => {});
+    return AC;
+  } catch { return null; }
+}
+function prepareContact() {
+  if (contactBuffer) return Promise.resolve(true);
+  if (contactLoading) return contactLoading;
+  const a = audio(false); if (!a) return Promise.resolve(false);
+  contactLoading = fetch("./audio/contact.wav").then(r => {
+    if (!r.ok) throw new Error("Sound unavailable"); return r.arrayBuffer();
+  }).then(bytes => a.decodeAudioData(bytes)).then(buffer => { contactBuffer = buffer; return true; })
+    .catch(() => false).finally(() => { contactLoading = null; });
+  return contactLoading;
+}
+function stopContact() { for (const source of contactSources) { try { source.stop(); } catch {} } contactSources.clear(); }
 function sfx(kind, tier = 0, dur = 1) {
   if (S.muted) return; const a = audio(); if (!a) return; const now = a.currentTime;
   try {
     if (kind === "impact") {
-      // A bounded contact sound: crisp transient, warm body, short clean resonance.
-      const bus = a.createGain(); bus.gain.value = .62; bus.connect(a.destination);
-      const length = Math.floor(a.sampleRate * .055), buffer = a.createBuffer(1, length, a.sampleRate), samples = buffer.getChannelData(0);
-      for (let i = 0; i < length; i++) samples[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / length, 4);
-      const noise = a.createBufferSource(), high = a.createBiquadFilter(), low = a.createBiquadFilter(), click = a.createGain();
-      noise.buffer = buffer; high.type = "highpass"; high.frequency.value = 1100; low.type = "lowpass"; low.frequency.value = 6400;
-      click.gain.setValueAtTime(.0001, now); click.gain.linearRampToValueAtTime(.4, now + .0015); click.gain.exponentialRampToValueAtTime(.0001, now + .052);
-      noise.connect(high).connect(low).connect(click).connect(bus); noise.start(now); noise.stop(now + .06);
-      const body = a.createOscillator(), thump = a.createGain(); body.type = "sine";
-      body.frequency.setValueAtTime(230, now); body.frequency.exponentialRampToValueAtTime(90, now + .095);
-      thump.gain.setValueAtTime(.0001, now); thump.gain.linearRampToValueAtTime(.34, now + .003); thump.gain.exponentialRampToValueAtTime(.0001, now + .14);
-      body.connect(thump).connect(bus); body.start(now); body.stop(now + .15);
-      const contact = a.createOscillator(), snap = a.createGain(); contact.type = "triangle";
-      contact.frequency.setValueAtTime(2100, now); contact.frequency.exponentialRampToValueAtTime(850, now + .028);
-      snap.gain.setValueAtTime(.0001, now); snap.gain.linearRampToValueAtTime(.14, now + .001); snap.gain.exponentialRampToValueAtTime(.0001, now + .045);
-      contact.connect(snap).connect(bus); contact.start(now); contact.stop(now + .05);
-      [1046.5, 1568].forEach((hz, i) => { const ring = a.createOscillator(), gain = a.createGain(); ring.type = "sine"; ring.frequency.value = hz;
-        gain.gain.setValueAtTime(.0001, now + .012); gain.gain.linearRampToValueAtTime(i ? .025 : .045, now + .018); gain.gain.exponentialRampToValueAtTime(.0001, now + .22);
-        ring.connect(gain).connect(bus); ring.start(now + .012); ring.stop(now + .24); });
+      // Edited CC0 field recording; predecoded so the reveal never waits on network/decoding.
+      if (!contactBuffer || a.state !== "running") return;
+      const source = a.createBufferSource(), gain = a.createGain();
+      source.buffer = contactBuffer; gain.gain.value = .8;
+      source.connect(gain).connect(a.destination); contactSources.add(source);
+      source.onended = () => { contactSources.delete(source); source.disconnect(); gain.disconnect(); };
+      source.start(now); return true;
     } else if (kind === "rip") {
       const len = Math.floor(a.sampleRate * .28), buf = a.createBuffer(1, len, a.sampleRate), d = buf.getChannelData(0);
       for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2);
@@ -991,6 +1031,11 @@ function pendingSheet(a) {
   m.querySelector("#pLater").onclick = closeSheet;
 }
 
+function revealFace(res) {
+  if (res.preview) return '<div class="collect-card branded"><div class="collect-top"><span>CHEF PACK</span><span>DESIGN SAMPLE</span></div><div class="brand-orbit"><img src="./art/burger-king.svg" alt="Burger King" width="114" height="124"></div><div class="collect-name">Burger King</div><div class="collect-value">' + money(res.value || 15) + '<small>ILLUSTRATIVE VALUE</small></div><div class="collect-bottom"><span>BRAND STUDY / 001</span><span>NOT REDEEMABLE</span></div></div>';
+  return '<div class="collect-card"><div class="collect-top"><span>CHEF PACK</span><span>TEST EDITION</span></div><div class="collect-monogram"><svg aria-hidden="true"><use href="#hat"/></svg></div><div class="collect-name">' + esc(res.s.n) + '</div><div class="collect-value">' + (res.value !== null ? money(res.value) : '') + '<small>DEMO CARD</small></div><div class="collect-bottom"><span>TEST MODE</span><span>NOT REDEEMABLE</span></div></div>';
+}
+
 /* ---------- Physical reveal: presentation only; result supplied by caller ---------- */
 function previewOpening(p) {
   if (busy) return;
@@ -1009,12 +1054,40 @@ function reveal(p, res) {
   o.innerHTML = `<div class="rip-controls"><button class="rip-sound" type="button" aria-label="${S.muted ? "Turn sound on" : "Mute sound"}">${icon(S.muted ? "muted" : "sound")}</button><button class="rip-skip" type="button">Skip animation</button><button class="rip-close" type="button" aria-label="Close opening">${icon("close")}</button></div>
     <header class="rip-heading"><p class="rip-kicker">${note}</p><h2 id="ripTitle">A little anticipation.</h2><p class="rip-caption">${esc(p.name)}${res.preview ? " · preview only" : ""}</p></header>
     <div class="rip-scene"><span class="rip-halo" aria-hidden="true"></span><span class="rip-floor" aria-hidden="true"></span>
-      <div class="rip-card-shell" aria-hidden="true"><div class="rip-card-turn"><div class="rip-card-face rip-card-back"><svg aria-hidden="true"><use href="#hat"/></svg><b>CHEF PACK</b><small>GOOD THINGS INSIDE</small></div><div class="rip-card-face rip-card-front">${gc(res.s, "", res.value)}<span class="rip-gleam"></span><span class="rip-edge"></span></div></div></div>
+      <div class="rip-card-shell"><div class="rip-tilt" tabindex="-1" role="img" aria-label="Card preview"><div class="rip-card-turn"><div class="rip-card-face rip-card-back"><svg aria-hidden="true"><use href="#hat"/></svg><b>CHEF PACK</b><small>GOOD THINGS INSIDE</small></div><div class="rip-card-face rip-card-front">${revealFace(res)}<span class="rip-holo"></span><span class="rip-glare"></span><span class="rip-gleam"></span><span class="rip-edge"></span></div></div></div></div>
       <button class="rip-pack" type="button" aria-label="Tear open ${esc(p.name)}"><span class="rip-wrap rip-body">${foil(p)}</span><span class="rip-wrap rip-cap">${foil(p)}</span><span class="rip-seam" aria-hidden="true"></span><span class="rip-touch" aria-hidden="true">↗</span></button>
       <div class="rip-shards" aria-hidden="true">${Array.from({ length: 6 }, () => "<i></i>").join("")}</div>
-    </div><p class="rip-hint" role="status">Tap the pack<span></span>or swipe across the seam</p><div class="ores" id="ores" hidden></div>`;
+    </div><p class="rip-hint" role="status">Tap the pack<span></span>or swipe across the seam</p>${res.preview ? '<button class="rip-audition" type="button" disabled>Loading contact sound…</button>' : ""}<div class="ores" id="ores" hidden></div>`;
   document.body.appendChild(o);
   const q = sel => o.querySelector(sel), pack = q(".rip-pack"), card = q(".rip-card-shell"), turn = q(".rip-card-turn"), halo = q(".rip-halo");
+  const tilt = q(".rip-tilt");
+  // Spring integration adapted from React Bits Tilted Card (see vendor license).
+  let tiltFrame = 0, lastTilt = 0;
+  const tiltState = { x: 0, y: 0, vx: 0, vy: 0, tx: 0, ty: 0 };
+  function stepTilt(time) {
+    const dt = Math.min(.032, (time - (lastTilt || time - 16)) / 1000); lastTilt = time;
+    let moving = false;
+    for (const key of ["x", "y"]) {
+      const v = "v" + key, target = tiltState["t" + key], steps = Math.max(1, Math.ceil(dt * 240)), h = dt / steps;
+      for (let i = 0; i < steps; i++) { tiltState[v] += (400 * (target - tiltState[key]) - 30 * tiltState[v]) * h; tiltState[key] += tiltState[v] * h; }
+      moving ||= Math.abs(target - tiltState[key]) > .01 || Math.abs(tiltState[v]) > .01;
+    }
+    tilt.style.transform = "rotateX(" + tiltState.x + "deg) rotateY(" + tiltState.y + "deg)";
+    tilt.style.setProperty("--gx", (50 + tiltState.y * 3) + "%");
+    tilt.style.setProperty("--gy", (50 - tiltState.x * 3) + "%");
+    tiltFrame = moving && phase !== "closed" ? requestAnimationFrame(stepTilt) : 0;
+  }
+  function aimTilt(x, y) { if (reduced) return; tiltState.tx = x; tiltState.ty = y; if (!tiltFrame) { lastTilt = 0; tiltFrame = requestAnimationFrame(stepTilt); } }
+  tilt.onpointermove = e => { if (phase !== "revealed") return; const r = tilt.getBoundingClientRect(); aimTilt(-(e.clientY - r.top - r.height / 2) / r.height * 16, (e.clientX - r.left - r.width / 2) / r.width * 20); };
+  tilt.onpointerleave = tilt.onpointercancel = tilt.onblur = () => aimTilt(0, 0);
+  tilt.onkeydown = e => { const d = { ArrowLeft: [0,-10], ArrowRight: [0,10], ArrowUp: [8,0], ArrowDown: [-8,0] }[e.key]; if (d) { e.preventDefault(); aimTilt(...d); } };
+  prepareContact().then(ready => { const button = q(".rip-audition"); if (!button || phase === "closed") return; button.disabled = !ready; button.textContent = ready ? "Hear contact sound" : "Sound unavailable · animation still works"; });
+  if (q(".rip-audition")) q(".rip-audition").onclick = async e => {
+    const button = e.currentTarget, a = audio();
+    if (a?.state === "suspended") { try { await a.resume(); } catch {} }
+    if (phase === "closed") return;
+    button.textContent = S.muted ? "Sound is muted · use speaker to enable" : sfx("impact") ? "Played recorded contact · Hear again" : "Audio unavailable · try again";
+  };
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   let phase = "ready", pointer = null;
   const animations = new Set();
@@ -1026,7 +1099,7 @@ function reveal(p, res) {
   function cancelAnimations() { for (const a of animations) a.cancel(); animations.clear(); }
   function dispose() {
     if (phase === "closed") return;
-    phase = "closed"; cancelAnimations(); busy = false;
+    phase = "closed"; cancelAnimations(); cancelAnimationFrame(tiltFrame); stopContact(); busy = false;
     document.removeEventListener("keydown", onKey, true);
     document.removeEventListener("visibilitychange", onVisibility);
     o.remove(); if (app) app.inert = wasInert;
@@ -1042,7 +1115,7 @@ function reveal(p, res) {
     turn.style.transform = "rotateY(180deg)"; halo.style.opacity = ".45";
     q(".rip-shards").hidden = true; q(".rip-hint").hidden = true; q(".rip-skip").hidden = true;
     q("#ripTitle").textContent = res.preview ? "The reveal, reimagined." : res.free ? "Dinner, decided." : "Your card is here.";
-    o.classList.add("is-revealed");
+    o.classList.add("is-revealed"); tilt.tabIndex = 0; tilt.setAttribute("aria-label", "Inspect card: drag to tilt or use arrow keys");
     showResult(res, o); q("#ores").hidden = false;
     if (!reduced) animate(q("#ores"), [{ opacity: 0, transform: "translateY(10px)" }, { opacity: 1, transform: "none" }], { duration: 220, easing: "ease-out" });
     q("#ores button")?.focus({ preventScroll: true });
@@ -1088,7 +1161,7 @@ function reveal(p, res) {
   document.addEventListener("visibilitychange", onVisibility);
   q(".rip-close").onclick = dispose;
   q(".rip-skip").onclick = finish;
-  q(".rip-sound").onclick = e => { S.muted = !S.muted; e.currentTarget.innerHTML = icon(S.muted ? "muted" : "sound"); e.currentTarget.setAttribute("aria-label", S.muted ? "Turn sound on" : "Mute sound"); };
+  q(".rip-sound").onclick = e => { S.muted = !S.muted; if (S.muted) stopContact(); else { audio(); prepareContact(); } e.currentTarget.innerHTML = icon(S.muted ? "muted" : "sound"); e.currentTarget.setAttribute("aria-label", S.muted ? "Turn sound on" : "Mute sound"); };
   pack.onclick = rip;
   pack.addEventListener("pointerdown", e => { pointer = { id: e.pointerId, x: e.clientX, y: e.clientY }; pack.setPointerCapture?.(e.pointerId); });
   pack.addEventListener("pointermove", e => { if (pointer?.id === e.pointerId && Math.abs(e.clientX - pointer.x) > 35 && Math.abs(e.clientY - pointer.y) < 60) { pointer = null; rip(); } });
@@ -1113,7 +1186,7 @@ function showResult(r, o) {
   const close = () => { if (o.closeOpening) o.closeOpening(); else o.remove(); };
   const q = id => o.querySelector("#" + id);
   if (r.preview) {
-    q("ores").innerHTML = `<span class="rp" style="background:#d8b46516;color:#d8bc83">MOTION STUDY 01</span><h2>Worth the anticipation?</h2><p class="sub">Animation preview only. No order or wallet card was created.</p><div class="sacts"><button class="btn light" id="previewReplay" type="button">Replay opening</button><button class="btn soft" id="previewBack" type="button">Back to pack</button></div>`;
+    q("ores").innerHTML = `<span class="rp" style="background:#d8b46516;color:#d8bc83">MOTION & SOUND STUDY 02</span><h2>How does this feel?</h2><p class="sub">Brand artwork study only. No affiliation, order, or wallet card. Drag the card to inspect the light.</p><div class="sacts"><button class="btn light" id="previewReplay" type="button">Replay opening</button><button class="btn soft" id="previewBack" type="button">Back to pack</button></div>`;
     q("previewReplay").onclick = () => { close(); previewOpening(r.p); };
     q("previewBack").onclick = close;
     return;
