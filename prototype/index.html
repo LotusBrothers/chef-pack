@@ -1144,7 +1144,7 @@ function reveal(p, res) {
   async function rip() {
     if (phase !== "ready") return;
     const capStart = q(".rip-cap").style.transform || "translate3d(0,0,0) rotate(0deg)", capOpacity = q(".rip-cap").style.opacity || 1;
-    phase = "opening"; q(".rip-skip").hidden = false; q(".rip-cap").style.transform = ""; q(".rip-cap").style.opacity = ""; pack.style.transform = ""; pack.disabled = true; q(".rip-hint").textContent = "Opening…";
+    phase = "opening"; q(".rip-skip").hidden = false; pack.style.transform = ""; pack.disabled = true; q(".rip-hint").textContent = "Opening…";
     if (reduced) { finish(); return; }
     audio();
     await animate(pack, [{ transform: "rotate(-3deg) scale(1)" }, { transform: "rotate(-2deg) scale(.97)" }, { transform: "rotate(0deg) scale(1)" }], { duration: 160, easing: "ease-out" });
