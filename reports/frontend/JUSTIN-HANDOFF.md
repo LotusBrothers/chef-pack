@@ -33,10 +33,10 @@ Current logo pass: syntax/scope and 9 hosted image loads pass; Olive Garden and 
 
 Frontend PR https://github.com/LotusBrothers/chef-pack/pull/3 stays draft. The real registered-user golden journey, retry/pending reload, wallet persistence and second-account isolation are incomplete. The BLOCKED report gate intentionally fails. Android hardware and final reduced-motion checks are also outstanding. Do not turn these into PASS or switch to visual scope to hide integration work already on this branch. User authorized merge only if everything works; main remains unchanged. Synchronize normally from origin/main after reviewed backend changes land, preserving shared history.
 
-## Credit request remains separate
+## Redeemable credit is not implemented
 
-User proposed a guest welcome coin and actual credit redeemable for gift cards, not cash. Guaranteed-value versus chance-based rewards remains unanswered. No funds, welcome grant, paid funding, redemption or actual gift-card fulfillment is implemented. Do not treat the animation or local browser state as proof of a real balance or inventory.
+Tyler chose the free simulation after discussing paid, chance-based redeemable rewards. There is no pending product choice for this slice. No purchased balance, real funds, welcome cash grant, withdrawal, redemption or gift-card fulfillment is implemented. The free game cannot produce account wallet items or claim provider inventory.
 
-## Latest cosmetic correction and pending direction
+## Cascade corner correction retained
 
-Cascade sprites now default to opacity zero and apply their starting keyframe during the delay (fill both). This removes the stray upper-left card stack. Hosted first-frame and replay checks are recorded in evidence/cascade-corner-fix.json. The user requested broader lottery-like mechanics with redeemable value; none were implemented. The pending offered directions are a free game with non-purchasable/non-redeemable points or guaranteed-value gift-card purchases with decorative animation.
+Cascade sprites default to opacity zero and apply their starting keyframe through the delay (fill both), removing the stray upper-left stack. Historical hosted evidence is in evidence/cascade-corner-fix.json. The free game reuses that corrected effect.
