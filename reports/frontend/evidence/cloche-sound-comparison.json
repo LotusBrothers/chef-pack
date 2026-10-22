@@ -1,0 +1,97 @@
+{
+  "tested_commit": "932e03ffd5b4714ae79d74ace523477076595ecd",
+  "preview_url": "https://chef-pack-dwe1ds0m1-ctbedfords-projects.vercel.app/",
+  "checks": {
+    "local_sound_buttons": [
+      {
+        "name": "Bright unlock",
+        "result": "matching Played label and complete result"
+      },
+      {
+        "name": "Coin cascade",
+        "result": "matching Played label and complete result"
+      },
+      {
+        "name": "Level up",
+        "result": "matching Played label and complete result"
+      },
+      {
+        "name": "Warm glow",
+        "result": "matching Played label and complete result"
+      },
+      {
+        "name": "Arcade win",
+        "result": "matching Played label and complete result"
+      },
+      {
+        "name": "Grand reveal",
+        "result": "matching Played label and complete result"
+      }
+    ],
+    "hosted_sound_buttons": [
+      "Coin cascade",
+      "Grand reveal"
+    ],
+    "brand_artworks": [
+      "McDonald’s",
+      "Subway",
+      "Taco Bell",
+      "Slim Chickens"
+    ],
+    "phone_viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "local_order_requests": 0,
+    "local_orders": 0,
+    "local_pulls": 0,
+    "syntax": "pass",
+    "scope": "pass"
+  },
+  "sounds": [
+    {
+      "file": "bright-unlock.wav",
+      "bytes": 34540,
+      "seconds": 0.539,
+      "sha256": "31b7830669512f88fe958a610fe30ae977f410d4c1c249618a83cd38f8a9a9fb"
+    },
+    {
+      "file": "coin-cascade.wav",
+      "bytes": 18716,
+      "seconds": 0.292,
+      "sha256": "eae4629c2f5d2c7b6747de7de6eb886b40815fd93ec8d6ffc9e55fa0951be060"
+    },
+    {
+      "file": "level-up.wav",
+      "bytes": 36926,
+      "seconds": 0.576,
+      "sha256": "391e7c3ebb099a23240b67be897a724a8224e2c68f2f0f94fcbeac30c1b6e3d3"
+    },
+    {
+      "file": "warm-glow.wav",
+      "bytes": 14278,
+      "seconds": 0.222,
+      "sha256": "b4a7469fda857e279f2adb65b221446d8c33a30d3952c01df02fe6007490234e"
+    },
+    {
+      "file": "arcade-win.wav",
+      "bytes": 29782,
+      "seconds": 0.465,
+      "sha256": "0c0a6430af983e9794dd97c666cbb71f09851f0ecb1be6b29bc880519a5978ff"
+    },
+    {
+      "file": "grand-reveal.wav",
+      "bytes": 44844,
+      "seconds": 0.7,
+      "sha256": "cfb86efdff6b95aa8deacca36532801b0adeb1bbbe7f1bf37b8258d89ab66c4c"
+    }
+  ],
+  "total_reward_wav_bytes": 179086,
+  "motion": "native SVG/CSS/WAAPI; card grounded in plate plane with rotateX74deg ->0deg pivot and changing contact shadow; metal cover profile lowered and reduced",
+  "limitations": [
+    "Subjective quality requires user judgment",
+    "No physical Android performance or speaker measurement",
+    "Full current account/order/wallet golden journey unrun",
+    "Reduced-motion path implemented; emulation not run"
+  ]
+}

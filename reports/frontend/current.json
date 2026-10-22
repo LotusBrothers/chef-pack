@@ -2,93 +2,84 @@
   "schema_version": 1,
   "scope": "integration",
   "readiness": "blocked",
-  "tested_commit": "fea8d524acd62e0b2d10d2fd8e3f88d3100aded1",
+  "tested_commit": "932e03ffd5b4714ae79d74ace523477076595ecd",
   "base_commit": "65fee1b112d65f4d5a46070d04584c69ada7c467",
-  "preview_url": "https://chef-pack-3o55db9b9-ctbedfords-projects.vercel.app/",
-  "summary": "Playable guest landing is live: arrive directly on a starter pack, no login/catalog wait, tap or continuously drag seal, reveal an explicitly unsaved/non-redeemable sample, replay or explore packs. Current golden account/order/wallet acceptance remains incomplete; Android hardware performance and taste review pending.",
+  "preview_url": "https://chef-pack-dwe1ds0m1-ctbedfords-projects.vercel.app/",
+  "summary": "Guest comparison prototype: refined silver cloche settles on porcelain plate, cover lifts through steam, card starts flat in the dish and pivots upright on a CSS3D stage. Four explicit sample brands and six distinct reward mixes, each button auto-replays the whole sequence. Golf sample is no longer used. Full integration acceptance and real Android measurement remain outstanding.",
   "cases": [
     {
       "id": "CATALOG",
-      "status": "pass",
+      "status": "not_run",
       "evidence": [
-        "reports/frontend/evidence/motion-sound-study.json",
-        "reports/frontend/evidence/playable-landing.json"
+        "reports/frontend/evidence/cloche-sound-comparison.json"
       ],
-      "notes": "Hosted combined preview rendered the three server packs. Read-only /api/health and /api/packs returned 200; mock_only flags present."
+      "notes": "No API/auth/order/wallet contract changes in this presentation iteration. Full current combined-preview acceptance for CATALOG has not been rerun. Earlier evidence is historical."
     },
     {
       "id": "SIGNIN",
       "status": "not_run",
       "evidence": [
-        "reports/frontend/evidence/motion-sound-study.json",
-        "reports/frontend/evidence/playable-landing.json"
+        "reports/frontend/evidence/cloche-sound-comparison.json"
       ],
-      "notes": "Not rerun on this revision. Public auth configuration and combined preview now exist; old missing-config blockers are obsolete. Signup/confirmation and expiry still require current browser evidence."
+      "notes": "No API/auth/order/wallet contract changes in this presentation iteration. Full current combined-preview acceptance for SIGNIN has not been rerun. Earlier evidence is historical."
     },
     {
       "id": "OPEN",
       "status": "not_run",
       "evidence": [
-        "reports/frontend/evidence/motion-sound-study.json",
-        "reports/frontend/evidence/playable-landing.json"
+        "reports/frontend/evidence/cloche-sound-comparison.json"
       ],
-      "notes": "Local harness on prior motion revision exercised one server-stand-in order to reveal and wallet. Current hosted branded preview is explicitly no-order; this does not establish current real API order PASS."
+      "notes": "No API/auth/order/wallet contract changes in this presentation iteration. Full current combined-preview acceptance for OPEN has not been rerun. Earlier evidence is historical."
     },
     {
       "id": "RETRY",
       "status": "not_run",
       "evidence": [
-        "reports/frontend/evidence/motion-sound-study.json",
-        "reports/frontend/evidence/playable-landing.json"
+        "reports/frontend/evidence/cloche-sound-comparison.json"
       ],
-      "notes": "No changes to request/idempotency code. Current-revision timeout/reload/retry browser journey not rerun."
+      "notes": "No API/auth/order/wallet contract changes in this presentation iteration. Full current combined-preview acceptance for RETRY has not been rerun. Earlier evidence is historical."
     },
     {
       "id": "WALLET",
       "status": "not_run",
       "evidence": [
-        "reports/frontend/evidence/motion-sound-study.json",
-        "reports/frontend/evidence/playable-landing.json"
+        "reports/frontend/evidence/cloche-sound-comparison.json"
       ],
-      "notes": "No API/wallet changes. Current-revision persistence and logout/login browser journey not rerun."
+      "notes": "No API/auth/order/wallet contract changes in this presentation iteration. Full current combined-preview acceptance for WALLET has not been rerun. Earlier evidence is historical."
     },
     {
       "id": "ISOLATION",
       "status": "not_run",
       "evidence": [
-        "reports/frontend/evidence/motion-sound-study.json",
-        "reports/frontend/evidence/playable-landing.json"
+        "reports/frontend/evidence/cloche-sound-comparison.json"
       ],
-      "notes": "No ownership/RLS changes. Current-revision two-user browser journey not rerun."
+      "notes": "No API/auth/order/wallet contract changes in this presentation iteration. Full current combined-preview acceptance for ISOLATION has not been rerun. Earlier evidence is historical."
     },
     {
       "id": "ERROR",
       "status": "not_run",
       "evidence": [
-        "reports/frontend/evidence/motion-sound-study.json",
-        "reports/frontend/evidence/playable-landing.json"
+        "reports/frontend/evidence/cloche-sound-comparison.json"
       ],
-      "notes": "Current-revision offline/rejected-auth/503 browser journey not rerun."
+      "notes": "No API/auth/order/wallet contract changes in this presentation iteration. Full current combined-preview acceptance for ERROR has not been rerun. Earlier evidence is historical."
     },
     {
       "id": "MOCK-SAFETY",
       "status": "not_run",
       "evidence": [
-        "reports/frontend/evidence/motion-sound-study.json",
-        "reports/frontend/evidence/playable-landing.json"
+        "reports/frontend/evidence/cloche-sound-comparison.json"
       ],
-      "notes": "Guest landing states FREE PREVIEW / NO ACCOUNT NEEDED / No purchase. No gift card. Pack states FREE DEMO / NO ACCOUNT / NO ORDER. Guest result sample not redeemable or saved. Local harness observed zero order requests, zero orders and zero pulls throughout guest tests. Ordering/auth/wallet code not changed."
+      "notes": "Guest scene labels free preview/no account/no purchase/no gift card. Four brand artworks explicitly DESIGN SAMPLE / NOT REDEEMABLE. Local log after guest comparison sessions: zero orders, zero pulls, zero /api/orders requests. Complete authenticated safety journey not rerun."
     },
     {
       "id": "VISUAL",
       "status": "not_run",
       "evidence": [
-        "reports/frontend/evidence/motion-sound-study.json",
-        "reports/frontend/evidence/motion-sound-study-mobile.png",
-        "reports/frontend/evidence/playable-landing.json",
-        "reports/frontend/evidence/playable-landing-mobile.png"
+        "reports/frontend/evidence/cloche-sound-comparison.json",
+        "reports/frontend/evidence/cloche-ready-mobile.png",
+        "reports/frontend/evidence/cloche-reward-mobile.png"
       ],
-      "notes": "Hosted root redirected to playable starter pack. Actual390x844 viewport: scrollWidth390. Hosted short swipe returned sealed; full swipe opened; local keyboard Enter opened, replay returned ready, Choose pack exposed catalog. Current golden journey still incomplete. Reduced motion implemented but not emulated; actual Android hardware untested."
+      "notes": "Local checks: all six reward buttons completed with matching Played labels, all four brand artworks rendered. Hosted final revision: root guest landing, Slim Chickens, Coin cascade then Grand reveal, complete result, refined smaller cover. Phone viewport390x844 checked. Current full golden journey, reduced-motion emulation and real Android hardware unrun; taste approval pending."
     }
   ]
 }

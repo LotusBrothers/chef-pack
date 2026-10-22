@@ -1,3 +1,20 @@
+# Cloche and six-sound comparison handoff
+
+Readiness: BLOCKED for full integration; guest comparison preview available.
+Tested code: 932e03ffd5b4714ae79d74ace523477076595ecd
+Main included: 65fee1b112d65f4d5a46070d04584c69ada7c467
+Preview: https://chef-pack-dwe1ds0m1-ctbedfords-projects.vercel.app/
+
+Replaced the guest pack with a refined, low-profile silver cloche arriving on a white plate. Cover lifts through steam; sample card begins lying flat in the dish and pivots upright around its lower edge in CSS3D. Added McDonald’s, Subway, Taco Bell, and Slim Chickens sample artwork. Six independently rendered CC0 reward mixes replace the golf hit. Each named sound button immediately replays arrival/lift/reveal with that mix; the active sound is visibly selected and reported. No new runtime dependencies or backend/auth/order/wallet changes.
+
+Verified local six-button play/completion, four brand renderings, hosted final Slim Chickens with Coin cascade and Grand reveal, phone layout, syntax and frontend scope. All new WAVs total179086bytes with cached decoding; no runtime sound synthesis for the reward. Local guest log: zero order requests/orders/pulls. Source/license files are in prototype/audio/ and prototype/art/.
+
+Evidence: reports/frontend/evidence/cloche-sound-comparison.json, cloche-ready-mobile.png, cloche-reward-mobile.png. Full current golden journey, reduced-motion emulation, actual Android latency/frame pacing/speaker checks, and human taste acceptance remain outstanding. Keep the integration PR draft; report gate intentionally rejects BLOCKED.
+
+---
+
+## Previous handoff
+
 # Playable guest landing handoff
 
 Readiness: BLOCKED for full integration; playable preview ready for user review.
