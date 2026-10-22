@@ -1,5 +1,13 @@
 # Justin's agent: Chef Pack changes and next steps
 
+## Follow-on restaurant and credit work
+
+The presentation and this handoff were pushed to `frontend/justin`. The user then authorized real restaurant metadata and Supabase work. A separate backend PR, [Add public restaurant directory grouped by pack tier](https://github.com/LotusBrothers/chef-pack/pull/5), adds `GET /api/restaurants`. Its migration is already applied to the development database: 9 brands across the 3 existing tiers, public SELECT-only access with RLS. Backend tests and both GitHub workflows passed for its implementation. Its hosted endpoint is https://chef-pack-9bbyomuvt-ctbedfords-projects.vercel.app/api/restaurants .
+
+GitHub rejected the normal merge because an approving review from a write-access reviewer is required. Neither PR has been merged. Do not bypass that rule or pull an unmerged backend branch into this shared frontend branch. Once approved and merged, synchronize from main and connect the directory to the UI; the current frontend still has its five local artwork choices.
+
+The user clarified that the proposed guest welcome balance should eventually be actual credit redeemable for gift cards, not cash withdrawal. The open question is whether purchased credits have guaranteed redemption value or fund chance-based rewards. No credit ledger, guest monetary grant, payment collection or gift-card fulfillment has been implemented. Keep the existing demo labels and do not display a funded balance based solely on an animation. The coin landing is pending that decision and provider setup.
+
 ## Current state
 
 Branch: `frontend/justin`. Tested implementation commit: `b1f1d0d48186c70d3a5ce289ce90b4edde7ee96e`.
