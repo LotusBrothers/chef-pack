@@ -479,6 +479,46 @@
   .has-3d .rip-pack:focus-visible {outline:none;}
   .has-3d .rip-pack:focus-visible::after {content:"Press Enter to reveal";position:absolute;bottom:0;left:50%;transform:translateX(-50%);font-size:10px;color:#ddbf93;}
 
+  /* ---------- Flip card: React Bits FlipCard (JS-CSS) ported without React/motion; see vendor license ---------- */
+  .flip-card { --fc-w:300px; --fc-h:400px; --fc-radius:22px; --fc-bg:#27272a; --fc-ink:#f5f5f5; --fc-shadow:#000000; --fc-shadow-o:.45; --fc-glare:.22;
+    position:relative; display:inline-block; width:var(--fc-w); max-width:100%; height:var(--fc-h); border-radius:var(--fc-radius); outline:none; cursor:pointer; user-select:none; -webkit-user-select:none; -webkit-touch-callout:none; -webkit-tap-highlight-color:transparent; touch-action:pan-y; }
+  .flip-card[data-axis='x'] { touch-action:pan-x; }
+  .flip-card[data-draggable] { cursor:grab; }
+  .flip-card[data-dragging] { cursor:grabbing; }
+  .flip-card:focus-visible { outline:2px solid #e4c889; outline-offset:8px; }
+  .flip-card__shadow { position:absolute; inset:12% 9% -5%; border-radius:var(--fc-radius); background:color-mix(in srgb, var(--fc-shadow) calc(var(--fc-shadow-o) * 100%), transparent); filter:blur(22px); pointer-events:none; }
+  .flip-card__rotor { position:absolute; inset:0; transform-style:preserve-3d; will-change:transform; }
+  .flip-card__face { position:absolute; inset:0; overflow:hidden; border-radius:var(--fc-radius); background:var(--fc-bg); color:var(--fc-ink); backface-visibility:hidden; -webkit-backface-visibility:hidden; }
+  .flip-card__face img { -webkit-user-drag:none; }
+  .flip-card__face--back { transform:rotateY(180deg); }
+  .flip-card[data-axis='x'] .flip-card__face--back { transform:rotateX(180deg); }
+  .flip-card__glare { position:absolute; inset:0; pointer-events:none; opacity:var(--fc-sheen,0);
+    background:radial-gradient(circle farthest-side at var(--fc-gx,50%) var(--fc-gy,50%), rgba(255,255,255,var(--fc-glare)) 0%, rgba(255,255,255,calc(var(--fc-glare)*.76)) 12%, rgba(255,255,255,calc(var(--fc-glare)*.5)) 26%, rgba(255,255,255,calc(var(--fc-glare)*.28)) 42%, rgba(255,255,255,calc(var(--fc-glare)*.12)) 60%, rgba(255,255,255,calc(var(--fc-glare)*.04)) 78%, rgba(255,255,255,0) 100%); }
+  .flip-card[data-fade] .flip-card__face { transform:none; opacity:0; backface-visibility:visible; -webkit-backface-visibility:visible; transition:opacity 200ms ease; }
+  .flip-card[data-fade='front'] .flip-card__face--front, .flip-card[data-fade='back'] .flip-card__face--back { opacity:1; }
+
+  /* Revealed card fills most of the screen. Art is designed at 270x360 and scaled up crisply. */
+  .rip-flip { display:none; position:relative; z-index:7; flex-direction:column; align-items:center; gap:12px; }
+  .is-flipcard .rip-flip { display:flex; }
+  .is-flipcard .rip-scene, .is-flipcard.is-revealed .rip-scene, .is-flipcard.cloche-study .rip-scene, .is-flipcard.game-entry.is-revealed .rip-scene { height:auto; min-height:0; margin-top:14px; display:flex; justify-content:center; perspective:none; }
+  .is-flipcard .rip-scene > :not(.rip-flip) { display:none !important; }
+  .is-flipcard .rip-heading { margin-top:12px; }
+  .is-flipcard .rip-heading h2, .is-flipcard.cloche-study .rip-heading h2 { font-size:22px; }
+  .is-flipcard .rip-heading .rip-caption { display:none; }
+  .fc-art { position:absolute; left:0; top:0; width:270px; height:360px; transform-origin:0 0; transform:scale(var(--fc-k,1)); }
+  .fc-art .collect-card { border-radius:22px; }
+  .fc-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
+  .fc-back { height:100%; container-type:inline-size; display:flex; flex-direction:column; padding:24px; background:repeating-linear-gradient(135deg,#ffffff04 0 1px,transparent 1px 9px),radial-gradient(ellipse at 50% 0%,#3a3a3e,#27272a 62%); border:1px solid #ffffff14; border-radius:inherit; }
+  .fc-back-mark { display:flex; align-items:center; gap:9px; color:#e5cf9d; font-size:clamp(10px,3.6cqw,13px); font-weight:700; letter-spacing:.16em; }
+  .fc-back-mark svg { width:clamp(22px,8cqw,32px); height:clamp(22px,8cqw,32px); }
+  .fc-back h3 { margin:auto 0 0; font:700 clamp(26px,10cqw,44px)/1.05 var(--display); letter-spacing:-.045em; color:#f5f5f5; }
+  .fc-back p { margin:10px 0 0; color:#b9b4ab; font-size:clamp(13px,4.4cqw,17px); }
+  .fc-back-value { margin-top:22px; padding-top:18px; border-top:1px solid #ffffff1a; display:flex; justify-content:space-between; align-items:baseline; gap:12px; }
+  .fc-back-value b { font:700 clamp(30px,12cqw,52px)/1 var(--display); letter-spacing:-.05em; color:#f3d7a1; }
+  .fc-back-value span { color:#9f998f; font-size:clamp(9px,3.2cqw,12px); letter-spacing:.12em; text-transform:uppercase; text-align:right; }
+  .fc-back small { margin-top:16px; color:#8d877d; font-size:clamp(9px,3cqw,11px); letter-spacing:.14em; text-transform:uppercase; }
+  .fc-hint { margin:4px 0 0; font-size:12px; color:#aaa397; text-align:center; }
+
   /* ---------- Wallet ---------- */
   .pagehead { padding-top: 6px; }
   .pagehead h1 { margin: 0; font: 700 32px/1.1 var(--display); letter-spacing: -.035em; }
@@ -1255,6 +1295,156 @@ function servingPlate() {
   return '<div class="serving-plate" aria-hidden="true"><svg viewBox="0 0 400 100"><defs><radialGradient id="porcelain"><stop offset=".1" stop-color="#d7d6d1"/><stop offset=".54" stop-color="#ffffff"/><stop offset=".67" stop-color="#babdbd"/><stop offset=".72" stop-color="#f9f8f4"/><stop offset="1" stop-color="#d7d8d6"/></radialGradient></defs><ellipse cx="200" cy="60" rx="190" ry="35" fill="#000" opacity=".4"/><ellipse cx="200" cy="45" rx="190" ry="39" fill="url(#porcelain)" stroke="#fff" stroke-width="2"/><ellipse cx="200" cy="45" rx="135" ry="23" fill="none" stroke="#b7babb" stroke-width="1" opacity=".6"/></svg></div>';
 }
 
+/* ---------- Flip card: React Bits FlipCard (JS-CSS variant) ported to plain JS ----------
+   Same props, gestures and spring physics as the React/motion original (see vendor/react-bits-LICENSE.txt).
+   Returns { el, flip, setSize, destroy }. Front/back accept HTML strings. */
+function createFlipCard(props = {}) {
+  const o = { front: "", back: "", defaultFlipped: false, onFlipChange: null, axis: "y", flipOnClick: true, draggable: true, dragDistance: 0,
+    tilt: true, tiltMax: 12, glare: true, glareOpacity: .22, hoverScale: 1.03, perspective: 1100, stiffness: 170, damping: 20,
+    width: 300, height: 400, radius: 22, background: "#27272a", color: "#f5f5f5", shadow: true, shadowColor: "#000000", shadowOpacity: .45,
+    disabled: false, ariaLabel: "Flip card", ...props };
+  const SLOP = { fine: 4, coarse: 8 }, FLING = .16, HISTORY_MS = 90;
+  const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+  const snap = deg => Math.round(deg / 180) * 180;
+  const isBack = deg => Math.abs(Math.round(deg / 180)) % 2 === 1;
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let W = o.width, H = o.height;
+
+  const root = document.createElement("div");
+  root.className = "flip-card"; root.setAttribute("role", "button"); root.tabIndex = o.disabled ? -1 : 0;
+  root.setAttribute("aria-label", o.ariaLabel); root.dataset.axis = o.axis;
+  if (o.draggable && !o.disabled && !reduce) root.dataset.draggable = "";
+  const glare = o.glare ? '<span class="flip-card__glare" aria-hidden="true"></span>' : "";
+  root.innerHTML = (o.shadow ? '<span class="flip-card__shadow" aria-hidden="true"></span>' : "") +
+    '<div class="flip-card__rotor"><div class="flip-card__face flip-card__face--front">' + o.front + glare +
+    '</div><div class="flip-card__face flip-card__face--back">' + o.back + glare + '</div></div>';
+  const rotor = root.querySelector(".flip-card__rotor"), shadowEl = root.querySelector(".flip-card__shadow");
+  const faceFront = root.querySelector(".flip-card__face--front"), faceBack = root.querySelector(".flip-card__face--back");
+  const css = { "--fc-radius": o.radius + "px", "--fc-bg": o.background, "--fc-ink": o.color, "--fc-shadow": o.shadowColor, "--fc-shadow-o": o.shadowOpacity, "--fc-glare": o.glareOpacity };
+  for (const k in css) root.style.setProperty(k, css[k]);
+  function setSize(w, h) { W = w; H = h; root.style.setProperty("--fc-w", w + "px"); root.style.setProperty("--fc-h", h + "px"); }
+  setSize(W, H);
+
+  // Springs (motion-style: stiffness, damping, mass; velocity in units/second).
+  const spring = (v, k, c, m = 1, rest = .01) => ({ v, to: v, vel: 0, k, c, m, rest, live: false });
+  let shown = !!o.defaultFlipped;
+  const turn = spring(shown ? 180 : 0, o.stiffness, o.damping, 1, .05);
+  const tiltX = spring(0, 240, 24, .6), tiltY = spring(0, 240, 24, .6), lift = spring(1, 320, 26), sheen = spring(0, 320, 26);
+  const springs = [turn, tiltX, tiltY, lift, sheen];
+  let gx = 50, gy = 50, frame = 0, last = 0, grip = null, dragging = false, destroyed = false;
+  const aim = (s, to) => { s.to = to; s.live = true; kick(); };
+
+  function draw() {
+    const t = turn.v;
+    rotor.style.transform = o.axis === "x"
+      ? `perspective(${o.perspective}px) scale(${lift.v}) rotateY(${tiltY.v}deg) rotateX(${t + tiltX.v}deg)`
+      : `perspective(${o.perspective}px) scale(${lift.v}) rotateX(${tiltX.v}deg) rotateY(${t + tiltY.v}deg)`;
+    rotor.style.setProperty("--fc-gx", gx + "%"); rotor.style.setProperty("--fc-gy", gy + "%"); rotor.style.setProperty("--fc-sheen", sheen.v);
+    if (shadowEl) {
+      const f = Math.abs(Math.cos(t * Math.PI / 180));
+      shadowEl.style.transform = (o.axis === "x" ? "scaleY(" : "scaleX(") + (.08 + .92 * f) + ")";
+      shadowEl.style.opacity = .1 + .9 * f * f;
+    }
+  }
+  function tick(time) {
+    frame = 0; if (destroyed) return;
+    const dt = Math.min(.05, (time - (last || time - 16)) / 1000); last = time;
+    const steps = Math.max(1, Math.ceil(dt * 480)), h = dt / steps;
+    let moving = false;
+    for (const s of springs) {
+      if (!s.live) continue;
+      for (let i = 0; i < steps; i++) { s.vel += ((-s.k * (s.v - s.to) - s.c * s.vel) / s.m) * h; s.v += s.vel * h; }
+      if (Math.abs(s.v - s.to) < s.rest && Math.abs(s.vel) < s.rest * 10) { s.v = s.to; s.vel = 0; s.live = false; } else moving = true;
+    }
+    draw();
+    if (moving) frame = requestAnimationFrame(tick); else last = 0;
+  }
+  function kick() { if (!frame && !destroyed) { last = 0; frame = requestAnimationFrame(tick); } }
+
+  function syncFaces() {
+    root.setAttribute("aria-pressed", String(shown));
+    faceFront.setAttribute("aria-hidden", String(shown)); faceFront.inert = shown;
+    faceBack.setAttribute("aria-hidden", String(!shown)); faceBack.inert = !shown;
+    if (reduce) root.dataset.fade = shown ? "back" : "front";
+  }
+  function settle(to, velocity, instant) {
+    turn.to = to;
+    if (instant || reduce) { turn.v = to; turn.vel = 0; turn.live = false; draw(); }
+    else { turn.vel = velocity; turn.live = true; kick(); }
+    const next = isBack(to);
+    if (next === shown) return;
+    shown = next; syncFaces(); o.onFlipChange?.(next);
+  }
+  function flip(instant = false) { const base = snap(turn.v); settle(isBack(base) ? base - 180 : base + 180, 0, instant); }
+  function rest() { aim(tiltX, 0); aim(tiltY, 0); aim(sheen, 0); aim(lift, 1); }
+
+  root.addEventListener("pointerdown", e => {
+    if (o.disabled || e.button !== 0 || grip) return;
+    try { root.setPointerCapture(e.pointerId); } catch {}
+    turn.live = false; turn.vel = 0;
+    grip = { id: e.pointerId, x: e.clientX, y: e.clientY, base: turn.v, moved: false, slop: e.pointerType === "touch" ? SLOP.coarse : SLOP.fine, hist: [] };
+    if (!reduce) aim(lift, o.hoverScale);
+  });
+  root.addEventListener("pointermove", e => {
+    const g = grip;
+    if (g && g.id === e.pointerId) {
+      const d = o.axis === "x" ? e.clientY - g.y : e.clientX - g.x;
+      if (!g.moved) {
+        if (Math.abs(d) < g.slop || !o.draggable || reduce) return;
+        g.moved = true; dragging = true; root.dataset.dragging = "";
+        aim(tiltX, 0); aim(tiltY, 0); aim(sheen, 0);
+      }
+      const span = o.dragDistance > 0 ? o.dragDistance : o.axis === "x" ? H : W;
+      const deg = g.base + (o.axis === "x" ? -1 : 1) * (d / span) * 180;
+      turn.v = deg; turn.to = deg; draw();
+      const now = performance.now();
+      g.hist.push({ t: now, v: deg });
+      while (g.hist.length > 2 && now - g.hist[0].t > HISTORY_MS) g.hist.shift();
+      return;
+    }
+    if (!o.tilt || reduce || o.disabled || e.pointerType === "touch") return;
+    const r = root.getBoundingClientRect();
+    const px = clamp((e.clientX - r.left) / r.width, 0, 1), py = clamp((e.clientY - r.top) / r.height, 0, 1);
+    aim(tiltX, (.5 - py) * 2 * o.tiltMax); aim(tiltY, (px - .5) * 2 * o.tiltMax);
+    gx = px * 100; gy = py * 100; aim(sheen, 1);
+  });
+  function release(e, cancelled) {
+    const g = grip;
+    if (!g || g.id !== e.pointerId) return;
+    grip = null;
+    try { if (root.hasPointerCapture(e.pointerId)) root.releasePointerCapture(e.pointerId); } catch {}
+    dragging = false; delete root.dataset.dragging;
+    if (e.pointerType === "touch" || !root.matches(":hover")) rest();
+    if (!g.moved) { if (!cancelled && o.flipOnClick) flip(false); else settle(turn.to, 0, false); return; }
+    const here = turn.v, a = g.hist[0], b = g.hist[g.hist.length - 1];
+    let velocity = 0;
+    if (!cancelled && a && b && b.t > a.t && performance.now() - b.t < 60) velocity = ((b.v - a.v) / (b.t - a.t)) * 1000;
+    const to = cancelled ? snap(g.base) : clamp(snap(here + velocity * FLING), snap(here) - 180, snap(here) + 180);
+    settle(to, velocity, false);
+  }
+  root.addEventListener("pointerup", e => release(e, false));
+  root.addEventListener("pointercancel", e => release(e, true));
+  root.addEventListener("lostpointercapture", e => release(e, true));
+  root.addEventListener("pointerenter", e => { if (!reduce && !o.disabled && e.pointerType !== "touch") aim(lift, o.hoverScale); });
+  root.addEventListener("pointerleave", () => { if (!grip) rest(); });
+  root.addEventListener("keydown", e => { if (o.disabled || (e.key !== "Enter" && e.key !== " ")) return; e.preventDefault(); if (!e.repeat) flip(true); });
+  root.addEventListener("click", e => { if (!o.disabled && e.detail === 0) flip(true); });
+  root.addEventListener("dragstart", e => e.preventDefault());
+
+  syncFaces(); draw();
+  return { el: root, flip, setSize, get flipped() { return shown; }, destroy() { destroyed = true; cancelAnimationFrame(frame); } };
+}
+
+/* Back of the revealed card: what was pulled, in plain words. */
+function revealBack(res) {
+  let name, sub, value, unit, fine;
+  if (res.sim) { name = res.brand.name; sub = "Free play reward"; value = res.value + " CR"; unit = "Credits"; fine = "Demo · no cash value"; }
+  else if (res.preview) { const b = CARD_STUDIES.find(x => x.id === selectedCard); name = b?.name || res.p.name; sub = res.landing ? "Starter demo · sample artwork" : "Pack preview · design sample"; value = money(res.value || 15); unit = "Illustrative value"; fine = "No order · not redeemable"; }
+  else if (res.api) { name = res.pull?.restaurant_label || res.s.n; sub = "Simulated delivery · order " + String(res.order?.id || "").slice(0, 8); value = money(res.value); unit = "Test card"; fine = "Test mode · not redeemable"; }
+  else { name = res.s.n; sub = (res.s.c ? res.s.c + " · " : "") + CITY; value = ""; unit = "Suggestion only"; fine = "Free pick · no card"; }
+  return '<div class="fc-back"><div class="fc-back-mark"><svg aria-hidden="true"><use href="#hat"/></svg>CHEF PACK</div><h3>' + esc(name) + '</h3><p>' + esc(sub) + '</p><div class="fc-back-value"><b>' + esc(value) + '</b><span>' + esc(unit) + '</span></div><small>' + esc(fine) + '</small></div>';
+}
+
 function revealFace(res) {
   if (res.sim) return `<div class="collect-card"><div class="collect-name">${esc(res.brand.name)}</div><div class="collect-value">${res.value} CR<small>FREE PLAY REWARD · NO CASH VALUE</small></div></div>`;
   if (res.preview) {
@@ -1291,6 +1481,7 @@ function reveal(p, res) {
       <div class="rip-card-shell"><div class="rip-tilt" tabindex="-1" role="img" aria-label="Card preview"><div class="rip-card-turn"><div class="rip-card-face rip-card-back"><svg aria-hidden="true"><use href="#hat"/></svg><b>CHEF PACK</b><small>GOOD THINGS INSIDE</small></div><div class="rip-card-face rip-card-front">${revealFace(res)}<span class="rip-holo"></span><span class="rip-glare"></span><span class="rip-gleam"></span><span class="rip-edge"></span></div></div></div></div>
       <button class="rip-pack" type="button" aria-label="${physical ? "Drop and spin card" : "Tear open " + esc(p.name)}"><span class="rip-wrap rip-body">${physical ? "" : foil(p)}</span><span class="rip-wrap rip-cap" ${physical ? "hidden" : ""}>${physical ? "" : foil(p)}</span><span class="rip-seam" aria-hidden="true" ${physical ? "hidden" : ""}></span><span class="rip-touch" aria-hidden="true">${res.preview ? "↑" : "↗"}</span></button>
       <div class="rip-shards" aria-hidden="true">${Array.from({ length: 6 }, () => "<i></i>").join("")}</div>
+      <div class="rip-flip"></div>
     </div><p class="rip-hint" role="status">${res.landing ? "Tap the plate to drop your card" : "Tap the pack<span></span>or swipe across the seam"}</p>${res.landing ? '<p class="guest-note">FREE PREVIEW · NO ACCOUNT NEEDED<small>No purchase. No gift card.</small></p>' : ""}${res.preview ? comparisonControls() : ""}<div class="ores" id="ores" hidden></div>`;
   document.body.appendChild(o);
   const q = sel => o.querySelector(sel), pack = q(".rip-pack"), card = q(".rip-card-shell"), turn = q(".rip-card-turn"), halo = q(".rip-halo");
@@ -1334,7 +1525,36 @@ function reveal(p, res) {
     o.querySelectorAll("[data-study]").forEach(button => button.onclick = () => { if (phase === "opening") return; selectedCard = button.dataset.study; dispose(); previewOpening(p, res.landing); });
   } else { prepareContact(); prepareContact("quiet-tick"); prepareContact("warm-confirm"); }
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  let phase = "ready", pointer = null, stage3d = null, celebration = null;
+  let phase = "ready", pointer = null, stage3d = null, celebration = null, flipCard = null;
+  // Revealed card: React Bits FlipCard sized to take up most of the screen.
+  const FLIP_RATIO = .75; // 300 x 400 from the FlipCard config
+  function fitFlipCard() {
+    if (!flipCard) return;
+    const h = Math.max(320, Math.min(innerHeight * .72, (Math.min(innerWidth, 560) - 32) / FLIP_RATIO)), w = Math.round(h * FLIP_RATIO);
+    flipCard.setSize(w, Math.round(h));
+    flipCard.el.style.setProperty("--fc-k", String(w / 270));
+  }
+  function mountFlipCard() {
+    if (flipCard) return;
+    flipCard = createFlipCard({
+      // Prefer the exact card artwork the 3D table rendered, so the flipped card matches what landed.
+      front: (stage3d?.cardArtwork ? '<img class="fc-img" src="' + stage3d.cardArtwork + '" alt="" draggable="false">' : '<div class="fc-art">' + revealFace(res) + '</div>') + '<span class="rip-holo"></span><span class="rip-edge"></span>',
+      back: revealBack(res),
+      axis: "y", flipOnClick: true, draggable: true, dragDistance: 0,
+      tilt: true, tiltMax: 12, glare: true, glareOpacity: .22, hoverScale: 1.03,
+      perspective: 1100, stiffness: 170, damping: 20, width: 300, height: 400, radius: 22,
+      background: "#27272a", color: "#f5f5f5", shadow: true, shadowColor: "#000000", shadowOpacity: .45,
+      ariaLabel: "Your card. Press Enter, tap, or drag sideways to flip it over.",
+      onFlipChange: flipped => { o.dataset.cardSide = flipped ? "back" : "front"; const hint = q(".fc-hint"); if (hint) hint.textContent = flipped ? "Tap or drag to see the front" : "Tap or drag to flip the card"; }
+    });
+    const host = q(".rip-flip");
+    host.append(flipCard.el);
+    host.insertAdjacentHTML("beforeend", '<p class="fc-hint">Tap or drag to flip the card</p>');
+    o.classList.add("is-flipcard"); o.dataset.cardSide = "front";
+    fitFlipCard(); addEventListener("resize", fitFlipCard);
+    stage3d?.dispose(); stage3d = null; // the WebGL table is hidden now; free the GPU
+    if (!reduced) animate(flipCard.el, [{ opacity: 0, transform: "translateY(24px) scale(.9)" }, { opacity: 1, transform: "none" }], { duration: 420, easing: "cubic-bezier(.2,.7,.25,1)", fill: "none" });
+  }
   function celebrate() {
     if (reduced || celebration || !stage3d?.cardArtwork || phase !== "opening") return;
     const rect = q(".rip-scene").getBoundingClientRect(), width = innerWidth, height = innerHeight;
@@ -1382,7 +1602,7 @@ function reveal(p, res) {
   function cancelAnimations() { for (const a of animations) a.cancel(); animations.clear(); }
   function dispose() {
     if (phase === "closed") return;
-    phase = "closed"; for (const a of celebrationAnimations) a.cancel(); celebrationAnimations.clear(); celebration?.remove(); celebration = null; stage3d?.dispose(); cancelAnimations(); cancelAnimationFrame(tiltFrame); stopContact(); busy = false;
+    phase = "closed"; for (const a of celebrationAnimations) a.cancel(); celebrationAnimations.clear(); celebration?.remove(); celebration = null; stage3d?.dispose(); flipCard?.destroy(); removeEventListener("resize", fitFlipCard); cancelAnimations(); cancelAnimationFrame(tiltFrame); stopContact(); busy = false;
     document.removeEventListener("keydown", onKey, true);
     document.removeEventListener("visibilitychange", onVisibility);
     o.remove(); if (app) app.inert = wasInert;
@@ -1401,12 +1621,12 @@ function reveal(p, res) {
     turn.style.transform = "rotateY(180deg)"; halo.style.opacity = ".45";
     q(".rip-shards").hidden = true; q(".rip-hint").hidden = true; q(".rip-skip").hidden = true;
     q("#ripTitle").textContent = res.sim ? "Your pull" : res.landing ? "Freshly revealed." : res.preview ? "Freshly revealed." : res.free ? "Dinner, decided." : "Your card is here.";
-    o.classList.add("is-revealed"); tilt.tabIndex = 0; tilt.setAttribute("aria-label", "Inspect card: drag to tilt or use arrow keys");
+    o.classList.add("is-revealed"); mountFlipCard();
     if (res.preview) { o.querySelectorAll("[data-reward]").forEach(b => b.disabled = !rewardBuffers.has(b.dataset.reward)); o.querySelectorAll("[data-study]").forEach(b => b.disabled = false); }
     if (res.preview && q(".reward-status").textContent.startsWith("Playing:")) q(".reward-status").textContent = "Animation skipped · select a sound to replay";
     showResult(res, o); q("#ores").hidden = false;
     if (!reduced) animate(q("#ores"), [{ opacity: 0, transform: "translateY(10px)" }, { opacity: 1, transform: "none" }], { duration: 220, easing: "ease-out" });
-    q("#ores button")?.focus({ preventScroll: true });
+    (flipCard?.el || q("#ores button"))?.focus({ preventScroll: true });
   }
   async function rip() {
     if (phase !== "ready") return;
