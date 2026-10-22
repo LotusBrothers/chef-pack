@@ -371,6 +371,22 @@
   .rip-opener.is-revealed .rip-heading h2 { font-size:25px; }
   @media(max-height:740px) { .rip-card-shell { width:210px; } .rip-opener.is-revealed .rip-scene { height:305px; min-height:305px; } .brand-orbit { width:106px; height:106px; margin:12px 0 8px; } .brand-orbit img { width:75px; height:82px; } .collect-name{font-size:20px}.collect-value{font-size:36px;margin-top:8px}.collect-card{padding:12px}.collect-top{font-size:6px}.collect-bottom{font-size:5px}.collect-value small{font-size:5px} }
 
+
+  .game-entry { background:radial-gradient(ellipse at 50% 43%,#4b3021 0%,#1c1715 36%,#0b0b0d 72%) !important; }
+  .game-entry .rip-heading { margin-top:clamp(30px,6vh,65px); }
+  .game-entry .rip-heading h2 { font-size:clamp(32px,7vw,48px); font-weight:800; letter-spacing:-.055em; }
+  .game-entry .rip-heading .rip-caption { color:#c5b6a3; font-size:13px; }
+  .game-entry .rip-close { width:auto; padding:0 16px; font-size:11px; }
+  .game-entry .rip-skip { margin-left:auto; }
+  .game-entry .rip-pack { width:clamp(190px,51vw,260px); transform:rotate(-3deg); }
+  .game-entry .rip-scene { height:clamp(320px,47vh,430px); }
+  .game-entry .rip-hint { font-size:14px; font-weight:600; color:#f8dcb3; margin-top:18px; }
+  .guest-note { color:#a99377; font-size:8px; font-weight:600; letter-spacing:.14em; text-align:center; margin:20px 0 0; }
+  .guest-note small { display:block; margin-top:7px; color:#958d84; font-size:11px; font-weight:400; letter-spacing:0; }
+  .game-entry.is-revealed .guest-note { display:none; }
+  .game-fallback { min-height:80vh; display:grid; align-content:center; text-align:center; gap:15px; }
+  @media(max-height:740px) { .game-entry .rip-heading{margin-top:20px}.game-entry .rip-scene{height:310px;min-height:280px}.game-entry .rip-pack{width:190px}.game-entry .guest-note{margin-top:12px} }
+
   /* ---------- Wallet ---------- */
   .pagehead { padding-top: 6px; }
   .pagehead h1 { margin: 0; font: 700 32px/1.1 var(--display); letter-spacing: -.035em; }
@@ -630,7 +646,7 @@ function render(motion = false) {
   closeSheet();
   chrome();
   const v = $("view");
-  v.innerHTML = ({ home, pack, cards, wallet })[S.page]();
+  v.innerHTML = ({ home, browse, pack, cards, wallet })[S.page]();
   v.scrollTop = 0; $("top").classList.remove("shadow");
   if (motion) { v.classList.remove("in-fade"); v.offsetWidth; v.classList.add("in-fade"); }
   bind[S.page]?.();
@@ -647,7 +663,7 @@ const acctBtn = () => S.user
   : `<button class="bal" id="acct" type="button" aria-label="Sign in"><span>Sign in</span></button>`;
 function topBar() {
   if (S.page === "pack") return `${testBar}<div class="bar"><button class="round" id="back" type="button" aria-label="Back">${icon("back")}</button><span class="bartitle">${esc(packOf(S.packId).name)}</span>${acctBtn()}</div>`;
-  const searchable = S.page === "home" || S.page === "cards";
+  const searchable = S.page === "browse" || S.page === "cards";
   return `${testBar}<div class="bar"><button class="brand" id="brand" type="button" aria-label="Chef Pack home"><svg aria-hidden="true"><use href="#hat"/></svg><b>Chef Pack</b></button><span class="grow"></span><span class="pill">${icon("pin")}${CITY}</span>${acctBtn()}</div>
     ${searchable ? `<label class="search">${icon("search")}<input id="q" type="search" inputmode="search" enterkeyhint="search" autocomplete="off" placeholder="${S.page === "cards" ? "Search gift cards" : "Search restaurants or packs"}" aria-label="Search" value="${esc(S.q)}"></label>` : ""}`;
 }
@@ -661,7 +677,7 @@ function bindChrome() {
   if ($("back")) $("back").onclick = () => go(S.from || "home");
   $("acct").onclick = () => accountSheet();
   if ($("open")) $("open").onclick = openFlow;
-  if ($("q")) $("q").oninput = e => { S.q = e.target.value; S.page === "home" ? renderPacks() : renderShelf(); };
+  if ($("q")) $("q").oninput = e => { S.q = e.target.value; S.page === "browse" ? renderPacks() : renderShelf(); };
 }
 
 /* ---------- Pieces ---------- */
@@ -673,7 +689,7 @@ const tone = p => p.api ? "#d9b25f" : p.free ? "#7a7a80" : accent(p.spots[0]);
 // The sealed pack: black foil, crimped edges, the pack name and its guarantee.
 const foil = p => `<div class="foil"><div class="bag" style="clip-path:${ZIG};--a:${band(p)}"><span class="crimp t"></span><span class="crimp b"></span>
   <span class="fmark"><svg aria-hidden="true"><use href="#hat-w"/></svg>CHEF PACK</span><span class="fname">${esc(p.name)}</span><span class="fband"></span>
-  <span class="fval">${p.free ? "Free pick" : p.api ? `${money(p.price)} card` : `${money(p.tiers[0])}+ card`}</span><span class="fsub">${p.free ? "NO CARD INSIDE" : p.api ? "TEST · NOT REDEEMABLE" : "PREVIEW"}</span></div></div>`;
+  <span class="fval">${p.guest ? "FREE DEMO" : p.free ? "Free pick" : p.api ? `${money(p.price)} card` : `${money(p.tiers[0])}+ card`}</span><span class="fsub">${p.guest ? "NO ACCOUNT · NO ORDER" : p.free ? "NO CARD INSIDE" : p.api ? "TEST · NOT REDEEMABLE" : "PREVIEW"}</span></div></div>`;
 const tile = p => `<button class="ptile${p.demo ? " demo" : ""}" type="button" data-pack="${p.id}">
   <div class="mini" style="--a:${tone(p)}">${p.demo ? `<span class="mtag">Coming soon</span>` : p.free ? `<span class="mtag">Daily</span>` : `<span class="mtag test">Test</span>`}${foil(p)}</div>
   <span><b>${esc(p.name)}</b><small>${p.free ? "A place to eat tonight" : p.api ? "1 gift card · test mode" : esc(p.blurb)}</small>
@@ -681,7 +697,11 @@ const tile = p => `<button class="ptile${p.demo ? " demo" : ""}" type="button" d
 const openPack = id => go("pack", { packId: id, from: S.page, slide: 3 });
 
 /* ---------- Pages ---------- */
+function starterPack() { return { id: "starter-preview", name: "Starter Pack", guest: true, price: 15, tiers: [15], spots: [R.bk] }; }
 function home() {
+  return '<section class="game-fallback"><h1>Dinner starts here.</h1><button class="btn" id="guestStart" type="button">Open starter demo</button><p>Free preview · no account · no gift card</p><button class="motion-preview" id="guestBrowse" type="button">Choose a pack</button></section>';
+}
+function browse() {
   const qb = S.catalog?.find(p => p.id === "quick-bite");
   return `<div class="chips" role="group" aria-label="Categories">${CATS.map(([id, label]) => `<button class="chip" type="button" data-cat="${id}" aria-pressed="${S.cat === id}">${label}</button>`).join("")}</div>
     <section class="feature">
@@ -800,7 +820,7 @@ async function loadCatalog() {
     if (!Array.isArray(r?.packs)) throw new Fail(502, "bad_catalog");
     S.catalog = r.packs.map(fromApi);
   } catch (e) { S.catErr = failText(e); }
-  if (S.page === "home") { renderPacks(); const qb = S.catalog?.find(p => p.id === "quick-bite"); if ($("pOpen")) { $("pOpen").disabled = !qb; $("pOpen").textContent = qb ? `Open ${qb.name} · ${money(qb.price)}` : "Packs unavailable"; } }
+  if (S.page === "browse") { renderPacks(); const qb = S.catalog?.find(p => p.id === "quick-bite"); if ($("pOpen")) { $("pOpen").disabled = !qb; $("pOpen").textContent = qb ? `Open ${qb.name} · ${money(qb.price)}` : "Packs unavailable"; } }
 }
 async function loadWallet() {
   if (!S.user) return;
@@ -1037,9 +1057,9 @@ function revealFace(res) {
 }
 
 /* ---------- Physical reveal: presentation only; result supplied by caller ---------- */
-function previewOpening(p) {
+function previewOpening(p, landing = false) {
   if (busy) return;
-  reveal(p, { p, s: TEST_SPOT, t: 0, value: p.price || null, preview: true });
+  reveal(p, { p, s: TEST_SPOT, t: 0, value: p.price || null, preview: true, landing });
 }
 function reveal(p, res) {
   if (busy) return;
@@ -1048,16 +1068,16 @@ function reveal(p, res) {
   const previousFocus = document.activeElement, app = $("app"), wasInert = app?.inert;
   if (app) app.inert = true;
   const o = document.createElement("div");
-  o.className = "opener rip-opener";
+  o.className = "opener rip-opener" + (res.landing ? " game-entry" : "");
   o.setAttribute("role", "dialog"); o.setAttribute("aria-modal", "true"); o.setAttribute("aria-labelledby", "ripTitle");
-  const note = res.preview ? "MOTION PREVIEW · NO ORDER" : res.api ? "TEST MODE · NOT REDEEMABLE" : "FREE PICK · NO CARD";
-  o.innerHTML = `<div class="rip-controls"><button class="rip-sound" type="button" aria-label="${S.muted ? "Turn sound on" : "Mute sound"}">${icon(S.muted ? "muted" : "sound")}</button><button class="rip-skip" type="button">Skip animation</button><button class="rip-close" type="button" aria-label="Close opening">${icon("close")}</button></div>
-    <header class="rip-heading"><p class="rip-kicker">${note}</p><h2 id="ripTitle">A little anticipation.</h2><p class="rip-caption">${esc(p.name)}${res.preview ? " · preview only" : ""}</p></header>
+  const note = res.landing ? "CHEF PACK · PLAY THE DEMO" : res.preview ? "MOTION PREVIEW · NO ORDER" : res.api ? "TEST MODE · NOT REDEEMABLE" : "FREE PICK · NO CARD";
+  o.innerHTML = `<div class="rip-controls"><button class="rip-sound" type="button" aria-label="${S.muted ? "Turn sound on" : "Mute sound"}">${icon(S.muted ? "muted" : "sound")}</button><button class="rip-skip" type="button">Skip animation</button><button class="rip-close" type="button" aria-label="${res.landing ? "Choose a pack" : "Close opening"}">${res.landing ? "Choose pack" : icon("close")}</button></div>
+    <header class="rip-heading"><p class="rip-kicker">${note}</p><h2 id="ripTitle">${res.landing ? "Dinner starts here." : "A little anticipation."}</h2><p class="rip-caption">${res.landing ? "Your starter pack is ready." : esc(p.name) + (res.preview ? " · preview only" : "")}</p></header>
     <div class="rip-scene"><span class="rip-halo" aria-hidden="true"></span><span class="rip-floor" aria-hidden="true"></span>
       <div class="rip-card-shell"><div class="rip-tilt" tabindex="-1" role="img" aria-label="Card preview"><div class="rip-card-turn"><div class="rip-card-face rip-card-back"><svg aria-hidden="true"><use href="#hat"/></svg><b>CHEF PACK</b><small>GOOD THINGS INSIDE</small></div><div class="rip-card-face rip-card-front">${revealFace(res)}<span class="rip-holo"></span><span class="rip-glare"></span><span class="rip-gleam"></span><span class="rip-edge"></span></div></div></div></div>
       <button class="rip-pack" type="button" aria-label="Tear open ${esc(p.name)}"><span class="rip-wrap rip-body">${foil(p)}</span><span class="rip-wrap rip-cap">${foil(p)}</span><span class="rip-seam" aria-hidden="true"></span><span class="rip-touch" aria-hidden="true">↗</span></button>
       <div class="rip-shards" aria-hidden="true">${Array.from({ length: 6 }, () => "<i></i>").join("")}</div>
-    </div><p class="rip-hint" role="status">Tap the pack<span></span>or swipe across the seam</p>${res.preview ? '<button class="rip-audition" type="button" disabled>Loading contact sound…</button>' : ""}<div class="ores" id="ores" hidden></div>`;
+    </div><p class="rip-hint" role="status">${res.landing ? "← Drag the seal to rip, or tap the pack" : "Tap the pack<span></span>or swipe across the seam"}</p>${res.landing ? '<p class="guest-note">FREE PREVIEW · NO ACCOUNT NEEDED<small>No purchase. No gift card.</small></p>' : ""}${res.preview && !res.landing ? '<button class="rip-audition" type="button" disabled>Loading contact sound…</button>' : ""}<div class="ores" id="ores" hidden></div>`;
   document.body.appendChild(o);
   const q = sel => o.querySelector(sel), pack = q(".rip-pack"), card = q(".rip-card-shell"), turn = q(".rip-card-turn"), halo = q(".rip-halo");
   const tilt = q(".rip-tilt");
@@ -1105,6 +1125,7 @@ function reveal(p, res) {
     o.remove(); if (app) app.inert = wasInert;
     if (previousFocus?.isConnected) previousFocus.focus({ preventScroll: true });
     else $("acct")?.focus({ preventScroll: true });
+    if (res.landing) go("browse");
   }
   o.closeOpening = dispose;
   function finish() {
@@ -1114,7 +1135,7 @@ function reveal(p, res) {
     card.style.opacity = "1"; card.style.transform = "none";
     turn.style.transform = "rotateY(180deg)"; halo.style.opacity = ".45";
     q(".rip-shards").hidden = true; q(".rip-hint").hidden = true; q(".rip-skip").hidden = true;
-    q("#ripTitle").textContent = res.preview ? "The reveal, reimagined." : res.free ? "Dinner, decided." : "Your card is here.";
+    q("#ripTitle").textContent = res.landing ? "Nice rip." : res.preview ? "The reveal, reimagined." : res.free ? "Dinner, decided." : "Your card is here.";
     o.classList.add("is-revealed"); tilt.tabIndex = 0; tilt.setAttribute("aria-label", "Inspect card: drag to tilt or use arrow keys");
     showResult(res, o); q("#ores").hidden = false;
     if (!reduced) animate(q("#ores"), [{ opacity: 0, transform: "translateY(10px)" }, { opacity: 1, transform: "none" }], { duration: 220, easing: "ease-out" });
@@ -1122,7 +1143,7 @@ function reveal(p, res) {
   }
   async function rip() {
     if (phase !== "ready") return;
-    phase = "opening"; pack.disabled = true; q(".rip-hint").textContent = "Opening…";
+    phase = "opening"; q(".rip-skip").hidden = false; q(".rip-cap").style.transform = ""; q(".rip-cap").style.opacity = ""; pack.style.transform = ""; pack.disabled = true; q(".rip-hint").textContent = "Opening…";
     if (reduced) { finish(); return; }
     audio();
     await animate(pack, [{ transform: "rotate(-3deg) scale(1)" }, { transform: "rotate(-2deg) scale(.97)" }, { transform: "rotate(0deg) scale(1)" }], { duration: 160, easing: "ease-out" });
@@ -1136,15 +1157,15 @@ function reveal(p, res) {
       const dx = (i - 2.5) * 32, dy = -28 - (i % 3) * 18;
       animate(el, [{ opacity: 0, transform: "translate(0,0) rotate(0deg)" }, { opacity: .65, offset: .15 }, { opacity: 0, transform: `translate(${dx}px,${dy}px) rotate(${i * 40 - 90}deg)` }], { duration: 600, delay: i * 12, easing: "ease-out" });
     });
-    await animate(card, [{ opacity: 0, transform: "translate3d(0,65px,0) rotate(-7deg) scale(.78)" }, { opacity: 1, offset: .2 }, { opacity: 1, transform: "translate3d(0,-12px,0) rotate(-5deg) scale(1.02)", offset: .8 }, { opacity: 1, transform: "translate3d(0,0,0) rotate(-3deg) scale(1)" }], { duration: 1050, delay: 100, easing: "cubic-bezier(.18,.8,.24,1)" });
+    await animate(card, [{ opacity: 0, transform: "translate3d(0,65px,0) rotate(-7deg) scale(.78)" }, { opacity: 1, offset: .2 }, { opacity: 1, transform: "translate3d(0,-12px,0) rotate(-5deg) scale(1.02)", offset: .8 }, { opacity: 1, transform: "translate3d(0,0,0) rotate(-3deg) scale(1)" }], { duration: 780, delay: 60, easing: "cubic-bezier(.18,.8,.24,1)" });
     if (phase !== "opening") return;
     pack.hidden = true;
-    await animate(turn, [{ transform: "rotateY(0deg)" }, { transform: "rotateY(180deg)" }], { duration: 680, easing: "cubic-bezier(.25,.6,.2,1)" });
+    await animate(turn, [{ transform: "rotateY(0deg)" }, { transform: "rotateY(180deg)" }], { duration: 460, easing: "cubic-bezier(.25,.6,.2,1)" });
     if (phase !== "opening") return;
     sfx("impact"); buzz(10);
     animate(halo, [{ opacity: .8, transform: "scale(1.04)" }, { opacity: .45, transform: "scale(1)" }], { duration: 380, easing: "ease-out" });
     animate(card, [{ transform: "rotate(-3deg) scale(1)" }, { transform: "rotate(1deg) scale(1.025)", offset: .55 }, { transform: "rotate(0deg) scale(1)" }], { duration: 560, easing: "cubic-bezier(.16,.8,.3,1)" });
-    await animate(q(".rip-gleam"), [{ transform: "translateX(-115%)" }, { transform: "translateX(115%)" }], { duration: 560, easing: "ease-in-out" });
+    await animate(q(".rip-gleam"), [{ transform: "translateX(-115%)" }, { transform: "translateX(115%)" }], { duration: 360, easing: "ease-in-out" });
     if (phase === "opening") finish();
   }
   function onKey(e) {
@@ -1160,12 +1181,38 @@ function reveal(p, res) {
   document.addEventListener("keydown", onKey, true);
   document.addEventListener("visibilitychange", onVisibility);
   q(".rip-close").onclick = dispose;
+  if (res.landing) q(".rip-skip").hidden = true;
   q(".rip-skip").onclick = finish;
   q(".rip-sound").onclick = e => { S.muted = !S.muted; if (S.muted) stopContact(); else { audio(); prepareContact(); } e.currentTarget.innerHTML = icon(S.muted ? "muted" : "sound"); e.currentTarget.setAttribute("aria-label", S.muted ? "Turn sound on" : "Mute sound"); };
   pack.onclick = rip;
-  pack.addEventListener("pointerdown", e => { pointer = { id: e.pointerId, x: e.clientX, y: e.clientY }; pack.setPointerCapture?.(e.pointerId); });
-  pack.addEventListener("pointermove", e => { if (pointer?.id === e.pointerId && Math.abs(e.clientX - pointer.x) > 35 && Math.abs(e.clientY - pointer.y) < 60) { pointer = null; rip(); } });
-  for (const event of ["pointerup", "pointercancel", "lostpointercapture"]) pack.addEventListener(event, () => { pointer = null; });
+  let dragged = false;
+  pack.onclick = e => { if (dragged) { dragged = false; e.preventDefault(); return; } rip(); };
+  pack.addEventListener("pointerdown", e => { if (phase !== "ready") return; pointer = { id: e.pointerId, x: e.clientX, y: e.clientY, progress: 0 }; dragged = false; audio(); prepareContact(); pack.setPointerCapture?.(e.pointerId); });
+  pack.addEventListener("pointermove", e => {
+    if (pointer?.id !== e.pointerId || phase !== "ready") return;
+    const dx = pointer.x - e.clientX;
+    pointer.progress = Math.min(1, Math.max(0, dx / Math.max(70, pack.clientWidth * .45)));
+    if (Math.abs(dx) > 6) dragged = true;
+    if (!reduced) {
+      q(".rip-cap").style.transform = "translate3d(" + (-pointer.progress * 65) + "px," + (-pointer.progress * 32) + "px,0) rotate(" + (-pointer.progress * 22) + "deg)";
+      q(".rip-cap").style.opacity = 1 - pointer.progress * .3;
+      pack.style.transform = "rotate(" + (-3 + pointer.progress * 4) + "deg)";
+    }
+    q(".rip-hint").textContent = pointer.progress >= .72 ? "Release to open" : "← Keep pulling the seal";
+  });
+  function releaseSeal(e) {
+    if (pointer?.id !== e.pointerId) return;
+    const complete = e.type === "pointerup" && pointer.progress >= .72;
+    pointer = null;
+    if (complete) { rip(); return; }
+    if (phase === "ready") {
+      const cap = q(".rip-cap");
+      if (!reduced) { animate(cap, [{ transform: cap.style.transform || "none", opacity: cap.style.opacity || 1 }, { transform: "none", opacity: 1 }], { duration: 180, easing: "ease-out", fill: "none" }); }
+      cap.style.transform = ""; cap.style.opacity = ""; pack.style.transform = "";
+      q(".rip-hint").textContent = "← Drag the seal to rip, or tap the pack";
+    }
+  }
+  for (const event of ["pointerup", "pointercancel", "lostpointercapture"]) pack.addEventListener(event, releaseSeal);
   pack.focus({ preventScroll: true });
 }
 
@@ -1186,8 +1233,8 @@ function showResult(r, o) {
   const close = () => { if (o.closeOpening) o.closeOpening(); else o.remove(); };
   const q = id => o.querySelector("#" + id);
   if (r.preview) {
-    q("ores").innerHTML = `<span class="rp" style="background:#d8b46516;color:#d8bc83">MOTION & SOUND STUDY 02</span><h2>How does this feel?</h2><p class="sub">Brand artwork study only. No affiliation, order, or wallet card. Drag the card to inspect the light.</p><div class="sacts"><button class="btn light" id="previewReplay" type="button">Replay opening</button><button class="btn soft" id="previewBack" type="button">Back to pack</button></div>`;
-    q("previewReplay").onclick = () => { close(); previewOpening(r.p); };
+    q("ores").innerHTML = `<span class="rp" style="background:#d8b46516;color:#d8bc83">${r.landing ? "STARTER DEMO" : "MOTION & SOUND STUDY 02"}</span><h2>${r.landing ? "Your first reveal." : "How does this feel?"}</h2><p class="sub">${r.landing ? "Sample artwork. Not redeemable or saved. Drag the card to catch the light." : "Brand artwork study only. No affiliation, order, or wallet card. Drag the card to inspect the light."}</p><div class="sacts"><button class="btn light" id="previewReplay" type="button">${r.landing ? "Open again" : "Replay opening"}</button><button class="btn soft" id="previewBack" type="button">${r.landing ? "Explore packs" : "Back to pack"}</button></div>`;
+    q("previewReplay").onclick = () => { close(); previewOpening(r.p, r.landing); };
     q("previewBack").onclick = close;
     return;
   }
@@ -1230,6 +1277,11 @@ function showBrand(s) {
 /* ---------- Bindings ---------- */
 const bind = {
   home() {
+    $("guestStart").onclick = () => previewOpening(starterPack(), true);
+    $("guestBrowse").onclick = () => go("browse");
+    previewOpening(starterPack(), true);
+  },
+  browse() {
     $("pOpen").onclick = () => openPack("quick-bite");
     $("view").querySelectorAll("[data-cat]").forEach(b => b.onclick = () => { S.cat = S.cat === b.dataset.cat ? "all" : b.dataset.cat; $("view").querySelectorAll("[data-cat]").forEach(c => c.setAttribute("aria-pressed", c.dataset.cat === S.cat)); renderPacks(); });
     renderPacks();
@@ -1256,7 +1308,7 @@ async function start(data) {
   S = Object.assign(fresh(), (data && data.S) || {}, { catalog: null, pulls: [], user: null, wstate: "signedout" });
   // The old play-money wallet held fabricated cards and barcodes; it is never shown as inventory.
   try { localStorage.removeItem("chefpack.app.v3"); } catch (e) {}
-  if (!({ home: 1, cards: 1, wallet: 1 })[S.page]) S.page = "home";
+  if (!({ home: 1, browse: 1, cards: 1, wallet: 1 })[S.page]) S.page = "home";
   busy = false;
   $("view").addEventListener("scroll", () => $("top").classList.toggle("shadow", $("view").scrollTop > 4), { passive: true });
   addEventListener("keydown", e => { if (e.key === "Escape" && !busy) { closeSheet(); document.querySelector(".opener")?.remove(); } });
