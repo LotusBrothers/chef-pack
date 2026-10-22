@@ -387,6 +387,64 @@
   .game-fallback { min-height:80vh; display:grid; align-content:center; text-align:center; gap:15px; }
   @media(max-height:740px) { .game-entry .rip-heading{margin-top:20px}.game-entry .rip-scene{height:310px;min-height:280px}.game-entry .rip-pack{width:190px}.game-entry .guest-note{margin-top:12px} }
 
+
+  .brand-choices { display:flex; justify-content:center; gap:6px; margin:16px 0 0; flex:none; }
+  .brand-choices button { color:#d6c7b4; background:#ffffff08; border:1px solid #ffffff16; border-radius:99px; padding:9px 12px; font-size:11px; min-height:38px; }
+  .brand-choices button[aria-pressed="true"] { color:#20170d; background:#f3d09e; border-color:#f3d09e; }
+  .reward-compare { width:min(100%,390px); margin:15px 0 10px; flex:none; }
+  .reward-compare>p { font-size:11px; color:#d0c2b0; margin:0 0 9px; text-align:center; }
+  .reward-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; }
+  .reward-grid button { color:#eee4d4; background:#ffffff08; border:1px solid #ffffff20; border-radius:10px; min-height:44px; padding:7px 5px; font-size:10px; line-height:1.3; }
+  .reward-grid button span { display:inline-grid; place-items:center; width:16px; height:16px; border:1px solid #dcb98455; border-radius:50%; margin-right:4px; font-size:9px; color:#e0b97e; }
+  .reward-grid button[aria-pressed="true"] { border-color:#e4bb7f; background:#ce995b20; }
+  .reward-grid button:disabled { opacity:.4; }
+  .reward-status { display:block; min-height:14px; margin-top:8px; text-align:center; color:#d3b884; font-size:10px; }
+  .collect-card.branded { background:radial-gradient(circle at 75% 5%,#ffffff25,transparent 60%),var(--brand-bg); color:var(--brand-ink); border-color:var(--brand-accent); }
+  .brand-orbit { background:var(--brand-orbit); }
+  .branded-subway .brand-orbit img { width:122px; height:70px; }
+  .branded-mcdonalds .brand-orbit img { width:100px; height:90px; }
+  .branded-taco-bell .brand-orbit img { width:90px; height:103px; }
+  .game-entry:not(.is-revealed) .rip-scene { height:280px; min-height:280px; margin-top:10px; }
+  .game-entry:not(.is-revealed) .rip-pack { width:170px; }
+  .game-entry .rip-heading { margin-top:20px; }
+  .game-entry .rip-heading h2 { font-size:32px; }
+  .game-entry .guest-note { margin-top:9px; font-size:7px; }
+  .game-entry .guest-note small { margin-top:3px; font-size:10px; }
+  .game-entry .rip-hint { margin-top:8px; font-size:12px; }
+  .game-entry.is-revealed .rip-scene { height:350px; min-height:350px; }
+  @media(max-width:400px) { .brand-choices button { padding:8px 11px; } .reward-grid button { font-size:9px; } }
+
+
+  .cloche-study .rip-scene { height:300px; min-height:300px; }
+  .cloche-study .rip-pack { width:min(84vw,330px); aspect-ratio:1.38; transform:none; }
+  .cloche-study.game-entry:not(.is-revealed) .rip-pack { width:min(84vw,330px); aspect-ratio:1.38; transform:none; }
+  .cloche-study .rip-body { clip-path:none; }
+  .silver-cloche { width:100%; height:100%; overflow:visible; filter:drop-shadow(0 14px 10px #0004); }
+  .serving-plate { position:absolute; z-index:1; width:min(93vw,370px); height:94px; bottom:0; opacity:0; pointer-events:none; }
+  .serving-plate svg { width:100%; height:100%; }
+  .cloche-study .rip-touch { top:19%; right:46%; border-color:#ffffff44; background:#393b3c; color:#fff; width:22px;height:22px;font-size:12px; }
+  .serving-steam { position:absolute; bottom:40px; left:20%; width:60%; height:190px; z-index:4; pointer-events:none; }
+  .serving-steam i { position:absolute; width:75px; height:170px; background:radial-gradient(ellipse,#fff7e94d,transparent 66%); opacity:0; left:0; }
+  .serving-steam i:nth-child(2){left:30%;height:200px}.serving-steam i:nth-child(3){left:60%;height:150px}
+  .cloche-study .rip-card-shell { z-index:2; }
+  .cloche-study .rip-heading h2 { max-width:350px; font-size:30px; }
+  .cloche-study .brand-choices { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); width:min(100%,390px); gap:4px; }
+  .cloche-study .brand-choices button { padding:7px 4px; font-size:9px; min-height:36px; }
+  .cloche-study:not(.is-revealed) .rip-scene { height:265px;min-height:265px; }
+  .cloche-study.is-revealed .serving-plate { bottom:-12px; }
+  .branded-slim-chickens .brand-orbit img { width:112px; height:112px; }
+  @media(max-height:740px){.cloche-study:not(.is-revealed) .rip-scene{height:230px;min-height:230px}.cloche-study .rip-heading{margin-top:12px}.cloche-study .rip-heading h2{font-size:27px}.cloche-study .rip-pack{width:280px}}
+
+
+  /* Shared CSS 3D stage: card lies in the dish, then pivots around its front edge. */
+  .cloche-study .rip-scene,.cloche-study:not(.is-revealed) .rip-scene,.cloche-study.is-revealed .rip-scene {height:320px;min-height:320px;perspective:900px;perspective-origin:50% 42%;}
+  .cloche-study .rip-card-shell {width:min(57vw,220px);bottom:16px;left:0;right:0;margin:auto;transform-origin:50% 100%;transform-style:preserve-3d;}
+  .cloche-study .rip-pack,.cloche-study.game-entry:not(.is-revealed) .rip-pack {bottom:18px;}
+  .cloche-study .rip-tilt {transform-style:preserve-3d;}
+  .cloche-study .serving-plate,.cloche-study.is-revealed .serving-plate {bottom:0;}
+  .card-ground-shadow {position:absolute;z-index:1;bottom:40px;width:175px;height:35px;border-radius:50%;background:radial-gradient(ellipse,#000a,transparent 70%);opacity:0;pointer-events:none;}
+  .cloche-study .rip-card-front {border:1px solid #e8d9bc;box-shadow:0 2px 0 #99866a,0 4px 0 #4c453b;}
+
   /* ---------- Wallet ---------- */
   .pagehead { padding-top: 6px; }
   .pagehead h1 { margin: 0; font: 700 32px/1.1 var(--display); letter-spacing: -.035em; }
@@ -920,8 +978,20 @@ async function takeRedirect() {
 /* ---------- Buy a test pack: one logical attempt per intentional purchase ---------- */
 /* ---------- Sound and haptics (only after the viewer taps; muted by the speaker button) ---------- */
 const TIER_COLOR = ["#ffffff", "#2fd27a", "#4f8dff", "#ffc83d"];
-let AC = null, contactBuffer = null, contactLoading = null;
-const contactSources = new Set();
+const REWARD_SOUNDS = [
+  { id: "bright-unlock", name: "Bright unlock" }, { id: "coin-cascade", name: "Coin cascade" },
+  { id: "level-up", name: "Level up" }, { id: "warm-glow", name: "Warm glow" },
+  { id: "arcade-win", name: "Arcade win" }, { id: "grand-reveal", name: "Grand reveal" }
+];
+const CARD_STUDIES = [
+  { id: "mcdonalds", name: "McDonald’s", bg: "#c92724", ink: "#fff3d0", orbit: "#bb201e", accent: "#ffce25" },
+  { id: "subway", name: "Subway", bg: "#087b40", ink: "#fff3c4", orbit: "#fff9e9", accent: "#ffcb21" },
+  { id: "taco-bell", name: "Taco Bell", bg: "#682dd0", ink: "#ffffff", orbit: "#ffffff", accent: "#d6b7ff" },
+  { id: "slim-chickens", name: "Slim Chickens", bg: "#b21f32", ink: "#ffffff", orbit: "#ffffff", accent: "#f0d5b4" }
+];
+let selectedReward = "bright-unlock", selectedCard = "mcdonalds";
+let AC = null;
+const rewardBuffers = new Map(), rewardLoads = new Map(), contactSources = new Set();
 function audio(resume = true) {
   try {
     AC ||= new (window.AudioContext || window.webkitAudioContext)({ latencyHint: "interactive" });
@@ -929,25 +999,32 @@ function audio(resume = true) {
     return AC;
   } catch { return null; }
 }
-function prepareContact() {
-  if (contactBuffer) return Promise.resolve(true);
-  if (contactLoading) return contactLoading;
-  const a = audio(false); if (!a) return Promise.resolve(false);
-  contactLoading = fetch("./audio/contact.wav").then(r => {
+function prepareContact(id = selectedReward) {
+  if (rewardBuffers.has(id)) return Promise.resolve(true);
+  if (rewardLoads.has(id)) return rewardLoads.get(id);
+  const a = audio(false); if (!a || !REWARD_SOUNDS.some(s => s.id === id)) return Promise.resolve(false);
+  const pending = fetch("./audio/" + id + ".wav").then(r => {
     if (!r.ok) throw new Error("Sound unavailable"); return r.arrayBuffer();
-  }).then(bytes => a.decodeAudioData(bytes)).then(buffer => { contactBuffer = buffer; return true; })
-    .catch(() => false).finally(() => { contactLoading = null; });
-  return contactLoading;
+  }).then(bytes => a.decodeAudioData(bytes)).then(buffer => { rewardBuffers.set(id, buffer); return true; })
+    .catch(() => false).finally(() => rewardLoads.delete(id));
+  rewardLoads.set(id, pending); return pending;
+}
+function comparisonControls() {
+  return '<section class="reward-compare" aria-label="Reward sound comparison"><p>Tap a sound. The opening plays automatically.</p><div class="reward-grid">' + REWARD_SOUNDS.map((sound,i) => '<button type="button" data-reward="' + sound.id + '" disabled aria-pressed="' + (sound.id === selectedReward) + '"><span>' + (i+1) + '</span>' + sound.name + '</button>').join('') + '</div><small class="reward-status" role="status">Loading reward sounds…</small></section>';
+}
+function brandControls() {
+  return '<div class="brand-choices" role="group" aria-label="Choose card artwork">' + CARD_STUDIES.map(brand => '<button type="button" data-study="' + brand.id + '" aria-pressed="' + (brand.id === selectedCard) + '">' + brand.name + '</button>').join('') + '</div>';
 }
 function stopContact() { for (const source of contactSources) { try { source.stop(); } catch {} } contactSources.clear(); }
 function sfx(kind, tier = 0, dur = 1) {
   if (S.muted) return; const a = audio(); if (!a) return; const now = a.currentTime;
   try {
     if (kind === "impact") {
-      // Edited CC0 field recording; predecoded so the reveal never waits on network/decoding.
-      if (!contactBuffer || a.state !== "running") return;
+      // Pre-rendered CC0 reward mix; no golf sample or realtime synthesis.
+      const buffer = rewardBuffers.get(selectedReward);
+      if (!buffer || a.state !== "running") return;
       const source = a.createBufferSource(), gain = a.createGain();
-      source.buffer = contactBuffer; gain.gain.value = .8;
+      source.buffer = buffer; gain.gain.value = .8;
       source.connect(gain).connect(a.destination); contactSources.add(source);
       source.onended = () => { contactSources.delete(source); source.disconnect(); gain.disconnect(); };
       source.start(now); return true;
@@ -1051,15 +1128,27 @@ function pendingSheet(a) {
   m.querySelector("#pLater").onclick = closeSheet;
 }
 
+function silverCloche() {
+  return '<svg class="silver-cloche" viewBox="0 0 360 260" aria-hidden="true"><defs><linearGradient id="clocheMetal" x1="0" x2="1"><stop stop-color="#555d64"/><stop offset=".12" stop-color="#c7cdd2"/><stop offset=".28" stop-color="#f7f8f8"/><stop offset=".43" stop-color="#a1a9ae"/><stop offset=".56" stop-color="#e7e9ea"/><stop offset=".75" stop-color="#737d85"/><stop offset=".9" stop-color="#bdc4c8"/><stop offset="1" stop-color="#454e55"/></linearGradient><linearGradient id="clocheShade" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffffff" stop-opacity=".6"/><stop offset=".42" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#121b22" stop-opacity=".6"/></linearGradient><radialGradient id="clocheHighlight" cx=".3" cy=".15" r=".8"><stop stop-color="#fff" stop-opacity=".9"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/></radialGradient></defs><ellipse cx="180" cy="235" rx="160" ry="17" fill="#172028" opacity=".5"/><path d="M25 225C29 123 88 55 180 55S331 123 335 225Z" fill="url(#clocheMetal)" stroke="#e0e7e9" stroke-width="1.3"/><path d="M25 225C29 123 88 55 180 55S331 123 335 225Z" fill="url(#clocheShade)"/><path d="M25 225C29 123 88 55 180 55S331 123 335 225Z" fill="url(#clocheHighlight)"/><path d="M66 185C80 124 111 89 151 78" stroke="#fff" stroke-opacity=".5" stroke-width="4" fill="none"/><ellipse cx="180" cy="225" rx="157" ry="13" fill="url(#clocheMetal)" stroke="#e7ecee" stroke-width="2"/><path d="M24 227Q180 252 336 227" fill="none" stroke="#333e46" stroke-width="5"/><path d="M167 56V42Q167 29 180 29Q193 29 193 42V56" fill="none" stroke="#414b53" stroke-width="9"/><path d="M168 53V42Q168 31 180 31Q191 31 191 42V53" fill="none" stroke="url(#clocheMetal)" stroke-width="6"/><ellipse cx="180" cy="57" rx="24" ry="6" fill="url(#clocheMetal)" stroke="#dce2e5"/></svg>';
+}
+function servingPlate() {
+  return '<div class="serving-plate" aria-hidden="true"><svg viewBox="0 0 400 100"><defs><radialGradient id="porcelain"><stop offset=".1" stop-color="#d7d6d1"/><stop offset=".54" stop-color="#ffffff"/><stop offset=".67" stop-color="#babdbd"/><stop offset=".72" stop-color="#f9f8f4"/><stop offset="1" stop-color="#d7d8d6"/></radialGradient></defs><ellipse cx="200" cy="60" rx="190" ry="35" fill="#000" opacity=".4"/><ellipse cx="200" cy="45" rx="190" ry="39" fill="url(#porcelain)" stroke="#fff" stroke-width="2"/><ellipse cx="200" cy="45" rx="135" ry="23" fill="none" stroke="#b7babb" stroke-width="1" opacity=".6"/></svg></div>';
+}
+
 function revealFace(res) {
-  if (res.preview) return '<div class="collect-card branded"><div class="collect-top"><span>CHEF PACK</span><span>DESIGN SAMPLE</span></div><div class="brand-orbit"><img src="./art/burger-king.svg" alt="Burger King" width="114" height="124"></div><div class="collect-name">Burger King</div><div class="collect-value">' + money(res.value || 15) + '<small>ILLUSTRATIVE VALUE</small></div><div class="collect-bottom"><span>BRAND STUDY / 001</span><span>NOT REDEEMABLE</span></div></div>';
+  if (res.preview) {
+    const brand = CARD_STUDIES.find(b => b.id === selectedCard);
+    return '<div class="collect-card branded branded-' + brand.id + '" style="--brand-bg:' + brand.bg + ';--brand-ink:' + brand.ink + ';--brand-orbit:' + brand.orbit + ';--brand-accent:' + brand.accent + '"><div class="collect-top"><span>CHEF PACK</span><span>DESIGN SAMPLE</span></div><div class="brand-orbit"><img src="./art/' + brand.id + '.svg" alt="' + brand.name + '" width="114" height="124"></div><div class="collect-name">' + brand.name + '</div><div class="collect-value">' + money(res.value || 15) + '<small>ILLUSTRATIVE VALUE</small></div><div class="collect-bottom"><span>BRAND STUDY</span><span>NOT REDEEMABLE</span></div></div>';
+  }
   return '<div class="collect-card"><div class="collect-top"><span>CHEF PACK</span><span>TEST EDITION</span></div><div class="collect-monogram"><svg aria-hidden="true"><use href="#hat"/></svg></div><div class="collect-name">' + esc(res.s.n) + '</div><div class="collect-value">' + (res.value !== null ? money(res.value) : '') + '<small>DEMO CARD</small></div><div class="collect-bottom"><span>TEST MODE</span><span>NOT REDEEMABLE</span></div></div>';
 }
 
 /* ---------- Physical reveal: presentation only; result supplied by caller ---------- */
-function previewOpening(p, landing = false) {
+function previewOpening(p, landing = false, autoplay = false) {
   if (busy) return;
-  reveal(p, { p, s: TEST_SPOT, t: 0, value: p.price || null, preview: true, landing });
+  const opener = reveal(p, { p, s: TEST_SPOT, t: 0, value: p.price || null, preview: true, landing });
+  if (autoplay) opener?.startOpening();
+  return opener;
 }
 function reveal(p, res) {
   if (busy) return;
@@ -1068,16 +1157,16 @@ function reveal(p, res) {
   const previousFocus = document.activeElement, app = $("app"), wasInert = app?.inert;
   if (app) app.inert = true;
   const o = document.createElement("div");
-  o.className = "opener rip-opener" + (res.landing ? " game-entry" : "");
+  o.className = "opener rip-opener" + (res.landing ? " game-entry" : "") + (res.preview ? " cloche-study" : "");
   o.setAttribute("role", "dialog"); o.setAttribute("aria-modal", "true"); o.setAttribute("aria-labelledby", "ripTitle");
   const note = res.landing ? "CHEF PACK · PLAY THE DEMO" : res.preview ? "MOTION PREVIEW · NO ORDER" : res.api ? "TEST MODE · NOT REDEEMABLE" : "FREE PICK · NO CARD";
   o.innerHTML = `<div class="rip-controls"><button class="rip-sound" type="button" aria-label="${S.muted ? "Turn sound on" : "Mute sound"}">${icon(S.muted ? "muted" : "sound")}</button><button class="rip-skip" type="button">Skip animation</button><button class="rip-close" type="button" aria-label="${res.landing ? "Choose a pack" : "Close opening"}">${res.landing ? "Choose pack" : icon("close")}</button></div>
-    <header class="rip-heading"><p class="rip-kicker">${note}</p><h2 id="ripTitle">${res.landing ? "Dinner starts here." : "A little anticipation."}</h2><p class="rip-caption">${res.landing ? "Your starter pack is ready." : esc(p.name) + (res.preview ? " · preview only" : "")}</p></header>
-    <div class="rip-scene"><span class="rip-halo" aria-hidden="true"></span><span class="rip-floor" aria-hidden="true"></span>
+    <header class="rip-heading"><p class="rip-kicker">${note}</p><h2 id="ripTitle">${res.landing ? "Something good is under here." : "A little anticipation."}</h2><p class="rip-caption">${res.landing ? "Lift the cover. Find your card." : esc(p.name) + (res.preview ? " · preview only" : "")}</p></header>
+    ${res.preview ? brandControls() : ""}<div class="rip-scene">${res.preview ? servingPlate() + '<span class="card-ground-shadow" aria-hidden="true"></span><div class="serving-steam" aria-hidden="true"><i></i><i></i><i></i></div>' : ""}<span class="rip-halo" aria-hidden="true"></span><span class="rip-floor" aria-hidden="true"></span>
       <div class="rip-card-shell"><div class="rip-tilt" tabindex="-1" role="img" aria-label="Card preview"><div class="rip-card-turn"><div class="rip-card-face rip-card-back"><svg aria-hidden="true"><use href="#hat"/></svg><b>CHEF PACK</b><small>GOOD THINGS INSIDE</small></div><div class="rip-card-face rip-card-front">${revealFace(res)}<span class="rip-holo"></span><span class="rip-glare"></span><span class="rip-gleam"></span><span class="rip-edge"></span></div></div></div></div>
-      <button class="rip-pack" type="button" aria-label="Tear open ${esc(p.name)}"><span class="rip-wrap rip-body">${foil(p)}</span><span class="rip-wrap rip-cap">${foil(p)}</span><span class="rip-seam" aria-hidden="true"></span><span class="rip-touch" aria-hidden="true">↗</span></button>
+      <button class="rip-pack" type="button" aria-label="${res.preview ? "Lift silver cover" : "Tear open " + esc(p.name)}"><span class="rip-wrap rip-body">${res.preview ? silverCloche() : foil(p)}</span><span class="rip-wrap rip-cap" ${res.preview ? "hidden" : ""}>${res.preview ? "" : foil(p)}</span><span class="rip-seam" aria-hidden="true" ${res.preview ? "hidden" : ""}></span><span class="rip-touch" aria-hidden="true">${res.preview ? "↑" : "↗"}</span></button>
       <div class="rip-shards" aria-hidden="true">${Array.from({ length: 6 }, () => "<i></i>").join("")}</div>
-    </div><p class="rip-hint" role="status">${res.landing ? "← Drag the seal to rip, or tap the pack" : "Tap the pack<span></span>or swipe across the seam"}</p>${res.landing ? '<p class="guest-note">FREE PREVIEW · NO ACCOUNT NEEDED<small>No purchase. No gift card.</small></p>' : ""}${res.preview && !res.landing ? '<button class="rip-audition" type="button" disabled>Loading contact sound…</button>' : ""}<div class="ores" id="ores" hidden></div>`;
+    </div><p class="rip-hint" role="status">${res.landing ? "Tap the silver cover to reveal" : "Tap the pack<span></span>or swipe across the seam"}</p>${res.landing ? '<p class="guest-note">FREE PREVIEW · NO ACCOUNT NEEDED<small>No purchase. No gift card.</small></p>' : ""}${res.preview ? comparisonControls() : ""}<div class="ores" id="ores" hidden></div>`;
   document.body.appendChild(o);
   const q = sel => o.querySelector(sel), pack = q(".rip-pack"), card = q(".rip-card-shell"), turn = q(".rip-card-turn"), halo = q(".rip-halo");
   const tilt = q(".rip-tilt");
@@ -1101,13 +1190,24 @@ function reveal(p, res) {
   tilt.onpointermove = e => { if (phase !== "revealed") return; const r = tilt.getBoundingClientRect(); aimTilt(-(e.clientY - r.top - r.height / 2) / r.height * 16, (e.clientX - r.left - r.width / 2) / r.width * 20); };
   tilt.onpointerleave = tilt.onpointercancel = tilt.onblur = () => aimTilt(0, 0);
   tilt.onkeydown = e => { const d = { ArrowLeft: [0,-10], ArrowRight: [0,10], ArrowUp: [8,0], ArrowDown: [-8,0] }[e.key]; if (d) { e.preventDefault(); aimTilt(...d); } };
-  prepareContact().then(ready => { const button = q(".rip-audition"); if (!button || phase === "closed") return; button.disabled = !ready; button.textContent = ready ? "Hear contact sound" : "Sound unavailable · animation still works"; });
-  if (q(".rip-audition")) q(".rip-audition").onclick = async e => {
-    const button = e.currentTarget, a = audio();
-    if (a?.state === "suspended") { try { await a.resume(); } catch {} }
-    if (phase === "closed") return;
-    button.textContent = S.muted ? "Sound is muted · use speaker to enable" : sfx("impact") ? "Played recorded contact · Hear again" : "Audio unavailable · try again";
-  };
+  if (res.preview) {
+    for (const sound of REWARD_SOUNDS) prepareContact(sound.id).then(ready => {
+      if (phase === "closed") return;
+      const button = q('[data-reward="' + sound.id + '"]');
+      button.disabled = !ready || !["ready", "revealed"].includes(phase);
+      if (!ready) button.title = "Sound failed to load; reload to retry";
+      if (phase === "ready" && rewardBuffers.size === REWARD_SOUNDS.length) q(".reward-status").textContent = "Selected: " + REWARD_SOUNDS.find(s => s.id === selectedReward).name;
+    });
+    o.querySelectorAll("[data-reward]").forEach(button => button.onclick = async () => {
+      if (phase === "opening" || phase === "arriving") return;
+      const id = button.dataset.reward, a = audio();
+      if (a?.state === "suspended") { try { await a.resume(); } catch {} }
+      if (phase === "closed") return;
+      if (!a || a.state !== "running") { q(".reward-status").textContent = "Audio unavailable. Try again or enable device sound."; return; }
+      selectedReward = id; S.muted = false; dispose(); previewOpening(p, res.landing, true);
+    });
+    o.querySelectorAll("[data-study]").forEach(button => button.onclick = () => { if (phase === "opening") return; selectedCard = button.dataset.study; dispose(); previewOpening(p, res.landing); });
+  } else prepareContact();
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   let phase = "ready", pointer = null;
   const animations = new Set();
@@ -1132,11 +1232,13 @@ function reveal(p, res) {
     if (phase === "closed" || phase === "revealed") return;
     phase = "revealed"; cancelAnimations(); busy = false;
     pack.hidden = true;
+    if (q(".serving-plate")) q(".serving-plate").style.opacity = "1";
     card.style.opacity = "1"; card.style.transform = "none";
     turn.style.transform = "rotateY(180deg)"; halo.style.opacity = ".45";
     q(".rip-shards").hidden = true; q(".rip-hint").hidden = true; q(".rip-skip").hidden = true;
-    q("#ripTitle").textContent = res.landing ? "Nice rip." : res.preview ? "The reveal, reimagined." : res.free ? "Dinner, decided." : "Your card is here.";
+    q("#ripTitle").textContent = res.landing ? "Freshly revealed." : res.preview ? "The reveal, reimagined." : res.free ? "Dinner, decided." : "Your card is here.";
     o.classList.add("is-revealed"); tilt.tabIndex = 0; tilt.setAttribute("aria-label", "Inspect card: drag to tilt or use arrow keys");
+    if (res.preview) { o.querySelectorAll("[data-reward]").forEach(b => b.disabled = !rewardBuffers.has(b.dataset.reward)); o.querySelectorAll("[data-study]").forEach(b => b.disabled = false); }
     showResult(res, o); q("#ores").hidden = false;
     if (!reduced) animate(q("#ores"), [{ opacity: 0, transform: "translateY(10px)" }, { opacity: 1, transform: "none" }], { duration: 220, easing: "ease-out" });
     q("#ores button")?.focus({ preventScroll: true });
@@ -1145,8 +1247,26 @@ function reveal(p, res) {
     if (phase !== "ready") return;
     const capStart = q(".rip-cap").style.transform || "translate3d(0,0,0) rotate(0deg)", capOpacity = q(".rip-cap").style.opacity || 1;
     phase = "opening"; q(".rip-skip").hidden = false; pack.style.transform = ""; pack.disabled = true; q(".rip-hint").textContent = "Opening…";
-    if (reduced) { finish(); return; }
-    audio();
+    if (res.preview) { o.querySelectorAll("[data-reward], [data-study]").forEach(b => b.disabled = true); q(".reward-status").textContent = "Playing: " + REWARD_SOUNDS.find(s => s.id === selectedReward).name; }
+    audio(); prepareContact();
+    if (reduced) { const played = sfx("impact"); if (res.preview) q(".reward-status").textContent = played ? "Played: " + REWARD_SOUNDS.find(s => s.id === selectedReward).name + " · reduced motion" : "Sound unavailable or muted"; finish(); return; }
+    if (res.preview) {
+      const lid = q(".rip-body");
+      turn.style.transform = "rotateY(180deg)";
+      q(".rip-touch").hidden = true;
+      animate(lid, [{ transform: "translate3d(0,0,0) rotate(0deg)", opacity: 1 }, { transform: "translate3d(35px,-75px,0) rotate(-8deg)", opacity: 1, offset: .35 }, { transform: "translate3d(105px,-230px,0) rotate(-18deg)", opacity: 0 }], { duration: 760, easing: "cubic-bezier(.2,.7,.25,1)" });
+      q(".serving-steam").querySelectorAll("i").forEach((el,i) => animate(el, [{ opacity: 0, transform: "translateY(40px) scale(.6)" }, { opacity: .5, offset: .25 }, { opacity: 0, transform: "translateY(-110px) scale(1.4)" }], { duration: 1050, delay: 100 + i * 100, easing: "ease-out" }));
+      animate(halo, [{ opacity: 0, transform: "scale(.75)" }, { opacity: .6, transform: "scale(1)" }], { duration: 650 });
+      animate(q(".card-ground-shadow"), [{ opacity: .55, transform: "scale(.65)" }, { opacity: .55, transform: "scale(.65)", offset: .4 }, { opacity: .18, transform: "scale(1.05)" }], { duration: 1250, delay: 100 });
+      await animate(card, [
+        { opacity: 0, transform: "translate3d(0,0,0) rotateX(74deg) rotateZ(-8deg) scale(.58)" },
+        { opacity: 1, transform: "translate3d(0,0,0) rotateX(74deg) rotateZ(-8deg) scale(.58)", offset: .18 },
+        { opacity: 1, transform: "translate3d(0,0,0) rotateX(74deg) rotateZ(-8deg) scale(.58)", offset: .4 },
+        { opacity: 1, transform: "translate3d(0,-18px,35px) rotateX(36deg) rotateZ(3deg) scale(.85)", offset: .7 },
+        { opacity: 1, transform: "translate3d(0,-4px,5px) rotateX(-6deg) rotateZ(-2deg) scale(1)", offset: .92 },
+        { opacity: 1, transform: "translate3d(0,0,0) rotateX(0deg) rotateZ(0deg) scale(1)" }
+      ], { duration: 1250, delay: 100, easing: "cubic-bezier(.2,.65,.25,1)" });
+    } else {
     await animate(pack, [{ transform: "rotate(-3deg) scale(1)" }, { transform: "rotate(-2deg) scale(.97)" }, { transform: "rotate(0deg) scale(1)" }], { duration: 160, easing: "ease-out" });
     if (phase !== "opening") return;
     sfx("rip"); buzz(12);
@@ -1159,11 +1279,13 @@ function reveal(p, res) {
       animate(el, [{ opacity: 0, transform: "translate(0,0) rotate(0deg)" }, { opacity: .65, offset: .15 }, { opacity: 0, transform: `translate(${dx}px,${dy}px) rotate(${i * 40 - 90}deg)` }], { duration: 600, delay: i * 12, easing: "ease-out" });
     });
     await animate(card, [{ opacity: 0, transform: "translate3d(0,65px,0) rotate(-7deg) scale(.78)" }, { opacity: 1, offset: .2 }, { opacity: 1, transform: "translate3d(0,-12px,0) rotate(-5deg) scale(1.02)", offset: .8 }, { opacity: 1, transform: "translate3d(0,0,0) rotate(-3deg) scale(1)" }], { duration: 780, delay: 60, easing: "cubic-bezier(.18,.8,.24,1)" });
+    }
     if (phase !== "opening") return;
     pack.hidden = true;
-    await animate(turn, [{ transform: "rotateY(0deg)" }, { transform: "rotateY(180deg)" }], { duration: 460, easing: "cubic-bezier(.25,.6,.2,1)" });
+    if (!res.preview) await animate(turn, [{ transform: "rotateY(0deg)" }, { transform: "rotateY(180deg)" }], { duration: 460, easing: "cubic-bezier(.25,.6,.2,1)" });
     if (phase !== "opening") return;
-    sfx("impact"); buzz(10);
+    const played = sfx("impact"); buzz(10);
+    if (res.preview) q(".reward-status").textContent = played ? "Played: " + REWARD_SOUNDS.find(s => s.id === selectedReward).name + " · choose another to compare" : "Sound unavailable or muted · enable sound and retry";
     animate(halo, [{ opacity: .8, transform: "scale(1.04)" }, { opacity: .45, transform: "scale(1)" }], { duration: 380, easing: "ease-out" });
     animate(card, [{ transform: "rotate(-3deg) scale(1)" }, { transform: "rotate(1deg) scale(1.025)", offset: .55 }, { transform: "rotate(0deg) scale(1)" }], { duration: 560, easing: "cubic-bezier(.16,.8,.3,1)" });
     await animate(q(".rip-gleam"), [{ transform: "translateX(-115%)" }, { transform: "translateX(115%)" }], { duration: 360, easing: "ease-in-out" });
@@ -1191,15 +1313,15 @@ function reveal(p, res) {
   pack.addEventListener("pointerdown", e => { if (phase !== "ready") return; pointer = { id: e.pointerId, x: e.clientX, y: e.clientY, progress: 0 }; dragged = false; audio(); prepareContact(); pack.setPointerCapture?.(e.pointerId); });
   pack.addEventListener("pointermove", e => {
     if (pointer?.id !== e.pointerId || phase !== "ready") return;
-    const dx = pointer.x - e.clientX;
+    const dx = res.preview ? pointer.y - e.clientY : pointer.x - e.clientX;
     pointer.progress = Math.min(1, Math.max(0, dx / Math.max(70, pack.clientWidth * .45)));
     if (Math.abs(dx) > 6) dragged = true;
     if (!reduced) {
-      q(".rip-cap").style.transform = "translate3d(" + (-pointer.progress * 65) + "px," + (-pointer.progress * 32) + "px,0) rotate(" + (-pointer.progress * 22) + "deg)";
-      q(".rip-cap").style.opacity = 1 - pointer.progress * .3;
+      (res.preview ? q(".rip-body") : q(".rip-cap")).style.transform = "translate3d(" + (-pointer.progress * 65) + "px," + (-pointer.progress * 32) + "px,0) rotate(" + (-pointer.progress * 22) + "deg)";
+      if (!res.preview) q(".rip-cap").style.opacity = 1 - pointer.progress * .3;
       pack.style.transform = "rotate(" + (-3 + pointer.progress * 4) + "deg)";
     }
-    q(".rip-hint").textContent = pointer.progress >= .72 ? "Release to open" : "← Keep pulling the seal";
+    q(".rip-hint").textContent = pointer.progress >= .72 ? "Release to reveal" : (res.preview ? "↑ Lift the cover" : "← Keep pulling the seal");
   });
   function releaseSeal(e) {
     if (pointer?.id !== e.pointerId) return;
@@ -1207,14 +1329,35 @@ function reveal(p, res) {
     pointer = null;
     if (complete) { rip(); return; }
     if (phase === "ready") {
-      const cap = q(".rip-cap");
+      const cap = res.preview ? q(".rip-body") : q(".rip-cap");
       if (!reduced) { animate(cap, [{ transform: cap.style.transform || "none", opacity: cap.style.opacity || 1 }, { transform: "none", opacity: 1 }], { duration: 180, easing: "ease-out", fill: "none" }); }
       cap.style.transform = ""; cap.style.opacity = ""; pack.style.transform = "";
       q(".rip-hint").textContent = "← Drag the seal to rip, or tap the pack";
     }
   }
   for (const event of ["pointerup", "pointercancel", "lostpointercapture"]) pack.addEventListener(event, releaseSeal);
+  async function serve() {
+    if (!res.preview || reduced) { if (q(".serving-plate")) q(".serving-plate").style.opacity = "1"; return; }
+    phase = "arriving"; pack.disabled = true;
+    o.querySelectorAll("[data-reward], [data-study]").forEach(b => b.disabled = true);
+    q(".reward-status").textContent = "Your covered plate is arriving…";
+    q(".rip-hint").textContent = "Something good is being served.";
+    pack.style.opacity = "0";
+    await animate(q(".serving-plate"), [{ opacity: 0, transform: "translateY(-150px) scale(.9)" }, { opacity: 1, transform: "translateY(5px) scale(1.04)", offset: .75 }, { opacity: 1, transform: "none" }], { duration: 430, easing: "cubic-bezier(.2,.7,.25,1)" });
+    if (phase !== "arriving") return;
+    await animate(pack, [{ opacity: 0, transform: "translateY(-190px) rotate(5deg)" }, { opacity: 1, offset: .2 }, { opacity: 1, transform: "translateY(6px) rotate(-1deg)", offset: .75 }, { opacity: 1, transform: "none" }], { duration: 470, easing: "cubic-bezier(.2,.7,.25,1)" });
+    if (phase !== "arriving") return;
+    phase = "ready"; pack.disabled = false; pack.style.opacity = "1";
+    pack.focus({ preventScroll: true });
+    q(".rip-hint").textContent = "Tap the silver cover to reveal";
+    o.querySelectorAll("[data-reward]").forEach(b => b.disabled = !rewardBuffers.has(b.dataset.reward));
+    o.querySelectorAll("[data-study]").forEach(b => b.disabled = false);
+    q(".reward-status").textContent = "Selected: " + REWARD_SOUNDS.find(s => s.id === selectedReward).name;
+  }
+  const arrival = serve();
+  o.startOpening = async () => { await arrival; return rip(); };
   pack.focus({ preventScroll: true });
+  return o;
 }
 
 
