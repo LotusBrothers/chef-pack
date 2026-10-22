@@ -438,7 +438,8 @@
 
 
   .victory-cascade { position:fixed; inset:0; z-index:10000; pointer-events:none; overflow:hidden; perspective:850px; contain:layout paint; }
-  .experience-tile { background:#181615; border:1px solid #40372e; border-radius:24px; overflow:hidden; color:#f6e9d5; min-width:280px; flex:1; }
+  .experience-grid {display:grid;grid-template-columns:minmax(0,1fr);gap:16px;}
+  .experience-tile { background:#181615; border:1px solid #40372e; border-radius:24px; overflow:hidden; color:#f6e9d5; min-width:0; flex:1; }
   .experience-tile>button { width:100%; border:0; color:inherit; background:radial-gradient(ellipse at 50% 65%,#70503255,transparent 70%); padding:18px 12px 14px; }
   .experience-tile>button:disabled { opacity:.5; }
   .tier-art { position:relative; height:200px; display:grid; place-items:center; perspective:700px; isolation:isolate; }
@@ -449,7 +450,7 @@
   .tier-play {display:block;font-size:11px;font-weight:700;color:#f2ce91;margin-top:5px}.tier-info{padding:16px 20px 20px}.tier-info>small{color:#b9a78d;font-size:10px}.tier-info h3{font-size:21px;margin:7px 0}.tier-info h3 span{float:right;color:#efcb91}.tier-info p{font-size:11px;line-height:1.7;min-height:38px;color:#c9baa6}.tier-details{margin-top:14px;color:#f1d2a2;background:none;border:0;font-size:11px;padding:0;text-align:left}
   .directory-note{font-size:11px;line-height:1.6;padding:15px;color:#947f67}.feature .tier-art{width:260px;height:230px}.feature .fart{overflow:visible}
   .tier-detail-hero{padding:20px;text-align:center;background:radial-gradient(ellipse at center,#edd4ae33,transparent 70%);border-radius:25px}.tier-detail-hero .tier-art{height:230px}.tier-detail-hero h1{font-size:36px;margin:10px 0}.tier-detail-hero p:not(.kicker){color:#807365;font-size:13px}.tier-detail-hero .btn{margin:16px auto 10px;max-width:360px}.tier-detail-hero>small{display:block;font-size:10px;color:#8d8172}.restaurant-preview-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.restaurant-preview-grid button{background:linear-gradient(145deg,#ffffff20,transparent),var(--card-color);color:white;border:1px solid #d8bb8555;border-radius:18px;padding:20px 12px;display:grid;place-items:center;gap:12px;min-height:180px}.restaurant-preview-grid img{height:70px;width:110px;object-fit:contain}.restaurant-preview-grid b{font-size:15px}.restaurant-preview-grid small{font-size:10px;opacity:.8}.restaurant-initials{height:70px;display:grid;place-items:center;font-size:32px;font-weight:800}
-  @media(min-width:760px){.restaurant-preview-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.experience-tile{min-width:290px}}
+  @media(min-width:760px){.restaurant-preview-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.experience-tile{min-width:0}}
   .victory-cascade img { position:absolute; left:0; top:0; width:120px; height:169px; border-radius:8px; box-shadow:0 6px 0 #7a5b30,0 15px 24px #0007; backface-visibility:visible; will-change:transform,opacity; }
   .victory-sweep { position:absolute; inset:-30%; background:radial-gradient(ellipse at center,#ffd38166,transparent 55%); opacity:0; }
   /* Shared CSS 3D stage: card lies in the dish, then pivots around its front edge. */
@@ -807,7 +808,7 @@ function renderPacks() {
   const browsing = S.cat === "all" && !q;
   const liveBody = S.catalog === null
     ? (S.catErr ? `<div class="none" role="alert"><b>Couldn't load packs.</b><br>${esc(S.catErr)}<br><button class="btn soft" id="catRetry" type="button" style="margin-top:10px">Try again</button></div>` : `<div class="none" aria-live="polite">Loading packs…</div>`)
-    : live.length ? `<div class="${browsing && live.length > 2 ? "hscroll" : "tiles"}">${live.map(experienceTile).join("")}</div>` : `<div class="none">${S.catalog.length ? "No test packs match." : "The server has no active packs."}</div>`;
+    : live.length ? `<div class="experience-grid">${live.map(experienceTile).join("")}</div>` : `<div class="none">${S.catalog.length ? "No test packs match." : "The server has no active packs."}</div>`;
   $("packs").innerHTML = `<div class="sh"><h2>${q ? `Results for "${esc(S.q.trim())}"` : "Packs"}</h2><small>${S.catalog ? `${live.length} available` : ""}</small></div>${liveBody}
     <p class="directory-note" role="status">${directoryError || (restaurantDirectory ? `${restaurantDirectory.length} restaurant designs · 3 dining tiers · preview any opening without an account` : "Loading restaurant directory…")}</p>
     <p class="foot">Test mode: nothing is charged and cards are not redeemable.<br>Restaurant choices above are artwork previews.<br>Restaurant names belong to their owners; no affiliation implied.</p>`;
