@@ -1,9 +1,11 @@
-# Free guest mystery-pack simulation
+# Refined Play screen
 
 Readiness: BLOCKED for full real-account integration.
-Tested code: b16e7c7c7adaf0a346295ebd39f3493becfe46d5
+Tested code: b96cce6fa2f083bf375f82d0b9d6124b9d4267c1
 Main included: 65fee1b112d65f4d5a46070d04584c69ada7c467
-Preview: https://chef-pack-jh0m04bt1-ctbedfords-projects.vercel.app/
+Preview: https://chef-pack-r4lk248re-ctbedfords-projects.vercel.app/
+
+Latest design pass follows the requested design-manager review. Play now uses the shared 3D mystery card and plate, a unified dark shell, one compact balance, direct Open pack wording and a gold primary action. Styles follow the base stylesheet, fixing the overridden button fill. Balance opens free refill; Rules stays in the header. Idle scene is disposed when opening or navigating. Local 390px check places the action at y468-524. Hosted Slim Chickens opening completes with +5 credits and a 95-credit balance. See reports/frontend/evidence/refined-play.json. Existing integration blockers below remain unchanged.
 
 Tyler selected a free simulation with non-redeemable credits. Home is now the game: 100 initial free credits, 10 per opening, one random restaurant collectible and a free credit reward, with local collection, free refill and Rules. The restaurant picker and existing signed-in API test paths are behind Developer Tools. No purchased balance, redeemable prize, payment, or gift-card issuance was added.
 

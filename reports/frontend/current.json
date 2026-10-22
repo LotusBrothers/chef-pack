@@ -2,10 +2,10 @@
   "schema_version": 1,
   "scope": "integration",
   "readiness": "blocked",
-  "tested_commit": "b16e7c7c7adaf0a346295ebd39f3493becfe46d5",
+  "tested_commit": "b96cce6fa2f083bf375f82d0b9d6124b9d4267c1",
   "base_commit": "65fee1b112d65f4d5a46070d04584c69ada7c467",
-  "preview_url": "https://chef-pack-jh0m04bt1-ctbedfords-projects.vercel.app/",
-  "summary": "Free guest simulation replaces the preview-library landing: 100 free credits, mystery restaurant, three published reward classes, local collection, free refill, and shared 3D drop/twirl/cascade. Hosted reveal and persistence verified. Full real-account integration remains blocked.",
+  "preview_url": "https://chef-pack-r4lk248re-ctbedfords-projects.vercel.app/",
+  "summary": "Refined Play screen uses the shared real 3D mystery card and plate, a dark shell, compact balance and direct gold Open pack action. Hosted Slim Chickens result completes with +5 credits and balance 95. See reports/frontend/evidence/refined-play.json and refined-play.png. Free simulation remains separate from the account wallet; full real-account integration remains blocked.",
   "cases": [
     {
       "id": "CATALOG",

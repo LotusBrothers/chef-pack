@@ -1,9 +1,11 @@
 # Justin's agent: current Chef Pack handoff
 
-Tested implementation: b16e7c7c7adaf0a346295ebd39f3493becfe46d5
+Tested implementation: b96cce6fa2f083bf375f82d0b9d6124b9d4267c1
 Frontend branch: frontend/justin
 Base main: 65fee1b112d65f4d5a46070d04584c69ada7c467
-Combined preview: https://chef-pack-jh0m04bt1-ctbedfords-projects.vercel.app/
+Combined preview: https://chef-pack-r4lk248re-ctbedfords-projects.vercel.app/
+
+Latest design pass: Play uses the same real 3D geometry as the opening, with a dedicated mystery texture. The idle plate is 85% width/depth and the card 110% size; result proportions remain unchanged. Dark shell, compact balance, gold Open pack action and Play/Collection tabs replace promotional copy and the flat mockup. Rules is in the header; tapping balance opens refill. Styles are after base styles to prevent overrides. Home stage is disposed on route change/open; late async mounts check connectivity and rendering stops when still. Evidence: reports/frontend/evidence/refined-play.json. This supersedes the older landing/navigation description below.
 
 ## Free simulation: latest implementation
 

@@ -1,0 +1,13 @@
+{
+  "tested_commit": "b96cce6fa2f083bf375f82d0b9d6124b9d4267c1",
+  "preview_url": "https://chef-pack-r4lk248re-ctbedfords-projects.vercel.app/",
+  "design_review": "Requested design-manager subagent reviewed code and screenshot. Styling order, duplicated balance, white shell, promotional copy and flat mockup were corrected; final idle plate/card scale refinement applied.",
+  "checks": {
+    "local_mobile": "390px viewport, no horizontal overflow. Open action at y468-524. Screenshot refined-play.png.",
+    "local_flow": "Balance 95 -> free refill 100 -> tap real 3D stage -> Capital Grille +5 credits, balance 95 -> Collection -> reload, one idle canvas present.",
+    "hosted_flow": "Direct Open pack action -> real 3D Slim Chickens result, Classic +5 credits, balance 95.",
+    "syntax": "Inline module and scene3d.mjs syntax pass.",
+    "tests": "Both simulation tests pass. Frontend scope passes, 89 changed files.",
+    "unchanged_blockers": "Real registered-user acceptance, Android hardware, final reduced-motion check and approving review remain incomplete. Main not merged."
+  }
+}
