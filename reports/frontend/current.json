@@ -2,93 +2,82 @@
   "schema_version": 1,
   "scope": "integration",
   "readiness": "blocked",
-  "tested_commit": "99ec42c8f02d6ac4a1a6787bce85e18763a3a312",
+  "tested_commit": "b1f1d0d48186c70d3a5ce289ce90b4edde7ee96e",
   "base_commit": "65fee1b112d65f4d5a46070d04584c69ada7c467",
-  "preview_url": "https://chef-pack-rc8368quj-ctbedfords-projects.vercel.app/",
-  "summary": "Restrained completion-sound comparison replaces arcade reward palette. Six original160–290ms cues; Apple/SND were design references, no Apple or SND asset copied. Existing SVG/CSS3D cloche visuals unchanged. True3D geometry/reflections/spring staging researched as a separate proposed next pass. Full integration and Android verification remain outstanding.",
+  "preview_url": "https://chef-pack-4o2mofa42-ctbedfords-projects.vercel.app/",
+  "summary": "Guest demo now uses a real 3D plate and card drop/twirl, followed by a fullscreen perspective victory cascade. Metal cover removed. Five sample brands include Little Caesars. Hosted guest replay and read-only health/catalog pass; seven automated tests pass. Full registered-account integration journey remains unverified, so merge is withheld.",
   "cases": [
     {
       "id": "CATALOG",
       "status": "not_run",
       "evidence": [
-        "reports/frontend/evidence/cloche-sound-comparison.json",
-        "reports/frontend/evidence/confirmation-sound-study.json"
+        "reports/frontend/evidence/card-drop-verification.json"
       ],
-      "notes": "No API/auth/order/wallet contract changes in this presentation iteration. Full current combined-preview acceptance for CATALOG has not been rerun. Earlier evidence is historical."
+      "notes": "Hosted API returns all three canonical IDs/prices; full browser catalog acceptance not rerun."
     },
     {
       "id": "SIGNIN",
-      "status": "not_run",
+      "status": "blocked",
       "evidence": [
-        "reports/frontend/evidence/cloche-sound-comparison.json",
-        "reports/frontend/evidence/confirmation-sound-study.json"
+        "reports/frontend/evidence/card-drop-verification.json"
       ],
-      "notes": "No API/auth/order/wallet contract changes in this presentation iteration. Full current combined-preview acceptance for SIGNIN has not been rerun. Earlier evidence is historical."
+      "notes": "Current combined-preview acceptance not completed. Dedicated real test accounts are not configured; local stand-in evidence from earlier work cannot substitute for real backend verification."
     },
     {
       "id": "OPEN",
-      "status": "not_run",
+      "status": "blocked",
       "evidence": [
-        "reports/frontend/evidence/cloche-sound-comparison.json",
-        "reports/frontend/evidence/confirmation-sound-study.json"
+        "reports/frontend/evidence/card-drop-verification.json"
       ],
-      "notes": "No API/auth/order/wallet contract changes in this presentation iteration. Full current combined-preview acceptance for OPEN has not been rerun. Earlier evidence is historical."
+      "notes": "Current combined-preview acceptance not completed. Dedicated real test accounts are not configured; local stand-in evidence from earlier work cannot substitute for real backend verification."
     },
     {
       "id": "RETRY",
-      "status": "not_run",
+      "status": "blocked",
       "evidence": [
-        "reports/frontend/evidence/cloche-sound-comparison.json",
-        "reports/frontend/evidence/confirmation-sound-study.json"
+        "reports/frontend/evidence/card-drop-verification.json"
       ],
-      "notes": "No API/auth/order/wallet contract changes in this presentation iteration. Full current combined-preview acceptance for RETRY has not been rerun. Earlier evidence is historical."
+      "notes": "Current combined-preview acceptance not completed. Dedicated real test accounts are not configured; local stand-in evidence from earlier work cannot substitute for real backend verification."
     },
     {
       "id": "WALLET",
-      "status": "not_run",
+      "status": "blocked",
       "evidence": [
-        "reports/frontend/evidence/cloche-sound-comparison.json",
-        "reports/frontend/evidence/confirmation-sound-study.json"
+        "reports/frontend/evidence/card-drop-verification.json"
       ],
-      "notes": "No API/auth/order/wallet contract changes in this presentation iteration. Full current combined-preview acceptance for WALLET has not been rerun. Earlier evidence is historical."
+      "notes": "Current combined-preview acceptance not completed. Dedicated real test accounts are not configured; local stand-in evidence from earlier work cannot substitute for real backend verification."
     },
     {
       "id": "ISOLATION",
-      "status": "not_run",
+      "status": "blocked",
       "evidence": [
-        "reports/frontend/evidence/cloche-sound-comparison.json",
-        "reports/frontend/evidence/confirmation-sound-study.json"
+        "reports/frontend/evidence/card-drop-verification.json"
       ],
-      "notes": "No API/auth/order/wallet contract changes in this presentation iteration. Full current combined-preview acceptance for ISOLATION has not been rerun. Earlier evidence is historical."
+      "notes": "Current combined-preview acceptance not completed. Dedicated real test accounts are not configured; local stand-in evidence from earlier work cannot substitute for real backend verification."
     },
     {
       "id": "ERROR",
       "status": "not_run",
       "evidence": [
-        "reports/frontend/evidence/cloche-sound-comparison.json",
-        "reports/frontend/evidence/confirmation-sound-study.json"
+        "reports/frontend/evidence/card-drop-verification.json"
       ],
-      "notes": "No API/auth/order/wallet contract changes in this presentation iteration. Full current combined-preview acceptance for ERROR has not been rerun. Earlier evidence is historical."
+      "notes": "Current combined-preview acceptance not completed. Dedicated real test accounts are not configured; local stand-in evidence from earlier work cannot substitute for real backend verification."
     },
     {
       "id": "MOCK-SAFETY",
       "status": "not_run",
       "evidence": [
-        "reports/frontend/evidence/cloche-sound-comparison.json",
-        "reports/frontend/evidence/confirmation-sound-study.json"
+        "reports/frontend/evidence/card-drop-verification.json"
       ],
-      "notes": "Guest scene labels free preview/no account/no purchase/no gift card. Four brand artworks explicitly DESIGN SAMPLE / NOT REDEEMABLE. Local log after guest comparison sessions: zero orders, zero pulls, zero /api/orders requests. Complete authenticated safety journey not rerun."
+      "notes": "Guest labels indicate sample/not redeemable; local guest log has zero order requests/orders/pulls. Full authenticated safety journey not rerun."
     },
     {
       "id": "VISUAL",
       "status": "not_run",
       "evidence": [
-        "reports/frontend/evidence/cloche-sound-comparison.json",
-        "reports/frontend/evidence/cloche-ready-mobile.png",
-        "reports/frontend/evidence/cloche-reward-mobile.png",
-        "reports/frontend/evidence/confirmation-sound-study.json"
+        "reports/frontend/evidence/card-drop-verification.json"
       ],
-      "notes": "All six new confirmation buttons completed with matching Played labels locally. Final hosted Clear confirm replay completed; screenshot captured. Four brand options and cloche presentation retained. Actual Android audio/frame pacing and full golden journey unrun."
+      "notes": "Local drop/twirl/cascade and hosted Little Caesars/Clear confirm replay completed. Desktop and 390px layout evidence saved. Full catalog -> account -> order -> wallet journey and final reduced-motion check not rerun."
     }
   ]
 }
