@@ -1,12 +1,14 @@
-# Cascade corner-card correction
+# Free guest mystery-pack simulation
 
 Readiness: BLOCKED for full real-account integration.
-Tested code: e9cfed80496956faebdea79d2e0a4fee87b46301
+Tested code: b16e7c7c7adaf0a346295ebd39f3493becfe46d5
 Main included: 65fee1b112d65f4d5a46070d04584c69ada7c467
-Preview: https://chef-pack-3niua0ze6-ctbedfords-projects.vercel.app/
+Preview: https://chef-pack-jh0m04bt1-ctbedfords-projects.vercel.app/
 
-Delayed cascade images were visible at left/top zero before their flights began. Default opacity zero plus animation fill both now keeps them hidden during each delay. Hosted first-frame screenshot shows no corner stack, and Clear confirm replay completes. Syntax and scope pass. See reports/frontend/evidence/cascade-corner-fix.json. All nine restaurant logos remain available.
+Tyler selected a free simulation with non-redeemable credits. Home is now the game: 100 initial free credits, 10 per opening, one random restaurant collectible and a free credit reward, with local collection, free refill and Rules. The restaurant picker and existing signed-in API test paths are behind Developer Tools. No purchased balance, redeemable prize, payment, or gift-card issuance was added.
 
-The user also requested random lottery-style mechanics and a redeemable balance. No such mechanics or balance have been implemented. The current pending choice is a free game using points that cannot be purchased/redeemed, or guaranteed-value gift-card purchases with decorative reveals.
+The simulation stores its outcome before animation; skip/close/refresh do not reroll. It uses nine bundled brand designs independently of Supabase metadata availability. Credit rewards: Classic 70% / 5 CR; Signature 25% / 15 CR; Chef’s special 5% / 50 CR. Each restaurant is equally likely and independent. LocalStorage stores the last 30 pulls and the current balance. This is browser-local, user-editable simulation state, not a secure ledger. Changing preview origins creates separate local state.
 
-Main remains unchanged; the existing real-account acceptance and required review blockers remain. Justin's current handoff is reports/frontend/JUSTIN-HANDOFF.md.
+Verified: hosted Capital Grille reveal 100 -> 95 CR and refresh persistence; local Taco Bell/Olive Garden results, refill, skip, mobile 390px; zero API orders/pulls/POSTs in local harness; two simulation tests and seven backend tests, syntax/scope pass. See reports/frontend/evidence/free-simulation.json and screenshots.
+
+Main remains unchanged. Existing registered-user golden journey and required review blockers remain; draft integration report stays blocked. Justin's agent handoff: reports/frontend/JUSTIN-HANDOFF.md.

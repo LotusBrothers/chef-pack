@@ -1,13 +1,23 @@
 # Justin's agent: current Chef Pack handoff
 
-Tested implementation: e9cfed80496956faebdea79d2e0a4fee87b46301
+Tested implementation: b16e7c7c7adaf0a346295ebd39f3493becfe46d5
 Frontend branch: frontend/justin
 Base main: 65fee1b112d65f4d5a46070d04584c69ada7c467
-Combined preview: https://chef-pack-3niua0ze6-ctbedfords-projects.vercel.app/
+Combined preview: https://chef-pack-jh0m04bt1-ctbedfords-projects.vercel.app/
+
+## Free simulation: latest implementation
+
+Tyler selected the free, non-redeemable simulation. Home no longer auto-opens an animation library: it shows the guest credit balance and mystery pack, with Play / Collection / Rules navigation. Developer Tools retains account/API test screens. prototype/simulation.mjs contains only local simulation logic. The inline script is now type=module and imports it; there are no inline HTML event-handler dependencies.
+
+Start with 100 free CR, spend 10 CR, receive one uniformly selected restaurant among nine bundled designs, plus an independent free-credit reward: 70% five CR, 25% fifteen CR, 5% fifty CR. Rules disclose this. Refill raises balances below 100 to 100 and never reduces a higher balance. There is no purchase/funding/withdrawal/redemption path. This is not connected to API orders or wallet, and does not change Supabase. LocalStorage key chefpack.free-simulation.v1 stores current balance, total plays and last 30 pulls. Opening saves its draw before launching the reveal, so close/skip/refresh cannot redraw or double-award. Browser state is user-editable and per-origin; do not reuse this as a money ledger. A storage write failure shows session-only wording.
+
+Simulation uses the shared real 3D drop/twirl and finite cascade, no artwork or sound comparison controls. Card textures display credits and FREE PLAY / NO CASH VALUE. Earlier preview tools and API results remain distinct. The corner-card opacity/delay fix remains intact.
+
+Verified evidence: reports/frontend/evidence/free-simulation.json plus game/result screenshots. Hosted Capital Grille result: +5 CR, balance 95; reload retains it. Local browser also verified refill/skip; local harness recorded zero orders, pulls or POSTs. Tests/frontend/simulation.test.mjs covers every reward interval, accounting, insufficient balance, bounded history and storage round-trip. Two tests and seven backend tests pass. 390px local viewport passes. Actual Android hardware and reduced-motion emulation remain unverified. Full real-account acceptance blockers below are unchanged.
 
 ## Current experience
 
-Guest landing, Choose Packs and tier-detail previews use a shared plate/card drop, twirl and fullscreen perspective victory cascade. Choose Packs has three readable stacked tiers. Restaurant selections are filtered by tier; previews require no account and create no order. Signed-in test orders use the same 3D scene but preserve the server label and value. The central card/plate are WebGL meshes; the fullscreen cascade uses perspective DOM images. Rendering stops when still, DPR is capped at 1.5 and shadows at 512px. No package manifests changed; pinned Three.js and its MIT license are under prototype/vendor/three/.
+Legacy preview tools in Choose Packs and tier-detail previews use a shared plate/card drop, twirl and fullscreen perspective victory cascade. Choose Packs has three readable stacked tiers. Restaurant selections are filtered by tier; previews require no account and create no order. Signed-in test orders use the same 3D scene but preserve the server label and value. The central card/plate are WebGL meshes; the fullscreen cascade uses perspective DOM images. Rendering stops when still, DPR is capped at 1.5 and shadows at 512px. No package manifests changed; pinned Three.js and its MIT license are under prototype/vendor/three/.
 
 The silver cover is removed. Six restrained original confirmation sounds remain, with plate/card contact cues and one reveal cue. Replay loads the selected cue. Browser autoplay can suppress arrival sounds before the first user gesture.
 
