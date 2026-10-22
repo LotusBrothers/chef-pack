@@ -1,0 +1,1 @@
+update public.restaurant_directory as r set card_art = logos.card_art from (values ('chilis','chilis.svg'),('olive-garden','olive-garden.svg'),('ruths-chris','ruths-chris.png'),('capital-grille','capital-grille.png')) as logos(id,card_art) where r.id = logos.id;
