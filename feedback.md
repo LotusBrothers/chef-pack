@@ -1,3 +1,18 @@
+# Playable guest landing handoff
+
+Readiness: BLOCKED for full integration; playable preview ready for user review.
+Tested code: fea8d524acd62e0b2d10d2fd8e3f88d3100aded1
+Main included: 65fee1b112d65f4d5a46070d04584c69ada7c467
+Preview: https://chef-pack-3o55db9b9-ctbedfords-projects.vercel.app/
+
+Visitors now land directly in a starter-pack scene with no login or catalog dependency. Tap/Enter opens; a left drag continuously peels the seal, short release returns sealed, threshold release completes. Retains recorded contact sound, branded sample card and tilt. Guest opens create no order/wallet card. Replay and Explore packs are available after the result. Root HTML points directly at this experience. Existing authenticated test-order and wallet paths remain available behind Choose pack.
+
+Verified local keyboard/open/replay/browse, hosted guest landing/short-swipe/full-swipe, actual390x844 viewport with no horizontal document overflow, syntax and frontend scope. Evidence: reports/frontend/evidence/playable-landing.json and playable-landing-mobile.png. Full integration acceptance, real Android measurement, and human taste review remain outstanding. Keep PR draft; blocked report check is intentional.
+
+---
+
+## Prior study handoff
+
 # Current motion and sound handoff
 
 Readiness: BLOCKED for integration; ready for a human audition of the study.
